@@ -1,12 +1,18 @@
 const express = require('express')
 const router = express.Router()
 
+/**
+ * Player CRUD
+ */
 router
-    .get('/', (req, res) => {
-        res.send('player route')
+    .post('/add', (req, res) => {
+        res.send('player route post')
     })
-    .post('/', (req, res) => {
-        res.send('player route')
+    .put('/', (req, res) => {
+        res.send('player route put')
+    })
+    .delete('/', (req, res) => {
+        res.send('player route delete')
     })
 
 module.exports = router
