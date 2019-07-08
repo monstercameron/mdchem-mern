@@ -1,19 +1,19 @@
 const express = require('express')
 const router = express.Router()
-const { addStudent, compareStudent } = require('../managers/Student')
+const { addStudent, compareStudent, deleteStudent } = require('../managers/Student')
 const { findByEmail } = require('../managers/Query')
 
 /**
  * Player CRUD
  */
 router
-    .post('/add', (req, res) => {
-        const student = new addStudent(res, req.body)
+    .post('/', (req, res) => {
+        new addStudent(res, req.body)
     })
     .post('/compare', (req, res) => {
         new findByEmail(req.body, (model) => {
-            new compareStudent(res, req.body, model.hash, (answer) => {
-                res.send(answer)
+            new compareStudent(res, req.body, model.hash, (result) => {
+                res.send(result)
             })
         })
     })
@@ -21,7 +21,7 @@ router
         res.send('player route put')
     })
     .delete('/', (req, res) => {
-        res.send('player route delete')
+        new deleteStudent(res, req.body)
     })
 
 module.exports = router

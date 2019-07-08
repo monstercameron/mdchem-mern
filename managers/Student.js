@@ -1,5 +1,6 @@
 const db = require('./Database')
 const studentSch = require('../models/schemas/student')
+const { findByEmail } = require('../managers/Query')
 const { Hash, Compare } = require('../managers/Encrypt')
 
 class AddStudent {
@@ -39,7 +40,19 @@ class CompareStudent {
     }
 }
 
+class DeleteStudent {
+    constructor(res, body){
+        this.delete(res, body.email)
+    }
+    delete = (res, email) => {
+        new findByEmail(email, (result) => {
+            res.json({student:result})
+        })
+    }
+}
+
 module.exports = {
     addStudent: AddStudent,
-    compareStudent: CompareStudent
+    compareStudent: CompareStudent,
+    deleteStudent: DeleteStudent
 }
