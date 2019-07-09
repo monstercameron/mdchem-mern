@@ -23,6 +23,26 @@ class FindByEmail {
 }
 
 /**
+ * returns sorted list of highscore
+ */
+class Highscore {
+    constructor(callback){
+        this.getHighscore(callback)
+    }
+    getHighscore = (callback) => {
+        const student = db.model('student', Student, 'test')
+        student.find({}, (err, students) => {
+            //console.log(docs)
+            callback(students)
+        })
+        .select('score')
+        .select('email')
+        .sort({score:-1})
+        .limit(10)
+    }
+}
+
+/**
  * Return a list of all students (ids, emails)
  */
 class FindAll {
@@ -58,5 +78,6 @@ class AllData {
 module.exports = {
     findByEmail: FindByEmail,
     findAll: FindAll,
-    allData: AllData
+    allData: AllData,
+    highscore: Highscore
 }

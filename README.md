@@ -25,17 +25,14 @@
 * Auth
   * login
   * logout
-* Players
-  * highscore
-  * highscore/update
-  * students
-  * students/data
-  * students/update
-* Player
+* Players = ('players')
+  * highscore           => ('/highscore')
+  * highscore/update    => ('/highscore/update)
+  * list                => ('/', POST)     => json(email/id), query(filter) 
+* Player = ('player')
   * add      => ('/', POST)     => json(email, password, class)
   * delete   => ('/', DELETE)   => json(email/id)
   * update   => ('/', PATCH)    => json(email/id, data) 
-  * list     => ('/', POST)     => json(email/id), query(filter) 
 * Feed
   * news
 * message
