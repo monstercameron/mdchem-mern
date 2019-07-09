@@ -32,6 +32,10 @@
   * students/data
   * students/update
 * Player
+  * add      => ('/', POST)     => json(email, password, class)
+  * delete   => ('/', DELETE)   => json(email/id)
+  * update   => ('/', PATCH)    => json(email/id, data) 
+  * list     => ('/', POST)     => json(email/id), query(filter) 
 * Feed
   * news
 * message

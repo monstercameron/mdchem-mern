@@ -54,5 +54,5 @@ class DeleteStudent {
 module.exports = {
     addStudent: AddStudent,
     compareStudent: CompareStudent,
-    deleteStudent: DeleteStudent
+    deleteStudent: DeleteStudent,
 }

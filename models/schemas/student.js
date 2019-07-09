@@ -4,6 +4,7 @@ module.exports = mongoose.Schema({
     hash: String,
     recovery: String,
     score: Number,
+    data: Object,
     class: String,
     login: Object,
     data: Object
