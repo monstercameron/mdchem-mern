@@ -18,11 +18,10 @@ router
         new findByEmail(req.body, (model) => {
             let { data } = model
             let newData
-            if(!data) {
-                newData = updatedData
-            }else{
-                newData = Object.assign(data, updatedData)
-            }
+            
+            if(!data) newData = updatedData
+            else newData = Object.assign(data, updatedData)
+
             model.updateOne({data:newData}, (err, result) => {
                 res.json({updated:result,message:'model updated'})
             })
