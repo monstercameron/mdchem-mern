@@ -1,4 +1,4 @@
-const settings  = require('./settings')
+const settings = require('./settings')
 const express = require('express')
 const app = express()
 
