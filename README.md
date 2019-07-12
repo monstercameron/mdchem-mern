@@ -19,24 +19,24 @@
   * /settings (settings)
 ***
 ## API:
-* Admin
-  * admins
-  * logs
-* Auth
-  * login
-  * logout
-* Players = ('players')
-  * highscore           => ('/highscore', POST) => ('/highscore')
-  * highscore update    => ('/highscore/update', POST) => ('/highscore/update)
-  * list                => ('/list', POST) => ('/', POST)     => json(email/id), query(filter) 
-* Player = ('player')
+* Admin => ('/admin')
+  * admins      =>  ('/', POST)
+  * logs        =>  ('/logs', POST) =>  query(linecount)
+* Auth => ('/auth')
+  * login       =>  ('/in', POST)   =>  json(email, password)
+  * logout      =>  ('/out', POST)  =>  json(email, password)
+* Players => ('/players')
+  * highscore   =>  ('/highscore', POST)
+  * hs update   =>  ('/highscore/update', POST)
+  * list        =>  ('/list', POST) => ('/', POST) => json(email/id), query(filter -db object props-) 
+* Player => ('/player')
   * create   => ('/', PUT)      =>  json(email, password, class)
   * read     => ('/', POST)     =>  json(email/id)
   * update   => ('/', PATCH)    =>  json(email/id, data)
   * delete   => ('/', DELETE)   =>  json(email/id) 
-* Feed
+* Feed => ('/feed')
   * create  => ('/', PUT)       =>  json(date, sender, message)
-  * read    => ('/', POST)      =>  
+  * read    => ('/', POST)
   * update  => ('/', PATCH)     =>  json(news id, message)
   * delete  => ('/', DELETE)    =>  json(news id)
 * message
