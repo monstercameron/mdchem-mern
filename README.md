@@ -30,11 +30,15 @@
   * highscore update    => ('/highscore/update', POST) => ('/highscore/update)
   * list                => ('/list', POST) => ('/', POST)     => json(email/id), query(filter) 
 * Player = ('player')
-  * add      => ('/', POST)     => json(email, password, class)
-  * delete   => ('/', DELETE)   => json(email/id)
-  * update   => ('/', PATCH)    => json(email/id, data) 
+  * create   => ('/', PUT)      =>  json(email, password, class)
+  * read     => ('/', POST)     =>  json(email/id)
+  * update   => ('/', PATCH)    =>  json(email/id, data)
+  * delete   => ('/', DELETE)   =>  json(email/id) 
 * Feed
-  * news
+  * create  => ('/', PUT)       =>  json(date, sender, message)
+  * read    => ('/', POST)      =>  
+  * update  => ('/', PATCH)     =>  json(news id, message)
+  * delete  => ('/', DELETE)    =>  json(news id)
 * message
   * send
   * inbox
