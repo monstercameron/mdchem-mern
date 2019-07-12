@@ -3,8 +3,6 @@
  */
 const db = require('../managers/Database')
 const Student = require('../models/schemas/student')
-const Feed = require('../models/schemas/news')
-
 /**
 * Query student via email address
 */
@@ -24,7 +22,7 @@ class FindByEmail {
 }
 
 /**
-* Query student via email address
+* Query student via unique key / id
 */
 class FindById {
     constructor(id, callback) {
@@ -97,7 +95,6 @@ class AllData {
         })
     }
 }
-
 module.exports = {
     findByEmail: FindByEmail,
     findById: FindById,
