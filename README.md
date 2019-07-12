@@ -26,9 +26,9 @@
   * login
   * logout
 * Players = ('players')
-  * highscore           => ('/highscore')
-  * highscore/update    => ('/highscore/update)
-  * list                => ('/', POST)     => json(email/id), query(filter) 
+  * highscore           => ('/highscore', POST) => ('/highscore')
+  * highscore update    => ('/highscore/update', POST) => ('/highscore/update)
+  * list                => ('/list', POST) => ('/', POST)     => json(email/id), query(filter) 
 * Player = ('player')
   * add      => ('/', POST)     => json(email, password, class)
   * delete   => ('/', DELETE)   => json(email/id)
