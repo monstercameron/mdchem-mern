@@ -1,21 +1,23 @@
-const express = require('express')
-const router = express.Router()
-const { allFeed } = require('../managers/Query')
-const News = require('../managers/News')
-
+/**
+ * News Feed Handler CRUD
+ */
+const router = require('express').Router()
+const { create, read, update, deletion } = require('../managers/News')
 router
+    .put('/', (req, res) => {
+        console.log(`Saving News Item Status:`)
+        new create(res, req.body)
+    })
     .post('/', (req, res) => {
         console.log(`All News Items:`)
-        new allFeed((news) => {
-            res.json(news)
-        })
+        new read(res, req.body)
     })
-    .post('/add', (req, res) => {
+    .patch('/', (req, res) => {
         console.log(`Saving News Item Status:`)
-        new News(res, req.body)
+        new update(res, req.body)
     })
     .delete('/', (req, res) => {
-        
+        console.log(`Deleting News Item Status:`)
+        new deletion(res, req.body)
     })
-
 module.exports = router

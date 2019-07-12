@@ -76,26 +76,9 @@ class AllData {
     }
 }
 
-/**
- * Return a list of all news items
- */
-class AllFeedData{
-    constructor(callback){
-        this.query(callback)
-    }
-    query = (callback) => {
-        const news = db.model('news', Feed, 'news')
-        news.find({}, (err, docs) => {
-            console.log(docs)
-            callback(docs)
-        })
-    }
-}
-
 module.exports = {
     findByEmail: FindByEmail,
     findAll: FindAll,
     allData: AllData,
-    highscore: Highscore,
-    allFeed: AllFeedData
+    highscore: Highscore
 }
