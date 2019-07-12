@@ -18,7 +18,7 @@ module.exports = class HighScoreUpdate {
                     score += student.data[key].score
                 }
                 student.updateOne({ score: score }, () => {
-                    console.log('updated!')
+                    //console.log('updated!')
                 })
             });
         })
