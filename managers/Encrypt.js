@@ -15,6 +15,7 @@ class Hash {
     }
 }
 
+
 class Compare {
     constructor(res, body, hash, callback) {
         this.compare(res, body.password, hash, callback)

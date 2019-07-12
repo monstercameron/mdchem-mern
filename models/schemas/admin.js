@@ -1,10 +1,14 @@
-const mongoose = require('mongoose')
-module.exports = mongoose.Schema({
-    role: String,
+module.exports = require('mongoose').Schema({
     name: String,
     email: String,
     hash: String,
-    recovery: String,
-    login: Object,
-    loggedIn: Boolean
+    role: String,
+    recovery: {
+        question: String,
+        hash: String
+    },
+    meta: {
+        mygroups: Array,
+        students: Number
+    }
 })

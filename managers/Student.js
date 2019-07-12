@@ -6,29 +6,51 @@ const { Hash, Compare } = require('../managers/Encrypt')
 class AddStudent {
     _student
     constructor(res, body) {
-        this.buildStudent(res, body)
+        this.res = res
+        this.body = body
+        this.run()
     }
-    buildStudent = (res, body) => {
-        new Hash(body.password, (hash) => {
-            console.log(hash)
-            const student = db.model('student', studentSch, 'test');
-            this._student = new student({
-                email: body.email,
-                hash: hash,
-                class: body.class
-            })
-            console.log(this._student)
-            this.saveStudent(res)
-        })
+    run = () => {
+        this.validateStudent()
     }
     validateStudent = () => {
-
+        // Note no validation has been done TBD
+        this.primaryhash()
     }
-    saveStudent = (res) => {
+    primaryhash = () => {
+        new Hash(this.body.password, (hash) => {
+            const student = db.model('student', studentSch, 'test');
+            this._student = new student({
+                email: this.body.email,
+                role: this.body.role,
+                hash: hash,
+                recovery:{
+                    question:this.body.recovery.question
+                },
+                meta:{
+                     group: this.body.meta.group
+                }
+            })
+            //console.log(this._student)
+            this.recoveryHash()
+        })
+    }
+
+    recoveryHash = () => {
+        const { question, recovery_password} = this.body.recovery
+        new Hash(question+recovery_password, (hash) => {
+            this._student.recovery.hash = hash
+            console.log(this._student)
+            //this.saveStudent()
+            this.res.send('done')
+        })
+    }
+
+    saveStudent = () => {
         this._student.save((err, model) => {
-            if (err) throw err
+            if (err) throw this.res.status(500).json(err)
             console.log(model)
-            res.send(`res`)
+            this.res.status(200).json({message:`Student ${model.email} saved`})
         })
     }
 

@@ -37,15 +37,4 @@ router
         // deletes a student from the database
         new deleteStudent(res, req.body)
     })
-    // Note usable auth code
-    // .post('/login', (req, res) => {
-    //     // find student by email
-    //     // checks password against stored hash
-    //     // WIP returns auth token
-    //     new findByEmail(req.body, (model) => {
-    //         new compareStudent(res, req.body, model.hash, (result) => {
-    //             res.send(result)
-    //         })
-    //     })
-    // })
 module.exports = router
