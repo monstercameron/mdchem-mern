@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const { addStudent } = require('../managers/Student')
+const { addAdmin } = require('../managers/Admin')
 router
 // Note usable auth code
 // .post('/login', (req, res) => {
@@ -19,20 +20,14 @@ router
         res.send('auth route')
     })
     .post('/register', (req, res) => {
-        // validate incoming data
-        // create user model
-        // hash password
-        // store user model
-        console.log(req.body)
         const { role } = req.body
         switch(role){
             case 'student': new addStudent(res, req.body)
                 break
-            case 'admin': res.send('wip')
+            case 'admin': new addAdmin(res, req.body)
                 break
             default: res.status(400).json({message:`There was a problem with the selected role`})
                 break
         }
     })
-
 module.exports = router
