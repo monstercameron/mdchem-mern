@@ -24,11 +24,6 @@ app.use(bodyParser.json())
 const routes = require('./apis/index')
 app.use('/', routes)
 
-// include jwt token middleware
-const {
-    tokenKey
-} = require('./settings')
-
 // start server
 const server = app.listen(process.env.PORT, () => {
     console.log(`Server Started on port:${process.env.PORT}`)
