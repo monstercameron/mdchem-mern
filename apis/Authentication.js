@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const { addStudent, authenticateStudent } = require('../managers/Student')
-const { addAdmin } = require('../managers/Admin')
+const { addAdmin, authenticateAdmin } = require('../managers/Admin')
 // testing
 const { verifyToken } = require('../managers/Authentication')
 //
@@ -15,7 +15,7 @@ router
         switch(req.params.role){
             case 'student': new authenticateStudent(res, req.body)
                 break
-            case 'admin': res.send('wip')
+            case 'admin': new authenticateAdmin(res, req.body)
                 break
             default:    res.status(400).json({message:`No role selected`})
         }

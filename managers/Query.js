@@ -125,7 +125,7 @@ class AdminEmailExists {
         this.query()
     }
     query = () => {
-        const admin = db.model('admin', Admin, 'admins')
+        const admin = db.model('admin', Admin, 'admin')
         admin.findOne({email:this.email}, (err, docs) => {
             //console.log('email exists results:',docs)
             this.callback(docs)

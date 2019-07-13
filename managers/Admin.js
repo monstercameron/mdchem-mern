@@ -1,7 +1,8 @@
 const db = require('../managers/Database')
 const adminSch = require('../models/schemas/admin')
-const { Hash } = require('../managers/Encrypt')
+const { Hash, Compare } = require('../managers/Encrypt')
 const { adminEmailExist } = require('../managers/Query')
+const { createToken, verifyToken} = require('../managers/Authentication')
 const AddAdmin = class {
     constructor(res, body) {
         this.res = res
@@ -55,6 +56,54 @@ const AddAdmin = class {
         })
     }
 }
+/**
+ * Login by generating a token
+ */
+class AuthenticateAdmin{
+    constructor(res, body){
+        this.res = res
+        this.body = body
+        this.run()
+    }
+    run = () => {
+        this.validation()
+    }
+    validation = () => {
+        this.emailExists()
+    }
+    emailExists = () => {
+        new adminEmailExist(this.body.email, (result) => {
+            if(!result) this.res.status(400).json({message:`user ${this.body.email} doesn't exist`})
+            //console.log(result)
+            this._admin = result
+            this.checkPassword()
+        })
+    }
+    checkPassword = () => {
+        const { password } = this.body
+        const { hash} = this._admin
+        new Compare(password, hash, (result) => {
+            //console.log(`result:`, result)
+            if(result){
+                this.generateToken()
+            }else{
+                this.res.status(403).json({message:`Credentials did not match.`})
+            }
+        })
+    }
+    generateToken = () => {
+        const params = {
+            payload:{test:`test`},
+            options:{
+                expiresIn: '1h'
+            }
+        }
+        createToken(params)
+        .then( token => this.res.status(200).json({token:token,message:`Successfully Authenticated.`}))
+        .catch( err => this.res.status(500).json({error:err,message:`There was an error.`}))
+    }
+}
 module.exports = {
-    addAdmin: AddAdmin
+    addAdmin: AddAdmin,
+    authenticateAdmin: AuthenticateAdmin
 }
