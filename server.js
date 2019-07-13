@@ -3,7 +3,6 @@ const environment = 'development'
 
 // required
 require('dotenv').config()
-const settings = require('./settings')
 const express = require('express')
 const app = express()
 
@@ -31,6 +30,6 @@ const {
 } = require('./settings')
 
 // start server
-const server = app.listen(settings.port, () => {
-    console.log(`Server Started on port:${settings.port}`)
+const server = app.listen(process.env.PORT, () => {
+    console.log(`Server Started on port:${process.env.PORT}`)
 });

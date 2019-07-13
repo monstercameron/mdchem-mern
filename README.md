@@ -17,7 +17,7 @@
 * Setup environment variables, at the root of the project create a .env file
 ~~~
 JWT_SECRET=<yourSecretKey>
-MONGo_LOCAL_CONN=<yourMongoDBConnection>
+MONGO_LOCAL_CONN=<yourMongoDBConnection>
 PORT=<yourPort>
 ~~~
 * Clone repo
