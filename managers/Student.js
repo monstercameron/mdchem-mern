@@ -122,9 +122,9 @@ class AuthenticateStudent{
     }
     generateToken = () => {
         const params = {
-            payload:{test:`test`},
+            payload:{role:`student`},
             options:{
-                expiresIn: '1h'
+                expiresIn: 60*15 // 15 minutes
             }
         }
         createToken(params)

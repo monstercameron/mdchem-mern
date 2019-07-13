@@ -93,9 +93,9 @@ class AuthenticateAdmin{
     }
     generateToken = () => {
         const params = {
-            payload:{test:`test`},
+            payload:{role:`admin`},
             options:{
-                expiresIn: '1h'
+                expiresIn: 60*5 // 5 minutes
             }
         }
         createToken(params)
