@@ -1,23 +1,24 @@
 const router = require('express').Router()
-const { addStudent } = require('../managers/Student')
+const { addStudent, authenticateStudent } = require('../managers/Student')
 const { addAdmin } = require('../managers/Admin')
+// testing
+const { verifyToken } = require('../managers/Authentication')
+//
 router
-// Note usable auth code
-// .post('/login', (req, res) => {
-//     // find student by email
-//     // checks password against stored hash
-//     // WIP returns auth token
-//     new findByEmail(req.body, (model) => {
-//         new compareStudent(res, req.body, model.hash, (result) => {
-//             res.send(result)
-//         })
-//     })
-// })
-    .post('/login', (req, res) => {
-        // find user by email
-        // compare user has to password
-        // generate a new jwt
-        res.send('auth route')
+// testing
+    .get('/', (req, res) => {
+        verifyToken(req.query.token)
+        .then( decoded => res.status(200).json(decoded))
+        .catch( err => res.status(500).json(err))
+    })
+    .post('/login/:role', (req, res) => {
+        switch(req.params.role){
+            case 'student': new authenticateStudent(res, req.body)
+                break
+            case 'admin': res.send('wip')
+                break
+            default:    res.status(400).json({message:`No role selected`})
+        }
     })
     .post('/register', (req, res) => {
         const { role } = req.body
