@@ -14,15 +14,15 @@
 * Node.Js
 * For node.js Dependencies see package.json
 ## Setup:
+* Clone repo
+~~~
+git clone https://github.com/monstercameron/mdchem-mern.git
+~~~
 * Setup environment variables, at the root of the project create a .env file
 ~~~
 JWT_SECRET=<yourSecretKey>
 MONGO_LOCAL_CONN=<yourMongoDBConnection>
 PORT=<yourPort>
-~~~
-* Clone repo
-~~~
-git clone https://github.com/monstercameron/mdchem-mern.git
 ~~~
 * Install dependencies
 ~~~
