@@ -8,7 +8,30 @@
 * Player Data CRUD
 * Player Data visualization
 ## Dependencies:
+* MongoDB
+* Express.Js
+* React
+* Node.Js
+* For node.js Dependencies see package.json
 ## Setup:
+* Setup environment variables, at the root of the project create a .env file
+~~~
+JWT_SECRET=<yourSecretKey>
+MONGo_LOCAL_CONN=<yourMongoDBConnection>
+PORT=<yourPort>
+~~~
+* Clone repo
+~~~
+git clone https://github.com/monstercameron/mdchem-mern.git
+~~~
+* Install dependencies
+~~~
+npm i
+~~~
+* Run server locally
+~~~
+npx nodemon server.js
+~~~
 ***
 ## Views
 * / (Home Page)
@@ -19,6 +42,7 @@
   * /settings (settings)
 ***
 ## API:
+* Headers => (authorization:jwt)
 * Admin => ('/admin')
   * admins      =>  ('/', POST)
   * logs        =>  ('/logs', POST) =>  query(linecount)
@@ -43,3 +67,4 @@
   * send
   * inbox
   * delete
+***
