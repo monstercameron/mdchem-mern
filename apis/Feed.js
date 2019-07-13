@@ -4,11 +4,11 @@
 const router = require('express').Router()
 const { create, read, update, deletion } = require('../managers/News')
 router
-    .put('/', (req, res) => {
+    .post('/', (req, res) => {
         console.log(`Saving News Item Status:`)
         new create(res, req.body)
     })
-    .post('/', (req, res) => {
+    .get('/', (req, res) => {
         console.log(`All News Items:`)
         new read(res, req.body)
     })

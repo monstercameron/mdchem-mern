@@ -1,16 +1,16 @@
-const router = require('express').Router()
-const { addStudent, deleteStudent } = require('../managers/Student')
-const { findByEmail, findById } = require('../managers/Query')
 /**
  * Player CRUD
  */
+const router = require('express').Router()
+const { addStudent, deleteStudent } = require('../managers/Student')
+const { findByEmail, findById } = require('../managers/Query')
 router
-    .put('/', (req, res) => {
+    .post('/', (req, res) => {
         // creating a new student
         // needs email, password & class
         new addStudent(res, req.body)
     })
-    .post('/', (req, res) => {
+    .get('/', (req, res) => {
         // return data for a specific user
         console.log(`Querying DB for ID:${req.body.id}`)
         new findById(req.body.id, (model) => {
