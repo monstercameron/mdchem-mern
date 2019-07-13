@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt')
 const saltRounds = 10;
-
 class Hash {
     constructor(passwordText, callback) {
         this.getHash(passwordText, callback)
@@ -14,15 +13,21 @@ class Hash {
         });
     }
 }
-
 class Compare {
-    constructor(res, body, hash, callback) {
-        this.compare(res, body.password, hash, callback)
+    constructor(password, hash, callback) {
+        this.password = password
+        this.hash = hash
+        this.callback = callback
+        this.run()
     }
-    compare = (res, password, hash, callback) => {
-        bcrypt.compare(password, hash, function (err, res) {
+    run = () => {
+        this.compare()
+    }
+    compare = () => {
+        bcrypt.compare(this.password, this.hash, (err, res) => {
+            if(err) throw err
             // res == true
-            callback(res)
+            this.callback(res)
         });
     }
 }

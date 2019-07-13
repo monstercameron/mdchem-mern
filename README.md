@@ -8,7 +8,30 @@
 * Player Data CRUD
 * Player Data visualization
 ## Dependencies:
+* MongoDB
+* Express.Js
+* React
+* Node.Js
+* For node.js Dependencies see package.json
 ## Setup:
+* Setup environment variables, at the root of the project create a .env file
+~~~
+JWT_SECRET=<yourSecretKey>
+MONGo_LOCAL_CONN=<yourMongoDBConnection>
+PORT=<yourPort>
+~~~
+* Clone repo
+~~~
+git clone https://github.com/monstercameron/mdchem-mern.git
+~~~
+* Install dependencies
+~~~
+npm i
+~~~
+* Run server locally
+~~~
+npx nodemon server.js
+~~~
 ***
 ## Views
 * / (Home Page)
@@ -19,27 +42,29 @@
   * /settings (settings)
 ***
 ## API:
+* Headers => (authorization:jwt)
 * Admin => ('/admin')
   * admins      =>  ('/', POST)
   * logs        =>  ('/logs', POST) =>  query(linecount)
 * Auth => ('/auth')
-  * login       =>  ('/in', POST)   =>  json(email, password)
-  * logout      =>  ('/out', POST)  =>  json(email, password)
+  * login       =>  ('/login', POST)   =>  json(email, password)
+  * register    =>  ('/register', POST)  =>  json(name, email, password, role, recovery question, recovery password)
 * Players => ('/players')
-  * highscore   =>  ('/highscore', POST)
+  * highscore   =>  ('/highscore', GET)
   * hs update   =>  ('/highscore/update', POST)
-  * list        =>  ('/list', POST) => ('/', POST) => json(email/id), query(filter -db object props-) 
+  * list        =>  ('/list', GET) => json(email/id), query(filter -db object props-) 
 * Player => ('/player')
-  * create   => ('/', PUT)      =>  json(email, password, class)
-  * read     => ('/', POST)     =>  json(email/id)
+  * create   => ('/', POST)     =>  json(email, password, class)
+  * read     => ('/', GET)      =>  json(email/id)
   * update   => ('/', PATCH)    =>  json(email/id, data)
   * delete   => ('/', DELETE)   =>  json(email/id) 
 * Feed => ('/feed')
-  * create  => ('/', PUT)       =>  json(date, sender, message)
-  * read    => ('/', POST)
+  * create  => ('/', POST)       =>  json(date, sender, message)
+  * read    => ('/', GET)
   * update  => ('/', PATCH)     =>  json(news id, message)
   * delete  => ('/', DELETE)    =>  json(news id)
 * message
   * send
   * inbox
   * delete
+***

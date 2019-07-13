@@ -1,4 +1,9 @@
-let router = require('express').Router()
+/**
+ * Route Config
+ */
+const router = require('express').Router()
+const { isAuthAdmin, isAuthStudent } = require('../middleware/Authentication')
+// include routes
 const Auth = require('./Authentication')
 const Admin = require('./Admin')
 const Feed = require('./Feed')
@@ -6,13 +11,11 @@ const Msg = require('./Message')
 const Player = require('./Player')
 const Players = require('./Players')
 const Test = require('./Testing')
-
 router.use('/auth', Auth)
-router.use('/admin', Admin)
-router.use('/feed', Feed)
-router.use('/message', Msg)
-router.use('/player', Player)
-router.use('/players', Players)
-router.use('/test', Test)
-
+router.use('/admin', isAuthAdmin, Admin)
+router.use('/feed', isAuthAdmin, Feed)
+router.use('/message', isAuthAdmin, Msg)
+router.use('/player', isAuthStudent, Player)
+router.use('/players', isAuthAdmin, Players)
+router.use('/test', isAuthAdmin, Test)
 module.exports = router

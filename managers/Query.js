@@ -3,6 +3,7 @@
  */
 const db = require('../managers/Database')
 const Student = require('../models/schemas/student')
+const Admin = require('../models/schemas/admin')
 /**
 * Query student via email address
 */
@@ -20,7 +21,6 @@ class FindByEmail {
         })
     }
 }
-
 /**
 * Query student via unique key / id
 */
@@ -42,7 +42,6 @@ class FindById {
         })
     }
 }
-
 /**
  * returns sorted list of highscore
  */
@@ -62,7 +61,6 @@ class Highscore {
         .limit(10)
     }
 }
-
 /**
  * Return a list of all students (ids, emails)
  */
@@ -79,7 +77,6 @@ class FindAll {
         .select(filter)
     }
 }
-
 /**
  * Returns a list of all students and their data
  */
@@ -95,10 +92,52 @@ class AllData {
         })
     }
 }
+/**
+ * Check if the student already exists via email
+ */
+class StudentEmailExists {
+    constructor(email, callback){
+        this.email = email
+        this.callback = callback
+        this.run()
+    }
+    run = () => {
+        this.query()
+    }
+    query = () => {
+        const student = db.model('student', Student, 'students')
+        student.findOne({email:this.email}, (err, docs) => {
+            //console.log('email exists results:',docs)
+            this.callback(docs)
+        })
+    }
+}
+/**
+ * Check if Admin already exists via email
+ */
+class AdminEmailExists {
+    constructor(email, callback){
+        this.email = email
+        this.callback = callback
+        this.run()
+    }
+    run = () => {
+        this.query()
+    }
+    query = () => {
+        const admin = db.model('admin', Admin, 'admin')
+        admin.findOne({email:this.email}, (err, docs) => {
+            //console.log('email exists results:',docs)
+            this.callback(docs)
+        })
+    }
+}
 module.exports = {
     findByEmail: FindByEmail,
     findById: FindById,
     findAll: FindAll,
     allData: AllData,
-    highscore: Highscore
+    highscore: Highscore,
+    studentEmailExist: StudentEmailExists,
+    adminEmailExist: AdminEmailExists
 }

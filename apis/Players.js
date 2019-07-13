@@ -5,13 +5,13 @@ const { findByEmail, findAll, allData, highscore } = require('../managers/Query'
 const highScoreService = require('../services/services/Highscore')
 
 router
-    .post('/list', (req, res) => {
+    .get('/list', (req, res) => {
         // lists all students (email, ids)
         new findAll(req.query.filter, (results) => {
             res.json(results)
         })
     })
-    .post('/highscore', (req, res) => {
+    .get('/highscore', (req, res) => {
         new highscore((students) => {
             res.json(students)
         })
