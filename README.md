@@ -5,6 +5,7 @@
 * https://play.google.com/store/apps/details?id=com.mdchem&hl=en_US
 * https://github.com/tvvizzle/MDChem
 ## Objectives:
+* Admin & Player Authentication
 * Player Data CRUD
 * Player Data visualization
 ## Dependencies:
