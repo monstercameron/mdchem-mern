@@ -30,7 +30,7 @@ npm i
 ~~~
 * Run server locally
 ~~~
-npx nodemon server.js
+npm test
 ~~~
 ***
 ## Views
