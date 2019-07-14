@@ -16,9 +16,10 @@
 
 */
 import React from "react";
+import { Redirect } from "react-router-dom"
 import questions from "../../variables/SecurityQuestions"
 import zxcvbn from "zxcvbn"
-
+import axios from "axios"
 // reactstrap components
 import {
   Button,
@@ -33,19 +34,19 @@ import {
   InputGroup,
   Row,
   Col
-} from "reactstrap";
-
-
+} from "reactstrap"
 
 class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       score: null,
+      privacy: false
     };
   }
   handlePasswordInput = (e) => {
     const results = zxcvbn(e.target.value)
+    this.setState({ password: e.target.value })
     if (e.target.value.length > 6) {
       this.setState({ score: results.score })
     }
@@ -62,13 +63,77 @@ class Register extends React.Component {
     }
   }
   buildRegistrationRequestForm = () => {
-    const form = {
-
+    return {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      role: `admin`,
+      recovery: {
+        question: this.state.sec_question,
+        answer: this.state.sec_answer
+      }
     }
-    console.log('runs')
+  }
+  validate = () => {
+    const form = this.buildRegistrationRequestForm()
+    const { name, email, password, role } = form
+    const { question, answer } = form.recovery
+    if (name) {
+      console.log(`name is good`)
+    } else {
+      return false
+    }
+    if (email) {
+      console.log(`email is good`)
+    } else {
+      return false
+    }
+    if (password) {
+      console.log(`password is good`)
+    } else {
+      return false
+    }
+    if (role) {
+      console.log(`role is good`)
+    } else {
+      return false
+    }
+    if (question) {
+      console.log(`question is good`)
+    } else {
+      return false
+    }
+    if (answer) {
+      console.log(`answer is good`)
+    } else {
+      return false
+    }
+    return true
+  }
+  register = () => {
+    if (this.state.privacy && this.validate()) {
+      const form = this.buildRegistrationRequestForm()
+      axios({
+        method: 'post',
+        url: 'http://localhost:8080/auth/register',
+        headers: {},
+        data: form
+      })
+        .then(res => {
+          console.log(res)
+          this.setState({ toLogin: true })
+        })
+        .catch(err => console.log(err))
+    } else {
+      // handle check box response
+      console.log('agree to privacy policy')
+    }
   }
   render() {
-    console.log(`score`, this.state.score)
+    console.log(`state`, this.state)
+    if (this.state.toLogin === true) {
+      return <Redirect to='/auth/login' />
+    }
     return (
       <>
         <Col lg="6" md="8">
@@ -90,7 +155,7 @@ class Register extends React.Component {
                         <i className="ni ni-hat-3" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Name" type="text" />
+                    <Input placeholder="Name" type="text" onChange={e => this.setState({ name: e.target.value })} />
                   </InputGroup>
                 </FormGroup>
                 <FormGroup>
@@ -100,7 +165,7 @@ class Register extends React.Component {
                         <i className="ni ni-email-83" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Email" type="email" />
+                    <Input placeholder="Email" type="email" onChange={e => this.setState({ email: e.target.value })} />
                   </InputGroup>
                 </FormGroup>
                 <FormGroup>
@@ -110,7 +175,7 @@ class Register extends React.Component {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Password" type="password" onKeyUp={this.handlePasswordInput} />
+                    <Input placeholder="Password" type="password" onChange={this.handlePasswordInput} />
                   </InputGroup>
                   <div className="text-muted font-italic">
                     <small>
@@ -119,8 +184,14 @@ class Register extends React.Component {
                   </div>
                 </FormGroup>
                 <FormGroup>
-                  <Input type="select" name="select" id="exampleSelect">
-                    <option disabled defaultValue>Select a security question</option>
+                  <Input
+                    type="select"
+                    name="select"
+                    id="exampleSelect"
+                    onChange={e => this.setState({ sec_question: e.target.value })}
+                    defaultValue={`Select a security question`}
+                  >
+                    <option disabled>Select a security question</option>
                     {questions.map((question, index) => {
                       return <option key={index}>{question}</option>
                     })}
@@ -133,7 +204,11 @@ class Register extends React.Component {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Security question" type="password" />
+                    <Input
+                      placeholder="Security question"
+                      type="password"
+                      onChange={e => this.setState({ sec_answer: e.target.value })}
+                    />
                   </InputGroup>
                 </FormGroup>
                 <Row className="my-4">
@@ -143,6 +218,7 @@ class Register extends React.Component {
                         className="custom-control-input"
                         id="customCheckRegister"
                         type="checkbox"
+                        onChange={e => this.setState({ privacy: !this.state.privacy })}
                       />
                       <label
                         className="custom-control-label"
@@ -159,7 +235,7 @@ class Register extends React.Component {
                   </Col>
                 </Row>
                 <div className="text-center">
-                  <Button className="mt-4" color="primary" type="button" onClick={this.buildRegistrationRequestForm}>
+                  <Button className="mt-4" color="primary" type="button" onClick={this.register}>
                     Create account
                   </Button>
                 </div>
@@ -171,5 +247,4 @@ class Register extends React.Component {
     );
   }
 }
-
-export default Register;
+export default Register

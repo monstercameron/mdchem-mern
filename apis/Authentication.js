@@ -17,7 +17,7 @@ router
                 break
             case 'admin': new authenticateAdmin(res, req.body)
                 break
-            default:    res.status(400).json({message:`No role selected`})
+            default:    res.status(401).json({message:`No role selected`})
         }
     })
     .post('/register', (req, res) => {
@@ -27,7 +27,7 @@ router
                 break
             case 'admin': new addAdmin(res, req.body)
                 break
-            default: res.status(400).json({message:`There was a problem with the selected role`})
+            default: res.status(401).json({message:`There was a problem with the selected role`})
                 break
         }
     })
