@@ -41,6 +41,9 @@ npm test
   * /students (list of students)
   * /students/:studentId (specified student)
   * /settings (settings)
+* /auth
+  * /login (login form)
+  * register (registration form)
 ***
 ## API:
 * Headers => (authorization:jwt)
