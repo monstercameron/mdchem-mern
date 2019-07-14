@@ -1,30 +1,59 @@
 import React, { Component } from 'react';
 import { MDBDataTable } from 'mdbreact';
-import url  from "../../variables/url.js"
+import url from "../../variables/url.js"
 import axios from "axios"
 class Table extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            url:null
+            url: null
         }
     }
     componentWillMount = () => {
-        this.setState({url:url.testing})
+        this.setState({ url: url.testing })
         this.fetchData()
     }
     fetchData = () => {
         const token = localStorage.getItem('token')
         axios({
             url: `${url.testing}/players/list`,
-            method:'get',
-            headers:{
-                authorization:token
+            method: 'get',
+            headers: {
+                authorization: token
             },
-            data:{}
+            data: {}
         })
-        .then(response  => console.log(response))
-        .catch(err => console.log(err))
+            .then(response => {
+                //console.log(response.data)
+                this.formatData(response.data)
+            })
+            .catch(err => console.log(err))
+    }
+    formatData = (data) => {
+        const newData = {
+            columns: [
+                {
+                    label: 'Email',
+                    field: 'email',
+                    sort: 'asc',
+                    width: 150
+                },
+                {
+                    label: 'Id',
+                    field: 'id',
+                    sort: 'asc',
+                    width: 270
+                }
+            ],
+            rows: [
+            ]
+        }
+        data.forEach(elem => {
+            //console.log(elem)
+            newData.rows.push({ email: elem.email, id: elem._id })
+        })
+
+        this.setState({ data: newData })
     }
     fetchTestData = () => {
         const data = {
@@ -56,7 +85,7 @@ class Table extends Component {
         this.setState({ data: data })
     }
     render() {
-        console.log(`state`, this.state)
+        //console.log(`state`, this.state)
         return (
             <div className="p-4">
                 <MDBDataTable
