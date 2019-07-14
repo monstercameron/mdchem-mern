@@ -60,8 +60,10 @@ class Auth extends React.Component {
                   <Col lg="5" md="6">
                     <h1 className="text-white">Welcome!</h1>
                     <p className="text-lead text-light">
-                      Use these awesome forms to login or create new account in
-                      your project for free.
+                    Students will learn chemistry concepts such as names of elements,
+                     ions and compounds. As students progress through each level the
+                      challenges become more and more intense. You will need all your
+                       concentration to master MDChem.
                     </p>
                   </Col>
                 </Row>

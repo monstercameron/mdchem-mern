@@ -43,6 +43,7 @@
     "not op_mini all"
   ],
   "dependencies": {
+    "axios": "^0.19.0",
     "chart.js": "2.7.3",
     "classnames": "2.2.6",
     "moment": "2.24.0",
@@ -54,9 +55,11 @@
     "react-datetime": "2.16.3",
     "react-dom": "16.8.4",
     "react-google-maps": "9.4.5",
+    "react-password-strength": "^2.4.0",
     "react-router-dom": "4.3.1",
     "react-scripts": "2.1.8",
-    "reactstrap": "7.1.0"
+    "reactstrap": "7.1.0",
+    "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
     "@types/googlemaps": "3.30.18",
