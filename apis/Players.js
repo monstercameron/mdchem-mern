@@ -5,8 +5,8 @@ const { findByEmail, findAll, allData, highscore } = require('../managers/Query'
 const highScoreService = require('../services/services/Highscore')
 
 router
+    // lists all students (email, ids)
     .get('/list', (req, res) => {
-        // lists all students (email, ids)
         new findAll(req.query.filter, (results) => {
             res.json(results)
         })
@@ -18,7 +18,7 @@ router
     })
     .post('/highscore/update', (req, res) => {
         new highScoreService()
-        res.json({message:`High Score Manually Updated`})
+        res.json({ message: `High Score Manually Updated` })
     })
 
 module.exports = router

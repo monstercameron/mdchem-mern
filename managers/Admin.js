@@ -90,7 +90,7 @@ class AuthenticateAdmin {
             if (result) {
                 this.generateToken()
             } else {
-                this.res.status(403).json({ message: `Credentials did not match.` })
+                this.res.status(401).json({ message: `Credentials did not match.` })
             }
         })
     }
@@ -98,7 +98,7 @@ class AuthenticateAdmin {
         const params = {
             payload: { role: `admin` },
             options: {
-                expiresIn: 60 * 5 // 5 minutes
+                expiresIn: 60 * 60 * 24 // 24 hours
             }
         }
         createToken(params)

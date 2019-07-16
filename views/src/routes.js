@@ -19,8 +19,9 @@ import Index from "views/Index.jsx";
 import Profile from "views/examples/Profile.jsx";
 import Maps from "views/examples/Maps.jsx";
 import Register from "views/production/Register.jsx";
-import Login from "views/examples/Login.jsx";
+import Login from "views/production/Login.jsx";
 import Tables from "views/examples/Tables.jsx";
+import Students from "views/production/Students.jsx";
 import Icons from "views/examples/Icons.jsx";
 
 var routes = [
@@ -57,6 +58,13 @@ var routes = [
     name: "Tables",
     icon: "ni ni-bullet-list-67 text-red",
     component: Tables,
+    layout: "/admin"
+  },
+  {
+    path: "/students",
+    name: "Students",
+    icon: "ni ni-bullet-list-67 text-red",
+    component: Students,
     layout: "/admin"
   },
   {

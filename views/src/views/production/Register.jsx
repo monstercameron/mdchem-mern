@@ -130,7 +130,7 @@ class Register extends React.Component {
     }
   }
   render() {
-    console.log(`state`, this.state)
+    //console.log(`state`, this.state)
     if (this.state.toLogin === true) {
       return <Redirect to='/auth/login' />
     }

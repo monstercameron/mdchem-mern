@@ -6,10 +6,16 @@ const { verifyToken } = require('../managers/Authentication')
 //
 router
 // testing
-    .get('/', (req, res) => {
+    .get('/check', (req, res) => {
         verifyToken(req.query.token)
-        .then( decoded => res.status(200).json(decoded))
-        .catch( err => res.status(500).json(err))
+        .then( decoded => {
+            //console.log(decoded)
+            res.status(200).json({expired:false})
+        })
+        .catch( err => {
+            //console.log(err)
+            res.status(401).json(err)
+        })
     })
     .post('/login/:role', (req, res) => {
         switch(req.params.role){

@@ -16,7 +16,9 @@
 
 */
 import React from "react";
-
+import { Redirect } from "react-router-dom";
+import axios from 'axios'
+import emailValidator from "email-validator"
 // reactstrap components
 import {
   Button,
@@ -34,7 +36,87 @@ import {
 } from "reactstrap";
 
 class Login extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      redirect: null,
+      remember: false,
+      local: {
+        email: undefined
+      }
+    }
+  }
+  componentWillMount = () => {
+    this.checkLocalStorage()
+  }
+  checkLocalStorage = () => {
+    const localEmail = localStorage.getItem('email');
+    if (localEmail) {
+      this.setState({ local: { email: localEmail } })
+      this.setState({ remember: true })
+      return localEmail
+    }
+    return ''
+  }
+  validate = () => {
+    let { email, password } = this.state
+    let { email: localEmail } = this.state.local
+    if (!email) email = localEmail
+    if (emailValidator.validate(email)) {
+      console.log('email is good')
+    } else {
+      console.log('email is not good')
+      return false
+    }
+    if (password) {
+      console.log('Password is good')
+    } else {
+      console.log('Password is not good')
+      return false
+    }
+    return true
+  }
+  buildLoginRequestForm = () => {
+    return {
+      email: (this.state.email) ? this.state.email : this.state.local.email,
+      password: this.state.password
+    }
+  }
+  login = () => {
+    const form = this.buildLoginRequestForm()
+    if (this.validate()) {
+      axios({
+        url: `http://localhost:8080/auth/login/admin`,
+        method: 'post',
+        data: form
+      })
+        .then(response => {
+          console.log(response)
+          if (this.state.remember) {
+            localStorage.setItem('email', form.email);
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('exp', new Date().getTime() + 3600000 /* 1 hour */)
+          } else {
+            localStorage.removeItem('email');
+          }
+          this.setState({ redirect: '/admin/index' })
+        })
+        .catch(err => console.log(err))
+    }
+  }
+  redirect = () => {
+    let { redirect } = this.state
+    if (redirect.includes(':3000')) {
+      redirect = redirect.split(':3000')
+      return <Redirect to={redirect[1]} />
+    }
+    return <Redirect to={redirect} />
+  }
   render() {
+    console.log('state', this.state)
+    if (this.state.redirect !== null) {
+      return this.redirect()
+    }
     return (
       <>
         <Col lg="5" md="7">
@@ -46,7 +128,7 @@ class Login extends React.Component {
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
               <div className="text-center text-muted mb-4">
-                <small>Or sign in with credentials</small>
+                <small>Sign in with credentials</small>
               </div>
               <Form role="form">
                 <FormGroup className="mb-3">
@@ -56,7 +138,14 @@ class Login extends React.Component {
                         <i className="ni ni-email-83" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Email" type="email" />
+                    <Input value={this.state.local.email} placeholder="Email" type="email"
+                      onChange={e => {
+                        this.setState({ email: e.target.value })
+                        if (this.state.remember) {
+                          this.setState({ local: { email: e.target.value } })
+                        }
+                      }}
+                    />
                   </InputGroup>
                 </FormGroup>
                 <FormGroup>
@@ -66,7 +155,7 @@ class Login extends React.Component {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Password" type="password" />
+                    <Input placeholder="Password" type="password" onChange={e => this.setState({ password: e.target.value })} />
                   </InputGroup>
                 </FormGroup>
                 <div className="custom-control custom-control-alternative custom-checkbox">
@@ -74,6 +163,8 @@ class Login extends React.Component {
                     className="custom-control-input"
                     id=" customCheckLogin"
                     type="checkbox"
+                    onChange={e => this.setState({ remember: !this.state.remember })}
+                    checked={this.state.remember}
                   />
                   <label
                     className="custom-control-label"
@@ -83,7 +174,7 @@ class Login extends React.Component {
                   </label>
                 </div>
                 <div className="text-center">
-                  <Button className="my-4" color="primary" type="button">
+                  <Button className="my-4" color="primary" type="button" onClick={this.login}>
                     Sign in
                   </Button>
                 </div>
@@ -103,8 +194,12 @@ class Login extends React.Component {
             <Col className="text-right" xs="6">
               <a
                 className="text-light"
-                href="#pablo"
-                onClick={e => e.preventDefault()}
+                href="/auth/register"
+                onClick={e => {
+                  //console.log(e.target.parentElement.href)
+                  this.setState({ redirect: e.target.parentElement.href })
+                  e.preventDefault()
+                }}
               >
                 <small>Create new account</small>
               </a>

@@ -16,7 +16,7 @@
 
 */
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 // reactstrap components
 import { Container } from "reactstrap";
 // core components
@@ -27,10 +27,30 @@ import Sidebar from "components/Sidebar/Sidebar.jsx";
 import routes from "routes.js";
 
 class Admin extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      auth: null
+    }
+  }
   componentDidUpdate(e) {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.mainContent.scrollTop = 0;
+  }
+  componentWillMount = () => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      console.warn('User Must Authenticate!')
+      this.setState({ auth: false })
+    }else if (localStorage.getItem('exp') < new Date().getTime()) {
+      console.warn('Token Expired, User Must Re-Authenticate!')
+      localStorage.removeItem('token')
+      localStorage.removeItem('exp')
+      this.setState({ auth: false })
+    } else {
+      this.setState({ auth: true })
+    }
   }
   getRoutes = routes => {
     return routes.map((prop, key) => {
@@ -60,6 +80,10 @@ class Admin extends React.Component {
     return "Brand";
   };
   render() {
+    if (!this.state.auth) {
+      console.log('Redirecting')
+      return <Redirect to={'/auth/login'} />
+    }
     return (
       <>
         <Sidebar
