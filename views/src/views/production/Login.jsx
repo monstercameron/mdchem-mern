@@ -95,6 +95,7 @@ class Login extends React.Component {
           if (this.state.remember) {
             localStorage.setItem('email', form.email);
             localStorage.setItem('token', response.data.token);
+            localStorage.setItem('exp', new Date().getTime() + 3600000 /* 1 hour */)
           } else {
             localStorage.removeItem('email');
           }
