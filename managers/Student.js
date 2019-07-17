@@ -1,11 +1,11 @@
 /**
- * Student Auth Manager
+ * Student Manager
  */
 const db = require('./Database')
-const studentSch = require('../models/schemas/student')
+const Student = require('../models/schemas/student')
 const { findByEmail, studentEmailExist } = require('../managers/Query')
 const { Hash, Compare } = require('../managers/Encrypt')
-const { createToken, verifyToken } = require('../managers/Authentication')
+const { createToken } = require('../managers/Authentication')
 /**
  * Add new Student to the database
  */
@@ -29,7 +29,7 @@ class AddStudent {
     }
     primaryhash = () => {
         new Hash(this.body.password, (hash) => {
-            const student = db.model('student', studentSch, 'students');
+            const student = db.model('student', Student, 'students');
             this._student = new student({
                 email: this.body.email,
                 role: this.body.role,
@@ -145,11 +145,130 @@ class CountStudent {
         this.count()
     }
     count = () => {
-        const student = db.model('student', studentSch, 'students');
-        student.count({}, (err, count) => {
-            if(err)  throw err
-            this.res.json({count:count})
+        const student = db.model('student', Student, 'students');
+        student.countDocuments({}, (err, count) => {
+            if (err) throw err
+            this.res.json({ results: count })
         })
+    }
+}
+/**
+ * Return a list of all students (ids, emails)
+ */
+class FindAllStudents {
+    constructor(req, res) {
+        this.req = req
+        this.res = res
+        this.run()
+    }
+    run = () => {
+        this.find()
+    }
+    find = () => {
+        const { filter } = this.req
+        const student = db.model('student', Student, 'test')
+        student.find({}, (err, docs) => {
+            if(err) throw err
+            this.res.status(200).json({results:docs})
+        }).select(filter)
+    }
+}
+/**
+ * Check if the student already exists via email
+ */
+class StudentEmailExists {
+    constructor(email, callback) {
+        this.email = email
+        this.callback = callback
+        this.run()
+    }
+    run = () => {
+        this.query()
+    }
+    query = () => {
+        const student = db.model('student', Student, 'students')
+        student.findOne({ email: this.email }, (err, docs) => {
+            //console.log('email exists results:',docs)
+            this.callback(docs)
+        })
+    }
+}
+/**
+* Query student via unique key / id
+*/
+class FindStudentById {
+    constructor(id, callback) {
+        this.id = id
+        this.callback = callback
+        this.run()
+    }
+    run = () => {
+        this.find()
+    }
+    find = () => {
+        const student = db.model('student', Student, 'test')
+        student.findById(this.id, (err, docs) => {
+            //console.log(docs)
+            console.log(`+++ item found`)
+            this.callback(docs)
+        })
+    }
+}
+/**
+* Query student via email address
+*/
+class FindStudentByEmail {
+    constructor(body, callback) {
+        this.find(body.email, callback)
+    }
+    find = (email, callback) => {
+        const student = db.model('student', Student, 'test')
+        student.findOne({
+            email: email
+        }, (err, docs) => {
+            //console.log(docs)
+            callback(docs)
+        })
+    }
+}
+/**
+ * Returns a list of all students and their data
+ */
+class AllData {
+    constructor(callback) {
+        this.find(callback)
+    }
+    find = (callback) => {
+        const student = db.model('student', Student, 'test')
+        student.find({}, (err, docs) => {
+            //console.log(docs)
+            callback(docs)
+        })
+    }
+}
+/**
+ * returns sorted list of highscore
+ */
+class Highscore {
+    constructor(req,  res){
+        this.req = req
+        this.res = res
+        this.run()
+    }
+    run= () => {
+        this.getHighscore()
+    }
+    getHighscore = () => {
+        const student = db.model('student', Student, 'test')
+        student.find({}, (err, highscores) => {
+            if(err) throw err
+            //console.log(docs)
+            this.res.json({results:highscores})
+        })
+        .select('score')
+        .select('email')
+        .sort({score:-1})
+        .limit(10)
     }
 }
 module.exports = {
@@ -157,5 +276,11 @@ module.exports = {
     compareStudent: CompareStudent,
     deleteStudent: DeleteStudent,
     authenticateStudent: AuthenticateStudent,
-    countStudent:CountStudent
+    countStudent: CountStudent,
+    findAllStudents: FindAllStudents,
+    emailExistsStudent: StudentEmailExists,
+    findStudentById: FindStudentById,
+    findStudentByEmail: FindStudentByEmail,
+    AllStudentData: AllData,
+    highscore:Highscore
 }
