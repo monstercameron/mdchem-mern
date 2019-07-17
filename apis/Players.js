@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { addStudent, compareStudent, deleteStudent } = require('../managers/Student')
+const { addStudent, compareStudent, deleteStudent, countStudent } = require('../managers/Student')
 const { findByEmail, findAll, allData, highscore } = require('../managers/Query')
 const highScoreService = require('../services/services/Highscore')
 
@@ -15,6 +15,9 @@ router
         new highscore((students) => {
             res.json(students)
         })
+    })
+    .get('/count', (req, res) => {
+        new countStudent(req, res)
     })
     .post('/highscore/update', (req, res) => {
         new highScoreService()
