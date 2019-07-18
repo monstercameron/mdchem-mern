@@ -22,7 +22,7 @@ const AddAdmin = class {
         // Validation TBC
         new adminEmailExist(this.body.email, (results) => {
             if (results) {
-                return this.res.status(400).json({ message: `${this.body.email} already registered` })
+                return this.res.status(400).json({ result: { message: `${this.body.email} already registered` } })
             }
             this.primaryhash()
         })
@@ -54,10 +54,10 @@ const AddAdmin = class {
     }
     saveAdmin = () => {
         this._admin.save((err, model) => {
-            if (err) throw this.res.status(500).json(err)
+            if (err) throw this.res.status(500).json({ result: { error: err } })
             // console.log(model)
             this.res.status(200).json({
-                result: `Admin ${model.email} saved`
+                result: { message: `Admin ${model.email} saved` }
             })
         })
     }
@@ -113,7 +113,7 @@ class AuthenticateAdmin {
  * Check if Admin already exists via email
  */
 class AdminEmailExists {
-    constructor(email, callback){
+    constructor(email, callback) {
         this.email = email
         this.callback = callback
         this.run()
@@ -123,7 +123,7 @@ class AdminEmailExists {
     }
     query = () => {
         const admin = db.model('admin', Admin, 'admin')
-        admin.findOne({email:this.email}, (err, docs) => {
+        admin.findOne({ email: this.email }, (err, docs) => {
             //console.log('email exists results:',docs)
             this.callback(docs)
         })
@@ -132,5 +132,5 @@ class AdminEmailExists {
 module.exports = {
     addAdmin: AddAdmin,
     authenticateAdmin: AuthenticateAdmin,
-    adminEmailExist:AdminEmailExists
+    adminEmailExist: AdminEmailExists
 }
