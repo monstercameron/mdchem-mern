@@ -1,20 +1,18 @@
 const express = require('express')
 const router = express.Router()
-const { addStudent, compareStudent, deleteStudent, countStudent } = require('../managers/Student')
-const { findByEmail, findAll, allData, highscore } = require('../managers/Query')
 const highScoreService = require('../services/services/Highscore')
+const {
+    findAllStudents,
+    countStudent,
+    highscore
+} = require('../managers/Student')
 
 router
-    // lists all students (email, ids)
     .get('/list', (req, res) => {
-        new findAll(req.query.filter, (results) => {
-            res.json(results)
-        })
+        new findAllStudents(req, res)
     })
     .get('/highscore', (req, res) => {
-        new highscore((students) => {
-            res.json(students)
-        })
+        new highscore(req, res)
     })
     .get('/count', (req, res) => {
         new countStudent(req, res)
