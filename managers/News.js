@@ -28,7 +28,7 @@ const create = class {
         this._news.save((err, model) => {
             if (err) throw err
             //console.log(model)
-            this.res.json({ result: `news item saved` })
+            this.res.json({ result: { message: `news item saved` } })
         })
     }
 }
@@ -64,7 +64,7 @@ const update = class {
         news.findById(this.body.id, (err, model) => {
             if (err) throw err
             model.updateOne({ message: this.body.message }, () => {
-                this.res.json({ result: `${this.body.id} was updated` })
+                this.res.json({ result: { message: `${this.body.id} was updated` } })
             })
         })
     }
@@ -81,7 +81,7 @@ const deletion = class {
     findAndDelete = () => {
         const news = db.model('news', Feed, 'news')
         news.findByIdAndDelete(this.body.id, (err, model) => {
-            this.res.json({ result: `${this.body.id} was deleted` })
+            this.res.json({ result: { message: `${this.body.id} was deleted` } })
         })
     }
 }

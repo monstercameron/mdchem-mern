@@ -22,7 +22,7 @@ const AddAdmin = class {
         // Validation TBC
         new adminEmailExist(this.body.email, (results) => {
             if (results) {
-                return this.res.status(400).json({ message: `${this.body.email} already registered` })
+                return this.res.status(400).json({ result: { message: `${this.body.email} already registered` } })
             }
             this.primaryhash()
         })
@@ -54,10 +54,10 @@ const AddAdmin = class {
     }
     saveAdmin = () => {
         this._admin.save((err, model) => {
-            if (err) throw this.res.status(500).json(err)
+            if (err) throw this.res.status(500).json({ result: { error: err } })
             // console.log(model)
             this.res.status(200).json({
-                result: `Admin ${model.email} saved`
+                result: { message: `Admin ${model.email} saved` }
             })
         })
     }
@@ -79,7 +79,7 @@ class AuthenticateAdmin {
     }
     emailExists = () => {
         new AdminEmailExists(this.body.email, (result) => {
-            if (!result) this.res.status(400).json({ message: `user ${this.body.email} doesn't exist` })
+            if (!result) this.res.status(400).json({ results: { message: `user ${this.body.email} doesn't exist` } })
             //console.log(result)
             this._admin = result
             this.checkPassword()
@@ -93,7 +93,7 @@ class AuthenticateAdmin {
             if (result) {
                 this.generateToken()
             } else {
-                this.res.status(401).json({ message: `Credentials did not match.` })
+                this.res.status(401).json({ results: { message: `Credentials did not match.` } })
             }
         })
     }
@@ -105,15 +105,15 @@ class AuthenticateAdmin {
             }
         }
         createToken(params)
-            .then(token => this.res.status(200).json({ token: token, message: `Successfully Authenticated.` }))
-            .catch(err => this.res.status(500).json({ error: err, message: `There was an error.` }))
+            .then(token => this.res.status(200).json({ results: { token: token, message: `Successfully Authenticated.` } }))
+            .catch(err => this.res.status(500).json({ results: { error: err, message: `There was an error.` } }))
     }
 }
 /**
  * Check if Admin already exists via email
  */
 class AdminEmailExists {
-    constructor(email, callback){
+    constructor(email, callback) {
         this.email = email
         this.callback = callback
         this.run()
@@ -123,7 +123,7 @@ class AdminEmailExists {
     }
     query = () => {
         const admin = db.model('admin', Admin, 'admin')
-        admin.findOne({email:this.email}, (err, docs) => {
+        admin.findOne({ email: this.email }, (err, docs) => {
             //console.log('email exists results:',docs)
             this.callback(docs)
         })
@@ -132,5 +132,5 @@ class AdminEmailExists {
 module.exports = {
     addAdmin: AddAdmin,
     authenticateAdmin: AuthenticateAdmin,
-    adminEmailExist:AdminEmailExists
+    adminEmailExist: AdminEmailExists
 }
