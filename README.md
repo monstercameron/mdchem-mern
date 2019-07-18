@@ -50,6 +50,7 @@ npm start
 * Run react frontend locally (from /views directory)
 ~~~
 cd views/
+npm i
 npm start
 ~~~
 ***
