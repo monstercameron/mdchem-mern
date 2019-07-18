@@ -16,7 +16,7 @@ class Table extends Component {
     fetchData = () => {
         const token = localStorage.getItem('token')
         axios({
-            url: `${url.testing}/players/list`,
+            url: `${url.testing}/api/players/list`,
             method: 'get',
             headers: {
                 authorization: token

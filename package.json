@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo 'No tests written'",
-    "start": "npx nodemon server.js"
+    "start": "npx nodemon server.js",
+    "build": "clear & echo 'Installing server dependencies' & npm i & clear & echo 'Installing React dependencies' & npm i --prefix veiws & clear & echo  'Bundling  React app'  & npm run build --prefix views & clear & npm start"
   },
   "author": "Earl Cameron",
   "license": "ISC",
