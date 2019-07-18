@@ -21,7 +21,19 @@
 ~~~
 git clone https://github.com/monstercameron/mdchem-mern.git
 ~~~
+* Go  into project root directory
+~~~
+cd mdchem-mern/
+~~~
 * Setup environment variables, at the root of the project create a .env file
+* * create .env file in  terminal
+~~~
+cat > .env
+JWT_SECRET=<yourSecretKey>
+MONGO_LOCAL_CONN=<yourMongoDBConnection>
+PORT=<yourPort>
+~~~
+* * or  create  a  .env file in  file  manager and editin text editor
 ~~~
 JWT_SECRET=<yourSecretKey>
 MONGO_LOCAL_CONN=<yourMongoDBConnection>
@@ -31,11 +43,11 @@ PORT=<yourPort>
 ~~~
 npm i
 ~~~
-* Run backend server locally
+* Run backend server locally (from / directory)
 ~~~
 npm start
 ~~~
-* Run react frontend locally
+* Run react frontend locally (from /views directory)
 ~~~
 cd views/
 npm start
