@@ -33,26 +33,28 @@ JWT_SECRET=<yourSecretKey>
 MONGO_LOCAL_CONN=<yourMongoDBConnection>
 PORT=<yourPort>
 ~~~
-* * or  create  a  .env file in  file  manager and editin text editor
+* * or  create  a  .env file in  file  manager and edit in text editor
 ~~~
 JWT_SECRET=<yourSecretKey>
 MONGO_LOCAL_CONN=<yourMongoDBConnection>
 PORT=<yourPort>
 ~~~
-* Install dependencies
+* Initial setup
 ~~~
-npm i
+npm run-script build
 ~~~
-* Run backend server locally (from / directory)
+* * Run backend server locally (from / directory)
 ~~~
 npm start
 ~~~
-* Run react frontend locally (from /views directory)
+* * Run react frontend server locally (from /views directory)
 ~~~
 cd views/
 npm i
 npm start
 ~~~
+* issues
+* * bcrypt might depend on make and g++ on linux
 ***
 ## Views
 * / (Home Page)
