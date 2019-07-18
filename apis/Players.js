@@ -21,6 +21,6 @@ router
     })
     .post('/highscore/update', (req, res) => {
         new highScoreService()
-        res.json({ message: `High Score Manually Updated` })
+        res.status(200).json({ result: { message: `High Score Manually Updated` } })
     })
 module.exports = router

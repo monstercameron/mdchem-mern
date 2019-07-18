@@ -9,11 +9,9 @@ router
     .get('/check', (req, res) => {
         verifyToken(req.query.token)
             .then(decoded => {
-                //console.log(decoded)
-                res.status(200).json({ expired: false })
+                res.status(200).json({ result: { expired: false } })
             })
             .catch(err => {
-                //console.log(err)
                 res.status(401).json(err)
             })
     })
@@ -23,7 +21,7 @@ router
                 break
             case 'admin': new authenticateAdmin(req, res)
                 break
-            default: res.status(401).json({ message: `No role selected` })
+            default: res.status(400).json({ result: { message: `No role selected` } })
         }
     })
     .post('/register/:role', (req, res) => {
@@ -32,7 +30,7 @@ router
                 break
             case 'admin': new addAdmin(req, res)
                 break
-            default: res.status(401).json({ message: `There was a problem with the selected role` })
+            default: res.status(400).json({ result: { message: `There was a problem with the selected role` } })
                 break
         }
     })

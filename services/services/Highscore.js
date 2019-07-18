@@ -9,7 +9,7 @@ module.exports = class HighScoreUpdate {
     }
     update = () => {
         new allStudentData((students) => {
-            console.log(`Updating ${students.length} students hichscores`)
+            console.log(`Updating ${students.length} students highscores`)
             students.forEach(student => {
                 //console.log(student)
                 let score = 0
