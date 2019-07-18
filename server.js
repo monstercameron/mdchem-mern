@@ -1,6 +1,3 @@
-// environment setup
-const environment = 'development'
-
 // required
 require('dotenv').config()
 const express = require('express')
