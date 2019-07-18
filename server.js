@@ -21,7 +21,15 @@ app.use(bodyParser.json())
 
 // include routes
 const routes = require('./apis/index')
-app.use('/', routes)
+app.use('/api', routes)
+
+// include static folder
+const path = require('path')
+app.use('/media',express.static(path.join(__dirname, '/views/build')))
+
+// Webpage Router
+const WebPage = require('./middleware/WebPage')
+app.use(WebPage);
 
 // start server
 const server = app.listen(process.env.PORT, () => {
