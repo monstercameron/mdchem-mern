@@ -1,3 +1,6 @@
+/**
+ * Student Schema
+ */
 module.exports = require('mongoose').Schema({
     email: String,
     hash: String,

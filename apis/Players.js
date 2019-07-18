@@ -1,3 +1,6 @@
+/**
+ * Player Route
+ */
 const express = require('express')
 const router = express.Router()
 const highScoreService = require('../services/services/Highscore')
@@ -6,7 +9,6 @@ const {
     countStudent,
     highscore
 } = require('../managers/Student')
-
 router
     .get('/list', (req, res) => {
         new findAllStudents(req, res)
@@ -21,5 +23,4 @@ router
         new highScoreService()
         res.json({ message: `High Score Manually Updated` })
     })
-
 module.exports = router

@@ -4,8 +4,8 @@
   "description": "Mdchem backend server",
   "main": "server.js",
   "scripts": {
-    "test": "npx nodemon server.js",
-    "start": "node server.js"
+    "test": "echo 'No tests written'",
+    "start": "npx nodemon server.js"
   },
   "author": "Earl Cameron",
   "license": "ISC",

@@ -1,9 +1,12 @@
+/**
+ * News Feed Manager
+ */
 const db = require('../managers/Database')
 const Feed = require('../models/schemas/news')
 const create = class {
-    constructor(res, body) {
+    constructor(req, res) {
         this.res = res
-        this.body = body
+        this.body = res.body
         this.run()
     }
     run = () => {
@@ -18,24 +21,21 @@ const create = class {
             sender: this.body.sender,
             message: this.body.message
         })
-        console.log(`+++ news item constructed`)
     }
     validate = () => {
-        console.log(`+++ news item not validated`)
     }
     save = () => {
         this._news.save((err, model) => {
             if (err) throw err
             //console.log(model)
-            console.log(`+++ news item saved`)
-            this.res.json({ message: `news item saved` })
-        })             
+            this.res.json({ result: `news item saved` })
+        })
     }
 }
 const read = class {
-    constructor(res, body){
+    constructor(req, res) {
         this.res = res
-        this.body = body
+        this.body = res.body
         this.run()
     }
     run = () => {
@@ -45,45 +45,43 @@ const read = class {
     query = () => {
         const news = db.model('news', Feed, 'news')
         news.find({}, (err, docs) => {
-            console.log(docs)
-            this.res.json(docs)
+            //  console.log(docs)
+            this.res.json({ resuls: docs })
         })
     }
 }
 const update = class {
-    constructor(res, body){
+    constructor(req, res) {
         this.res = res
-        this.body = body
+        this.body = res.body
         this.run()
     }
-    run = () =>{
+    run = () => {
         this.findAndUpdate()
     }
     findAndUpdate = () => {
         const news = db.model('news', Feed, 'news')
         news.findById(this.body.id, (err, model) => {
             if (err) throw err
-            console.log(`+++ item found`)
-            model.updateOne({message:this.body.message}, () => {
-                this.res.json({message:`${this.body.id} was updated`})
+            model.updateOne({ message: this.body.message }, () => {
+                this.res.json({ result: `${this.body.id} was updated` })
             })
         })
     }
 }
 const deletion = class {
-    constructor(res, body){
+    constructor(req, res) {
         this.res = res
-        this.body    = body
+        this.body = res.body
         this.run()
     }
-    run = () =>{
+    run = () => {
         this.findAndDelete()
     }
     findAndDelete = () => {
         const news = db.model('news', Feed, 'news')
         news.findByIdAndDelete(this.body.id, (err, model) => {
-            console.log(`+++ item deleted`)
-            this.res.json({message:`${this.body.id} was deleted`})
+            this.res.json({ result: `${this.body.id} was deleted` })
         })
     }
 }

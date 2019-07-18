@@ -1,23 +1,19 @@
 /**
- * News Feed Handler CRUD
+ * News Feed Route
  */
 const router = require('express').Router()
 const { create, read, update, deletion } = require('../managers/News')
 router
     .post('/', (req, res) => {
-        console.log(`Saving News Item Status:`)
-        new create(res, req.body)
+        new create(req, res)
     })
     .get('/', (req, res) => {
-        console.log(`All News Items:`)
-        new read(res, req.body)
+        new read(req, res)
     })
     .patch('/', (req, res) => {
-        console.log(`Saving News Item Status:`)
-        new update(res, req.body)
+        new update(req, res)
     })
     .delete('/', (req, res) => {
-        console.log(`Deleting News Item Status:`)
-        new deletion(res, req.body)
+        new deletion(req, res)
     })
 module.exports = router

@@ -1,12 +1,18 @@
+/**
+ * Admin  Manager
+ */
 const db = require('../managers/Database')
-const adminSch = require('../models/schemas/admin')
+const Admin = require('../models/schemas/admin')
 const { Hash, Compare } = require('../managers/Encrypt')
 const { adminEmailExist } = require('../managers/Query')
-const { createToken, verifyToken } = require('../managers/Authentication')
+const { createToken } = require('../managers/Authentication')
+/**
+ * Add Admin
+ */
 const AddAdmin = class {
-    constructor(res, body) {
+    constructor(req, res) {
         this.res = res
-        this.body = body
+        this.body = req.body
         this.run()
     }
     run = () => {
@@ -15,18 +21,15 @@ const AddAdmin = class {
     validateAdmin = () => {
         // Validation TBC
         new adminEmailExist(this.body.email, (results) => {
-            console.log(results === null)
             if (results) {
-                this.res.status(400).json({ message: `${this.body.email} already registered` })
-            } else {
-                this.primaryhash()
+                return this.res.status(400).json({ message: `${this.body.email} already registered` })
             }
+            this.primaryhash()
         })
     }
     primaryhash = () => {
-        console.log('runs')
         new Hash(this.body.password, (hash) => {
-            const admin = db.model('admin', adminSch, 'admin');
+            const admin = db.model('admin', Admin, 'admin');
             this._admin = new admin({
                 name: this.body.name,
                 email: this.body.email,
@@ -54,7 +57,7 @@ const AddAdmin = class {
             if (err) throw this.res.status(500).json(err)
             // console.log(model)
             this.res.status(200).json({
-                message: `Admin ${model.email} saved`
+                result: `Admin ${model.email} saved`
             })
         })
     }
@@ -63,9 +66,9 @@ const AddAdmin = class {
  * Login by generating a token
  */
 class AuthenticateAdmin {
-    constructor(res, body) {
+    constructor(req, res) {
         this.res = res
-        this.body = body
+        this.body = req.body
         this.run()
     }
     run = () => {
@@ -75,7 +78,7 @@ class AuthenticateAdmin {
         this.emailExists()
     }
     emailExists = () => {
-        new adminEmailExist(this.body.email, (result) => {
+        new AdminEmailExists(this.body.email, (result) => {
             if (!result) this.res.status(400).json({ message: `user ${this.body.email} doesn't exist` })
             //console.log(result)
             this._admin = result
@@ -106,7 +109,28 @@ class AuthenticateAdmin {
             .catch(err => this.res.status(500).json({ error: err, message: `There was an error.` }))
     }
 }
+/**
+ * Check if Admin already exists via email
+ */
+class AdminEmailExists {
+    constructor(email, callback){
+        this.email = email
+        this.callback = callback
+        this.run()
+    }
+    run = () => {
+        this.query()
+    }
+    query = () => {
+        const admin = db.model('admin', Admin, 'admin')
+        admin.findOne({email:this.email}, (err, docs) => {
+            //console.log('email exists results:',docs)
+            this.callback(docs)
+        })
+    }
+}
 module.exports = {
     addAdmin: AddAdmin,
-    authenticateAdmin: AuthenticateAdmin
+    authenticateAdmin: AuthenticateAdmin,
+    adminEmailExist:AdminEmailExists
 }

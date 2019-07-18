@@ -1,3 +1,6 @@
+/**
+ * Encryption Manager
+ */
 const bcrypt = require('bcrypt')
 const saltRounds = 10;
 class Hash {
@@ -25,13 +28,12 @@ class Compare {
     }
     compare = () => {
         bcrypt.compare(this.password, this.hash, (err, res) => {
-            if(err) throw err
+            if (err) throw err
             // res == true
             this.callback(res)
         });
     }
 }
-
 module.exports = {
     Hash: Hash,
     Compare: Compare
