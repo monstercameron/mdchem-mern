@@ -183,7 +183,7 @@ class FindAllStudents {
     }
     find = () => {
         const { filter } = this.req
-        const student = db.model('student', Student, 'test')
+        const student = db.model('student', Student, 'students')
         student.find({}, (err, docs) => {
             if (err) throw err
             this.res.status(200).json({ results: { students: docs } })

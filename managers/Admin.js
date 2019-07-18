@@ -79,7 +79,7 @@ class AuthenticateAdmin {
     }
     emailExists = () => {
         new AdminEmailExists(this.body.email, (result) => {
-            if (!result) this.res.status(400).json({ message: `user ${this.body.email} doesn't exist` })
+            if (!result) this.res.status(400).json({ results: { message: `user ${this.body.email} doesn't exist` } })
             //console.log(result)
             this._admin = result
             this.checkPassword()
@@ -93,7 +93,7 @@ class AuthenticateAdmin {
             if (result) {
                 this.generateToken()
             } else {
-                this.res.status(401).json({ message: `Credentials did not match.` })
+                this.res.status(401).json({ results: { message: `Credentials did not match.` } })
             }
         })
     }
@@ -105,8 +105,8 @@ class AuthenticateAdmin {
             }
         }
         createToken(params)
-            .then(token => this.res.status(200).json({ token: token, message: `Successfully Authenticated.` }))
-            .catch(err => this.res.status(500).json({ error: err, message: `There was an error.` }))
+            .then(token => this.res.status(200).json({ results: { token: token, message: `Successfully Authenticated.` } }))
+            .catch(err => this.res.status(500).json({ results: { error: err, message: `There was an error.` } }))
     }
 }
 /**
