@@ -59,14 +59,6 @@ class AddStudent {
     }
 }
 /**
- * Compare Student credentials for Login
- */
-class CompareStudent {
-    constructor(res, password, hash, callback) {
-        new Compare(res, password, hash, callback)
-    }
-}
-/**
  * Delete a Student from the database
  */
 class DeleteStudent {
@@ -297,7 +289,6 @@ class Highscore {
 }
 module.exports = {
     addStudent: AddStudent,
-    compareStudent: CompareStudent,
     deleteStudent: DeleteStudent,
     authenticateStudent: AuthenticateStudent,
     countStudent: CountStudent,
