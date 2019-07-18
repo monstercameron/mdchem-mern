@@ -15,6 +15,8 @@
 * Node.Js
 * For node.js Dependencies see package.json
 ## Setup:
+* Download MongoDB https://www.mongodb.com/download-center/community
+* Download  Nodejs https://nodejs.org/en/download/
 * Clone repo
 ~~~
 git clone https://github.com/monstercameron/mdchem-mern.git
@@ -29,9 +31,14 @@ PORT=<yourPort>
 ~~~
 npm i
 ~~~
-* Run server locally
+* Run backend server locally
 ~~~
-npm test
+npm start
+~~~
+* Run react frontend locally
+~~~
+cd views/
+npm start
 ~~~
 ***
 ## Views
@@ -51,11 +58,12 @@ npm test
   * admins      =>  ('/', POST)
   * logs        =>  ('/logs', POST) =>  query(linecount)
 * Auth => ('/auth')
-  * login       =>  ('/login', POST)   =>  json(email, password)
-  * register    =>  ('/register', POST)  =>  json(name, email, password, role, recovery question, recovery password)
+  * login       =>  ('/login', POST)    =>  json(email, password)
+  * register    =>  ('/register', POST) =>  json(name, email, password, role, recovery question, recovery password)
 * Players => ('/players')
   * highscore   =>  ('/highscore', GET)
   * hs update   =>  ('/highscore/update', POST)
+  * count       =>  ('/count', GET)
   * list        =>  ('/list', GET) => json(email/id), query(filter -db object props-) 
 * Player => ('/player')
   * create   => ('/', POST)     =>  json(email, password, class)
@@ -63,7 +71,7 @@ npm test
   * update   => ('/', PATCH)    =>  json(email/id, data)
   * delete   => ('/', DELETE)   =>  json(email/id) 
 * Feed => ('/feed')
-  * create  => ('/', POST)       =>  json(date, sender, message)
+  * create  => ('/', POST)      =>  json(date, sender, message)
   * read    => ('/', GET)
   * update  => ('/', PATCH)     =>  json(news id, message)
   * delete  => ('/', DELETE)    =>  json(news id)

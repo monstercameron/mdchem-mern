@@ -1,14 +1,13 @@
 /**
- * Include services to run
+ * Cron Job Service
  */
 const highScoreService = require('./services/Highscore')
-
 /**
  * Run services hourly
  */
 const cron = require('node-cron')
-cron.schedule("*/59 * * * *", function() {
-    console.log("Hourly Cron task");
-    new highScoreService()
-  });
+cron.schedule("*/59 * * * *", function () {
+  console.log("Hourly Cron task");
+  new highScoreService()
+});
 module.exports = cron

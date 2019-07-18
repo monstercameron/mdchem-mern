@@ -1,5 +1,7 @@
-const mongoose = require('mongoose')
-module.exports = mongoose.Schema({
+/**
+ * Message Schema
+ */
+module.exports = require('mongoose').Schema({
     target: String,
     cc: Array,
     bcc: Array,

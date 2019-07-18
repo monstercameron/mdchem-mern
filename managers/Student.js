@@ -3,28 +3,25 @@
  */
 const db = require('./Database')
 const Student = require('../models/schemas/student')
-const { findByEmail, studentEmailExist } = require('../managers/Query')
 const { Hash, Compare } = require('../managers/Encrypt')
 const { createToken } = require('../managers/Authentication')
 /**
  * Add new Student to the database
  */
 class AddStudent {
-    _student
-    constructor(res, body) {
+    constructor(req, res) {
+        this.body = req.body
         this.res = res
-        this.body = body
         this.run()
     }
     run = () => {
         this.validateStudent()
     }
     validateStudent = () => {
-        // Note no validation has been done TBD
-        new studentEmailExist(this.body.email, (results) => {
-            results !== undefined
-                ? this.res.status(400).json({ message: `${this.body.email} already registered` })
-                : this.primaryhash()
+        // only email validation done  so far, other  validation TBC
+        new StudentEmailExists(this.body.email, (results) => {
+            if (results) return this.res.status(200).json({ error: `${this.body.email} already exists` })
+            this.primaryhash()
         })
     }
     primaryhash = () => {
@@ -45,7 +42,6 @@ class AddStudent {
             this.recoveryHash()
         })
     }
-
     recoveryHash = () => {
         const { question, recovery_password } = this.body.recovery
         new Hash(question + recovery_password, (hash) => {
@@ -54,15 +50,13 @@ class AddStudent {
             this.saveStudent()
         })
     }
-
     saveStudent = () => {
         this._student.save((err, model) => {
-            if (err) throw this.res.status(500).json(err)
             // console.log(model)
-            this.res.status(200).json({ message: `Student ${model.email} saved` })
+            if (err) throw err
+            this.res.json({ message: `Student ${model.email} saved` })
         })
     }
-
 }
 /**
  * Compare Student credentials for Login
@@ -76,12 +70,43 @@ class CompareStudent {
  * Delete a Student from the database
  */
 class DeleteStudent {
-    constructor(res, body) {
-        this.delete(res, body.email)
+    constructor(req, res) {
+        this.res = res
+        this.body = req.body
+        this.run()
     }
-    delete = (res, email) => {
-        new findByEmail(email, (result) => {
-            res.json({ student: result })
+    run = () => {
+        this.delete()
+    }
+    delete = () => {
+        new findByEmail(this.body.email, (result) => {
+            this.res.json({ result: `Student Deleted` })
+        })
+    }
+}
+/**
+ * Update a Student from the database
+ */
+class UpdateStudent {
+    constructor(req, res) {
+        this.res = res
+        this.req = req
+        this.body = req.body
+        this.run()
+    }
+    run = () => {
+        this.update()
+    }
+    update = () => {
+        new FindStudentById(this.req, this.res, (result) => {
+            const updatedData = this.body.data
+            let { data } = result
+            let newData
+            if (!data) newData = updatedData
+            else newData = Object.assign(data, updatedData)
+            result.updateOne({ data: newData }, (err, result) => {
+                this.res.json({ result: result, message: 'model updated' })
+            })
         })
     }
 }
@@ -89,9 +114,9 @@ class DeleteStudent {
  * Login by generating a token
  */
 class AuthenticateStudent {
-    constructor(res, body) {
+    constructor(req, res) {
         this.res = res
-        this.body = body
+        this.body = req.body
         this.run()
     }
     run = () => {
@@ -101,8 +126,8 @@ class AuthenticateStudent {
         this.emailExists()
     }
     emailExists = () => {
-        new studentEmailExist(this.body.email, (result) => {
-            if (!result) this.res.status(400).json({ message: `user ${this.body.email} doesn't exist` })
+        new StudentEmailExists(this.body.email, (result) => {
+            if (!result) return this.res.status(400).json({ message: `user ${this.body.email} doesn't exist` })
             //console.log(result)
             this._student = result
             this.checkPassword()
@@ -168,8 +193,8 @@ class FindAllStudents {
         const { filter } = this.req
         const student = db.model('student', Student, 'test')
         student.find({}, (err, docs) => {
-            if(err) throw err
-            this.res.status(200).json({results:docs})
+            if (err) throw err
+            this.res.status(200).json({ results: docs })
         }).select(filter)
     }
 }
@@ -197,8 +222,9 @@ class StudentEmailExists {
 * Query student via unique key / id
 */
 class FindStudentById {
-    constructor(id, callback) {
-        this.id = id
+    constructor(req, res, callback) {
+        this.id = req.body.id
+        this.res = res
         this.callback = callback
         this.run()
     }
@@ -206,12 +232,12 @@ class FindStudentById {
         this.find()
     }
     find = () => {
-        const student = db.model('student', Student, 'test')
+        const student = db.model('student', Student, 'students')
         student.findById(this.id, (err, docs) => {
             //console.log(docs)
-            console.log(`+++ item found`)
-            this.callback(docs)
-        })
+            if (typeof this.callback === 'function') this.callback(docs)
+            else this.res.json({ result: docs })
+        }).select('-hash -recovery')
     }
 }
 /**
@@ -239,7 +265,7 @@ class AllData {
         this.find(callback)
     }
     find = (callback) => {
-        const student = db.model('student', Student, 'test')
+        const student = db.model('student', Student, 'students')
         student.find({}, (err, docs) => {
             //console.log(docs)
             callback(docs)
@@ -250,25 +276,25 @@ class AllData {
  * returns sorted list of highscore
  */
 class Highscore {
-    constructor(req,  res){
+    constructor(req, res) {
         this.req = req
         this.res = res
         this.run()
     }
-    run= () => {
+    run = () => {
         this.getHighscore()
     }
     getHighscore = () => {
         const student = db.model('student', Student, 'test')
         student.find({}, (err, highscores) => {
-            if(err) throw err
+            if (err) throw err
             //console.log(docs)
-            this.res.json({results:highscores})
+            this.res.json({ results: highscores })
         })
-        .select('score')
-        .select('email')
-        .sort({score:-1})
-        .limit(10)
+            .select('score')
+            .select('email')
+            .sort({ score: -1 })
+            .limit(10)
     }
 }
 module.exports = {
@@ -281,6 +307,7 @@ module.exports = {
     emailExistsStudent: StudentEmailExists,
     findStudentById: FindStudentById,
     findStudentByEmail: FindStudentByEmail,
-    AllStudentData: AllData,
-    highscore:Highscore
+    allStudentData: AllData,
+    highscore: Highscore,
+    updateStudent: UpdateStudent
 }

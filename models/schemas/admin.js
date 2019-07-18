@@ -1,3 +1,6 @@
+/**
+ * Admin Schema
+ */
 module.exports = require('mongoose').Schema({
     name: String,
     email: String,

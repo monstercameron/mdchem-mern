@@ -1,3 +1,6 @@
+/**
+ * Authentication Manager
+ */
 const jwt = require('jsonwebtoken')
 const verifyJWTToken = (token) => {
     return new Promise((resolve, reject) => {
