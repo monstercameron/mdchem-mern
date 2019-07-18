@@ -2,9 +2,8 @@
  * Logging Manager
  */
 const morgan = require('morgan')
-var rfs = require('rotating-file-stream')
-//const accessLogStream = fs.createWriteStream(`./logs/access.log`, { flags: 'a' })
-var accessLogStream = rfs('access.log', {
+const rfs = require('rotating-file-stream')
+const accessLogStream = rfs('access.log', {
     interval: '1d', // rotate daily
     path: `logs`
 })
