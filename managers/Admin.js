@@ -20,9 +20,9 @@ const AddAdmin = class {
     }
     validateAdmin = () => {
         // Validation TBC
-        new adminEmailExist(this.body.email, (results) => {
+        new AdminEmailExists(this.body.email, (results) => {
             if (results) {
-                return this.res.status(400).json({ result: { message: `${this.body.email} already registered` } })
+                return this.res.status(400).json({ results: { message: `${this.body.email} already registered` } })
             }
             this.primaryhash()
         })
@@ -54,10 +54,10 @@ const AddAdmin = class {
     }
     saveAdmin = () => {
         this._admin.save((err, model) => {
-            if (err) throw this.res.status(500).json({ result: { error: err } })
+            if (err) throw this.res.status(500).json({ results: { error: err } })
             // console.log(model)
             this.res.status(200).json({
-                result: { message: `Admin ${model.email} saved` }
+                results: { message: `Admin ${model.email} saved` }
             })
         })
     }
