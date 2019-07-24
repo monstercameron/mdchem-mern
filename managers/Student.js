@@ -54,9 +54,10 @@ class AddStudent {
     recoveryHash = () => {
         const {
             question,
-            recovery_password
+            answer
         } = this.body.recovery
-        new Hash(question + recovery_password, (hash) => {
+        //console.log(this.body)
+        new Hash(question + answer, (hash) => {
             this._student.recovery.hash = hash
             // console.log(this._student)
             this.saveStudent()
@@ -362,6 +363,76 @@ class Highscore {
             .limit(10)
     }
 }
+/**
+ * Reset Student Password
+ */
+class ResetStudentPassword {
+    constructor(req, res) {
+        this.body = req.body
+        this.res = res
+        this.run()
+        //res.json(this.body)
+    }
+    run = () => {
+        this.emailExists()
+    }
+    emailExists = () => {
+        new StudentEmailExists(this.body.email, (result) => {
+            if (!result) this.res.status(400).json({
+                results: {
+                    message: `user ${this.body.email} doesn't exist`
+                }
+            })
+            //console.log(result)
+            this._student = result
+            this.checkSecretQuestion()
+        })
+    }
+    checkSecretQuestion = () => {
+        const {
+            question,
+            answer
+        } = this.body
+        const {
+            hash
+        } = this._student.recovery
+        //console.log(question+answer)
+        new Compare(question + answer, hash, (result) => {
+            //console.log(`result:`, result)
+            if (result) {
+                this.generateNewHash()
+            } else {
+                this.res.status(401).json({
+                    results: {
+                        message: `Credentials did not match.`
+                    }
+                })
+            }
+        })
+    }
+    generateNewHash = () => {
+        new Hash(this.body.password, (hash) => {
+            this._student.hash = hash
+            //console.log(this._student)
+            this.updatePassword()
+        })
+    }
+    updatePassword = () => {
+        this._student.save((err, model) => {
+            if (err) throw this.res.status(500).json({
+                results: {
+                    error: err
+                }
+            })
+            // console.log(model)
+            this.res.status(200).json({
+                results: {
+                    message: `Student ${model.email} password updated!`
+                }
+            })
+        })
+    }
+}
 module.exports = {
     addStudent: AddStudent,
     deleteStudent: DeleteStudent,
@@ -373,5 +444,6 @@ module.exports = {
     findStudentByEmail: FindStudentByEmail,
     allStudentData: AllData,
     highscore: Highscore,
-    updateStudent: UpdateStudent
+    updateStudent: UpdateStudent,
+    resetStudentPassword:ResetStudentPassword
 }

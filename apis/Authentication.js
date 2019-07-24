@@ -4,7 +4,8 @@
 const router = require('express').Router()
 const {
     addStudent,
-    authenticateStudent
+    authenticateStudent,
+    resetStudentPassword
 } = require('../managers/Student')
 const {
     addAdmin,
@@ -64,12 +65,19 @@ router
         }
     })
     .post('/reset/:role', (req, res) => {
-        switch (req.params.role){
-            case 'admin': new resetAdminPassword(req, res)
-            break
-            case 'student': res.send(`wip`)
-            break
-            default: res.status(400).json({results:{message:`Please Specify a role!`}})
+        switch (req.params.role) {
+            case 'admin':
+                new resetAdminPassword(req, res)
+                break
+            case 'student':
+                new resetStudentPassword(req, res)
+                break
+            default:
+                res.status(400).json({
+                    results: {
+                        message: `Please Specify a role!`
+                    }
+                })
         }
     })
 module.exports = router

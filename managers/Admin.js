@@ -183,9 +183,10 @@ class ResetAdminPassword {
         this.body = req.body
         this.res = res
         this.run()
+        //res.json(this.body)
     }
     run = () => {
-
+        this.emailExists()
     }
     emailExists = () => {
         new AdminEmailExists(this.body.email, (result) => {
@@ -247,5 +248,5 @@ module.exports = {
     addAdmin: AddAdmin,
     authenticateAdmin: AuthenticateAdmin,
     adminEmailExist: AdminEmailExists,
-    resetAdminPassword:ResetAdminPassword
+    resetAdminPassword: ResetAdminPassword
 }
