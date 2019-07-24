@@ -4,7 +4,7 @@
   "description": "Mdchem backend server",
   "main": "server.js",
   "scripts": {
-    "test": "clear & npx jest --detectOpenHandles --config tests/jest.config.js",
+    "test": "clear & NODE_ENV=development npx jest --detectOpenHandles --config tests/jest.config.js",
     "start": "clear & npx nodemon server.js",
     "build": "clear & echo 'Installing server dependencies' & npm i & clear & echo 'Installing React dependencies' & npm i --prefix veiws & clear & echo  'Bundling  React app'  & npm run build --prefix views & clear & npm start"
   },
