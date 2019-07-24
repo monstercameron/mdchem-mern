@@ -3,13 +3,20 @@
  */
 const db = require('../managers/Database')
 const Admin = require('../models/schemas/admin')
-const { Hash, Compare } = require('../managers/Encrypt')
-const { adminEmailExist } = require('../managers/Query')
-const { createToken } = require('../managers/Authentication')
+const {
+    Hash,
+    Compare
+} = require('../managers/Encrypt')
+const {
+    adminEmailExist
+} = require('../managers/Query')
+const {
+    createToken
+} = require('../managers/Authentication')
 /**
  * Add Admin
  */
-const AddAdmin = class {
+class AddAdmin {
     constructor(req, res) {
         this.res = res
         this.body = req.body
@@ -22,7 +29,11 @@ const AddAdmin = class {
         // Validation TBC
         new AdminEmailExists(this.body.email, (results) => {
             if (results) {
-                return this.res.status(400).json({ results: { message: `${this.body.email} already registered` } })
+                return this.res.status(400).json({
+                    results: {
+                        message: `${this.body.email} already registered`
+                    }
+                })
             }
             this.primaryhash()
         })
@@ -44,7 +55,10 @@ const AddAdmin = class {
         })
     }
     recoveryHash = () => {
-        const { question, answer } = this.body.recovery
+        const {
+            question,
+            answer
+        } = this.body.recovery
         new Hash(question + answer, (hash) => {
             this._admin.recovery.hash = hash
             //console.log(this._admin)
@@ -54,10 +68,16 @@ const AddAdmin = class {
     }
     saveAdmin = () => {
         this._admin.save((err, model) => {
-            if (err) throw this.res.status(500).json({ results: { error: err } })
+            if (err) throw this.res.status(500).json({
+                results: {
+                    error: err
+                }
+            })
             // console.log(model)
             this.res.status(200).json({
-                results: { message: `Admin ${model.email} saved` }
+                results: {
+                    message: `Admin ${model.email} saved`
+                }
             })
         })
     }
@@ -79,34 +99,58 @@ class AuthenticateAdmin {
     }
     emailExists = () => {
         new AdminEmailExists(this.body.email, (result) => {
-            if (!result) this.res.status(400).json({ results: { message: `user ${this.body.email} doesn't exist` } })
+            if (!result) this.res.status(400).json({
+                results: {
+                    message: `user ${this.body.email} doesn't exist`
+                }
+            })
             //console.log(result)
             this._admin = result
             this.checkPassword()
         })
     }
     checkPassword = () => {
-        const { password } = this.body
-        const { hash } = this._admin
+        const {
+            password
+        } = this.body
+        const {
+            hash
+        } = this._admin
         new Compare(password, hash, (result) => {
             //console.log(`result:`, result)
             if (result) {
                 this.generateToken()
             } else {
-                this.res.status(401).json({ results: { message: `Credentials did not match.` } })
+                this.res.status(401).json({
+                    results: {
+                        message: `Credentials did not match.`
+                    }
+                })
             }
         })
     }
     generateToken = () => {
         const params = {
-            payload: { role: `admin` },
+            payload: {
+                role: `admin`
+            },
             options: {
                 expiresIn: 60 * 60 * 24 // 24 hours
             }
         }
         createToken(params)
-            .then(token => this.res.status(200).json({ results: { token: token, message: `Successfully Authenticated.` } }))
-            .catch(err => this.res.status(500).json({ results: { error: err, message: `There was an error.` } }))
+            .then(token => this.res.status(200).json({
+                results: {
+                    token: token,
+                    message: `Successfully Authenticated.`
+                }
+            }))
+            .catch(err => this.res.status(500).json({
+                results: {
+                    error: err,
+                    message: `There was an error.`
+                }
+            }))
     }
 }
 /**
@@ -123,14 +167,86 @@ class AdminEmailExists {
     }
     query = () => {
         const admin = db.model('admin', Admin, 'admin')
-        admin.findOne({ email: this.email }, (err, docs) => {
+        admin.findOne({
+            email: this.email
+        }, (err, docs) => {
             //console.log('email exists results:',docs)
             this.callback(docs)
+        })
+    }
+}
+/**
+ * Reset Admin Password
+ */
+class ResetAdminPassword {
+    constructor(req, res) {
+        this.body = req.body
+        this.res = res
+        this.run()
+        //res.json(this.body)
+    }
+    run = () => {
+        this.emailExists()
+    }
+    emailExists = () => {
+        new AdminEmailExists(this.body.email, (result) => {
+            if (!result) this.res.status(400).json({
+                results: {
+                    message: `user ${this.body.email} doesn't exist`
+                }
+            })
+            //console.log(result)
+            this._admin = result
+            this.checkSecretQuestion()
+        })
+    }
+    checkSecretQuestion = () => {
+        const {
+            question,
+            answer
+        } = this.body
+        const {
+            hash
+        } = this._admin.recovery
+        new Compare(question + answer, hash, (result) => {
+            //console.log(`result:`, result)
+            if (result) {
+                this.generateNewHash()
+            } else {
+                this.res.status(401).json({
+                    results: {
+                        message: `Credentials did not match.`
+                    }
+                })
+            }
+        })
+    }
+    generateNewHash = () => {
+        new Hash(this.body.password, (hash) => {
+            this._admin.hash = hash
+            //console.log(this._admin)
+            this.updatePassword()
+        })
+    }
+    updatePassword = () => {
+        this._admin.save((err, model) => {
+            if (err) throw this.res.status(500).json({
+                results: {
+                    error: err
+                }
+            })
+            // console.log(model)
+            this.res.status(200).json({
+                results: {
+                    message: `Admin ${model.email} password updated!`
+                }
+            })
         })
     }
 }
 module.exports = {
     addAdmin: AddAdmin,
     authenticateAdmin: AuthenticateAdmin,
-    adminEmailExist: AdminEmailExists
+    adminEmailExist: AdminEmailExists,
+    resetAdminPassword: ResetAdminPassword
 }

@@ -23,7 +23,7 @@ describe('Testing Auth APIs', () => {
         role: 'admin',
         password: 'password',
         recovery: {
-          question: 'test question',
+          question: 'test',
           answer: 'test'
         }
       })
@@ -68,6 +68,44 @@ describe('Testing Auth APIs', () => {
         done()
       })
   })
+  test('Resetting Admin Password', (done) => {
+    request(app)
+      .post(`/api/auth/reset/admin`)
+      .send({
+        email: 'test@test.com',
+        question: 'test',
+        answer: 'test',
+        password: 'new password'
+      })
+      .then(res => {
+        //console.log(res.body)
+        const {
+          message
+        } = res.body.results
+        expect(res.body.results.message)
+          .toEqual(`Admin test@test.com password updated!`)
+        done()
+      })
+  })
+  test('Logging in Admin After Password Reset', (done) => {
+    request(app)
+      .post('/api/auth/login/admin')
+      .send({
+        email: 'test@test.com',
+        password: 'new password'
+      })
+      .then(res => {
+        const {
+          message,
+          token: jwt
+        } = res.body.results
+        //console.log(res.body.results)
+        token = jwt
+        expect(message)
+          .toEqual(`Successfully Authenticated.`)
+        done()
+      })
+  })
   test('Registering Student', (done) => {
     request(app)
       .post('/api/auth/register/student')
@@ -76,14 +114,15 @@ describe('Testing Auth APIs', () => {
         password: 'password',
         role: 'student',
         recovery: {
-          question: 'test question'
+          question: 'test',
+          answer:'test'
         },
         meta: {
           group: 'test group'
         }
       })
       .expect(res => {
-        //console.log(res.body.result)
+        //console.log(res.body)
       })
       .expect(200, {
         results: {
@@ -103,7 +142,7 @@ describe('Testing Auth APIs', () => {
           message,
           token: jwt
         } = res.body.results
-        //console.log(res.body.results)
+        //console.log(res.body)
         token = jwt
         expect(message)
           .toEqual(`Successfully Authenticated.`)
@@ -120,6 +159,44 @@ describe('Testing Auth APIs', () => {
         } = res.body.results
         expect(res.body.results.message)
           .toEqual(false)
+        done()
+      })
+  })
+  test('Resetting Student Password', (done) => {
+    request(app)
+      .post(`/api/auth/reset/student`)
+      .send({
+        email: 'test@test.com',
+        question: 'test',
+        answer:'test',
+        password: 'new password'
+      })
+      .then(res => {
+        //console.log(res.body)
+        const {
+          message
+        } = res.body.results
+        expect(res.body.results.message)
+          .toEqual(`Student test@test.com password updated!`)
+        done()
+      })
+  })
+  test('Logging in Student After Password Reset', (done) => {
+    request(app)
+      .post('/api/auth/login/student')
+      .send({
+        email: 'test@test.com',
+        password: 'new password'
+      })
+      .then(res => {
+        const {
+          message,
+          token: jwt
+        } = res.body.results
+        //console.log(res.body.results)
+        token = jwt
+        expect(message)
+          .toEqual(`Successfully Authenticated.`)
         done()
       })
   })
