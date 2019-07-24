@@ -12,7 +12,7 @@ const Player = require('./Player')
 const Players = require('./Players')
 //const Test = require('./Testing')
 router.use('/auth', Auth)
-router.use('/admin', isAuthAdmin, Admin)
+router.use('/admin',/*isAuthAdmin,*/Admin)  // needs to add token checking middle ware
 router.use('/feed', isAuthAdmin, Feed)
 router.use('/message', isAuthAdmin, Msg)
 router.use('/player', isAuthStudent, Player)

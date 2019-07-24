@@ -11,7 +11,7 @@ const create = class {
     }
     run = () => {
         this.build()
-        this.validate()
+        //this.validate()
         this.save()
     }
     build = () => {

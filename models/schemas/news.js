@@ -2,7 +2,7 @@
  * News Feed Schema
  */
 module.exports = require('mongoose').Schema({
-    date: Object,
+    date: String,
     sender: String,
     message: String
 })

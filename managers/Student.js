@@ -3,8 +3,13 @@
  */
 const db = require('./Database')
 const Student = require('../models/schemas/student')
-const { Hash, Compare } = require('../managers/Encrypt')
-const { createToken } = require('../managers/Authentication')
+const {
+    Hash,
+    Compare
+} = require('../managers/Encrypt')
+const {
+    createToken
+} = require('../managers/Authentication')
 /**
  * Add new Student to the database
  */
@@ -20,7 +25,11 @@ class AddStudent {
     validateStudent = () => {
         // only email validation done  so far, other  validation TBC
         new StudentEmailExists(this.body.email, (results) => {
-            if (results) return this.res.status(200).json({ results: { message: `${this.body.email} already exists` } })
+            if (results) return this.res.status(200).json({
+                results: {
+                    message: `${this.body.email} already exists`
+                }
+            })
             this.primaryhash()
         })
     }
@@ -43,7 +52,10 @@ class AddStudent {
         })
     }
     recoveryHash = () => {
-        const { question, recovery_password } = this.body.recovery
+        const {
+            question,
+            recovery_password
+        } = this.body.recovery
         new Hash(question + recovery_password, (hash) => {
             this._student.recovery.hash = hash
             // console.log(this._student)
@@ -54,7 +66,11 @@ class AddStudent {
         this._student.save((err, model) => {
             // console.log(model)
             if (err) throw err
-            this.res.json({ results: { message: `Student ${model.email} saved` } })
+            this.res.json({
+                results: {
+                    message: `Student ${model.email} saved`
+                }
+            })
         })
     }
 }
@@ -72,7 +88,11 @@ class DeleteStudent {
     }
     delete = () => {
         new findByEmail(this.body.email, (result) => {
-            this.res.json({ result: { message: `Student Deleted` } })
+            this.res.json({
+                results: {
+                    message: `Student Deleted`
+                }
+            })
         })
     }
 }
@@ -92,12 +112,21 @@ class UpdateStudent {
     update = () => {
         new FindStudentById(this.req, this.res, (result) => {
             const updatedData = this.body.data
-            let { data } = result
+            let {
+                data
+            } = result
             let newData
             if (!data) newData = updatedData
             else newData = Object.assign(data, updatedData)
-            result.updateOne({ data: newData }, (err, result) => {
-                this.res.json({ result: { message: 'model updated', updated: result } })
+            result.updateOne({
+                data: newData
+            }, (err, result) => {
+                this.res.json({
+                    results: {
+                        message: 'model updated',
+                        updated: result
+                    }
+                })
             })
         })
     }
@@ -119,34 +148,58 @@ class AuthenticateStudent {
     }
     emailExists = () => {
         new StudentEmailExists(this.body.email, (result) => {
-            if (!result) return this.res.status(400).json({ results: { message: `user ${this.body.email} doesn't exist` } })
+            if (!result) return this.res.status(400).json({
+                results: {
+                    message: `user ${this.body.email} doesn't exist`
+                }
+            })
             //console.log(result)
             this._student = result
             this.checkPassword()
         })
     }
     checkPassword = () => {
-        const { password } = this.body
-        const { hash } = this._student
+        const {
+            password
+        } = this.body
+        const {
+            hash
+        } = this._student
         new Compare(password, hash, (result) => {
             //console.log(`result:`, result)
             if (result) {
                 this.generateToken()
             } else {
-                this.res.status(403).json({ results: { message: `Credentials did not match.` } })
+                this.res.status(403).json({
+                    results: {
+                        message: `Credentials did not match.`
+                    }
+                })
             }
         })
     }
     generateToken = () => {
         const params = {
-            payload: { role: `student` },
+            payload: {
+                role: `student`
+            },
             options: {
                 expiresIn: 60 * 15 // 15 minutes
             }
         }
         createToken(params)
-            .then(token => this.res.status(200).json({ results: { token: token, message: `Successfully Authenticated.` } }))
-            .catch(err => this.res.status(500).json({ results: { error: err, message: `There was an error.` } }))
+            .then(token => this.res.status(200).json({
+                results: {
+                    token: token,
+                    message: `Successfully Authenticated.`
+                }
+            }))
+            .catch(err => this.res.status(500).json({
+                results: {
+                    error: err,
+                    message: `There was an error.`
+                }
+            }))
     }
 }
 /**
@@ -165,7 +218,11 @@ class CountStudent {
         const student = db.model('student', Student, 'students');
         student.countDocuments({}, (err, count) => {
             if (err) throw err
-            this.res.json({ results: { count: count } })
+            this.res.json({
+                results: {
+                    count: count
+                }
+            })
         })
     }
 }
@@ -182,11 +239,17 @@ class FindAllStudents {
         this.find()
     }
     find = () => {
-        const { filter } = this.req
+        const {
+            filter
+        } = this.req
         const student = db.model('student', Student, 'students')
         student.find({}, (err, docs) => {
             if (err) throw err
-            this.res.status(200).json({ results: { students: docs } })
+            this.res.status(200).json({
+                results: {
+                    students: docs
+                }
+            })
         }).select(filter)
     }
 }
@@ -204,14 +267,16 @@ class StudentEmailExists {
     }
     query = () => {
         const student = db.model('student', Student, 'students')
-        student.findOne({ email: this.email }, (err, docs) => {
+        student.findOne({
+            email: this.email
+        }, (err, docs) => {
             this.callback(docs)
         })
     }
 }
 /**
-* Query student via unique key / id
-*/
+ * Query student via unique key / id
+ */
 class FindStudentById {
     constructor(req, res, callback) {
         this.id = req.body.id
@@ -226,13 +291,17 @@ class FindStudentById {
         const student = db.model('student', Student, 'students')
         student.findById(this.id, (err, docs) => {
             if (typeof this.callback === 'function') this.callback(docs)
-            else this.res.json({ result: { students: docs } })
+            else this.res.json({
+                results: {
+                    students: docs
+                }
+            })
         }).select('-hash -recovery')
     }
 }
 /**
-* Query student via email address
-*/
+ * Query student via email address
+ */
 class FindStudentByEmail {
     constructor(body, callback) {
         this.find(body.email, callback)
@@ -277,13 +346,19 @@ class Highscore {
     getHighscore = () => {
         const student = db.model('student', Student, 'test')
         student.find({}, (err, highscores) => {
-            if (err) throw err
-            //console.log(docs)
-            this.res.json({ results: { highscores: highscores } })
-        })
+                if (err) throw err
+                //console.log(docs)
+                this.res.json({
+                    results: {
+                        highscores: highscores
+                    }
+                })
+            })
             .select('score')
             .select('email')
-            .sort({ score: -1 })
+            .sort({
+                score: -1
+            })
             .limit(10)
     }
 }
