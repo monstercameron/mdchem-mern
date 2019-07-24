@@ -10,7 +10,7 @@ module.exports = class HighScoreUpdate {
     update = () => {
         new allStudentData((students) => {
             console.log(`Updating ${students.length} students hichscores`)
-            students.forEach(student => {
+            for(student of students){
                 //console.log(student)
                 let score = 0
                 if (student.data) {
@@ -22,7 +22,7 @@ module.exports = class HighScoreUpdate {
                 student.updateOne({ score: score }, () => {
                     //console.log('updated!')
                 })
-            });
+            }
         })
     }
 }
