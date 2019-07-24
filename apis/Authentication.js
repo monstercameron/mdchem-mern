@@ -8,7 +8,8 @@ const {
 } = require('../managers/Student')
 const {
     addAdmin,
-    authenticateAdmin
+    authenticateAdmin,
+    resetAdminPassword
 } = require('../managers/Admin')
 const {
     verifyToken
@@ -60,6 +61,15 @@ router
                     message: `There was a problem with the selected role`
                 })
                 break
+        }
+    })
+    .post('/reset/:role', (req, res) => {
+        switch (req.params.role){
+            case 'admin': new resetAdminPassword(req, res)
+            break
+            case 'student': res.send(`wip`)
+            break
+            default: res.status(400).json({results:{message:`Please Specify a role!`}})
         }
     })
 module.exports = router
