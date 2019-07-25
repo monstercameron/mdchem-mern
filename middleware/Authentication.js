@@ -3,7 +3,7 @@
  */
 const { verifyToken } = require('../managers/Authentication')
 const isAuthenticatedAdmin = (req, res, next) => {
-    verifyToken(req.headers.authorization)
+    verifyToken(req.cookies.headers)
         .then(decoded => {
             if (decoded.role === 'admin') next()
             else res.status(401).json({ message: `Unauthorized.` })

@@ -26,7 +26,24 @@ import {
 } from "reactstrap";
 // core components
 import Header from "components/Headers/Header.jsx";
+import axios from 'axios'
 class Tables extends React.Component {
+  testCookieFetch = () => {
+    axios({
+      url: `http://localhost:8080/api/admin`,
+      method: 'get',
+      headers: {
+        // 'Credentials':'include',
+        // 'Access-Control-Allow-Credentials': true
+      },
+      withCredentials: true,
+      data: {}
+  })
+    .then(res => console.log(res))
+  }
+  componentWillMount = () => {
+    this.testCookieFetch()
+  }
   render() {
     return (
       <>
