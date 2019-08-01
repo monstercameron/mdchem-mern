@@ -449,5 +449,5 @@ module.exports = {
     allStudentData: AllData,
     highscore: Highscore,
     updateStudent: UpdateStudent,
-    resetStudentPassword:ResetStudentPassword
+    resetStudentPassword: ResetStudentPassword
 }

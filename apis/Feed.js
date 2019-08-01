@@ -2,7 +2,12 @@
  * News Feed Route
  */
 const router = require('express').Router()
-const { create, read, update, deletion } = require('../managers/News')
+const {
+    create,
+    read,
+    update,
+    deletion
+} = require('../managers/News')
 router
     .post('/', (req, res) => {
         new create(req, res)

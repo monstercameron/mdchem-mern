@@ -30,7 +30,7 @@ import axios from 'axios'
 class Tables extends React.Component {
   testCookieFetch = () => {
     axios({
-      url: `http://localhost:8080/api/admin`,
+      url: `${process.env.LOCAL_URL}/api/admin`,
       method: 'get',
       headers: {
         // 'Credentials':'include',
@@ -38,8 +38,8 @@ class Tables extends React.Component {
       },
       withCredentials: true,
       data: {}
-  })
-    .then(res => console.log(res))
+    })
+      .then(res => console.log(res))
   }
   componentWillMount = () => {
     this.testCookieFetch()

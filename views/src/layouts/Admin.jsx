@@ -43,7 +43,7 @@ class Admin extends React.Component {
     if (!token) {
       console.warn('User Must Authenticate!')
       this.setState({ auth: false })
-    }else if (localStorage.getItem('exp') < new Date().getTime()) {
+    } else if (localStorage.getItem('exp') < new Date().getTime()) {
       console.warn('Token Expired, User Must Re-Authenticate!')
       localStorage.removeItem('token')
       localStorage.removeItem('exp')

@@ -3,11 +3,9 @@
  */
 const path = require('path')
 const isWebPageRequest = (req, res, next) => {
-    if(req.url.includes('api')){
+    if (req.url.includes('api') || req.url.includes('media')) {
         next()
-    }else if(req.url.includes('media')){
-        next()
-    }else{
+    } else {
         res.sendFile(path.join(__dirname, '../views/build/index.html'))
     }
 }

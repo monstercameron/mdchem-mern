@@ -10,7 +10,9 @@ router
         const aUser = new user({
             fname: req.query.fname,
             lname: req.query.lname,
-            has:{car:true}
+            has: {
+                car: true
+            }
         })
         //console.log(aUser)
         aUser.save((err, model) => {
@@ -26,9 +28,17 @@ router
 
 router
     .get('/search', (req, res) => {
-        const { fname, lname, all } = req.query
+        const {
+            fname,
+            lname,
+            all
+        } = req.query
         let user = db.model('user', schemas.user.model, 'test');
-        user.find(all ? {} : {has:{car:true}}, (err, docs) => {
+        user.find(all ? {} : {
+            has: {
+                car: true
+            }
+        }, (err, docs) => {
             console.log(docs)
             docs.length > 0 ? res.json(docs) : res.json({
                 message: `no users found with first name: ${fname}`

@@ -22,13 +22,16 @@ const create = class {
             message: this.body.message
         })
     }
-    validate = () => {
-    }
+    validate = () => {}
     save = () => {
         this._news.save((err, model) => {
             if (err) throw err
             //console.log(model)
-            this.res.json({ result: { message: `news item saved` } })
+            this.res.json({
+                result: {
+                    message: `news item saved`
+                }
+            })
         })
     }
 }
@@ -46,7 +49,9 @@ const read = class {
         const news = db.model('news', Feed, 'news')
         news.find({}, (err, docs) => {
             //  console.log(docs)
-            this.res.json({ resuls: docs })
+            this.res.json({
+                resuls: docs
+            })
         })
     }
 }
@@ -63,8 +68,14 @@ const update = class {
         const news = db.model('news', Feed, 'news')
         news.findById(this.body.id, (err, model) => {
             if (err) throw err
-            model.updateOne({ message: this.body.message }, () => {
-                this.res.json({ result: { message: `${this.body.id} was updated` } })
+            model.updateOne({
+                message: this.body.message
+            }, () => {
+                this.res.json({
+                    result: {
+                        message: `${this.body.id} was updated`
+                    }
+                })
             })
         })
     }
@@ -81,7 +92,11 @@ const deletion = class {
     findAndDelete = () => {
         const news = db.model('news', Feed, 'news')
         news.findByIdAndDelete(this.body.id, (err, model) => {
-            this.res.json({ result: { message: `${this.body.id} was deleted` } })
+            this.res.json({
+                result: {
+                    message: `${this.body.id} was deleted`
+                }
+            })
         })
     }
 }

@@ -115,7 +115,7 @@ class Register extends React.Component {
       const form = this.buildRegistrationRequestForm()
       axios({
         method: 'post',
-        url: 'http://localhost:8080/api/auth/register/admin',
+        url: `${process.env.LOCAL_URL}/api/auth/register/admin`,
         headers: {},
         data: form
       })
