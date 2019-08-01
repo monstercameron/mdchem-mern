@@ -86,7 +86,7 @@ class Login extends React.Component {
     const form = this.buildLoginRequestForm()
     if (this.validate()) {
       axios({
-        url: `${process.env.LOCAL_URL}/api/auth/login/admin`,
+        url: `localhost:8080/api/auth/login/admin`,
         method: 'post',
         withCredentials: true,
         data: form
