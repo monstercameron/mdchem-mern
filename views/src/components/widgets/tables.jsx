@@ -14,14 +14,10 @@ class Table extends Component {
         this.fetchData()
     }
     fetchData = () => {
-        const token = localStorage.getItem('token')
         axios({
             url: `${url.testing}/api/players/list`,
             method: 'get',
-            headers: {
-                authorization: token
-            },
-            data: {}
+            withCredentials: true
         })
             .then(response => {
                 console.log(response.data)

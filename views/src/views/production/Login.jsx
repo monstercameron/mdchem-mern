@@ -88,13 +88,13 @@ class Login extends React.Component {
       axios({
         url: `http://localhost:8080/api/auth/login/admin`,
         method: 'post',
+        withCredentials: true,
         data: form
       })
         .then(response => {
           console.log(response)
           if (this.state.remember) {
-            localStorage.setItem('email', form.email);
-            localStorage.setItem('token', response.data.results.token);
+            localStorage.setItem('email', form.email)
             localStorage.setItem('exp', new Date().getTime() + 3600000 /* 1 hour */)
           } else {
             localStorage.removeItem('email');
