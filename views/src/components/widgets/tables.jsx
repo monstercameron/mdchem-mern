@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { MDBDataTable } from 'mdbreact';
-import { linode } from '../../variables/url'
+import React, { Component } from 'react'
+import { MDBDataTable } from 'mdbreact'
+import URL from '../../variables/url'
 import axios from "axios"
 class Table extends Component {
     constructor(props) {
@@ -10,12 +10,12 @@ class Table extends Component {
         }
     }
     componentWillMount = () => {
-        this.setState({ url: url.testing })
+        this.setState({ url: URL.linode })
         this.fetchData()
     }
     fetchData = () => {
         axios({
-            url: `${linode}/api/players/list`,
+            url: `${URL.linode}/api/players/list`,
             method: 'get',
             withCredentials: true
         })

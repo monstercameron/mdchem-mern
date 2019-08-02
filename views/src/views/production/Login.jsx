@@ -19,7 +19,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import axios from 'axios'
 import emailValidator from "email-validator"
-import { linode } from '../../variables/url'
+import URL from '../../variables/url'
 // reactstrap components
 import {
   Button,
@@ -87,7 +87,7 @@ class Login extends React.Component {
     const form = this.buildLoginRequestForm()
     if (this.validate()) {
       axios({
-        url: `${linode}/api/auth/login/admin`,
+        url: `${URL.linode}/api/auth/login/admin`,
         method: 'post',
         withCredentials: true,
         data: form
