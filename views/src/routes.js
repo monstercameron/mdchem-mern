@@ -16,11 +16,11 @@
 
 */
 import Index from "views/Index.jsx";
-import Profile from "views/examples/Profile.jsx";
-import Maps from "views/examples/Maps.jsx";
+// import Profile from "views/examples/Profile.jsx";
+// import Maps from "views/examples/Maps.jsx";
 import Register from "views/production/Register.jsx";
 import Login from "views/production/Login.jsx";
-import Tables from "views/examples/Tables.jsx";
+// import Tables from "views/examples/Tables.jsx";
 import Students from "views/production/Students.jsx";
 import SingleStudent from "views/production/SingleStudent.jsx";
 import Icons from "views/examples/Icons.jsx";
@@ -40,27 +40,27 @@ var routes = [
     component: Icons,
     layout: "/admin"
   },
-  {
-    path: "/maps",
-    name: "Maps",
-    icon: "ni ni-pin-3 text-orange",
-    component: Maps,
-    layout: "/admin"
-  },
-  {
-    path: "/user-profile",
-    name: "User Profile",
-    icon: "ni ni-single-02 text-yellow",
-    component: Profile,
-    layout: "/admin"
-  },
-  {
-    path: "/tables",
-    name: "Tables",
-    icon: "ni ni-bullet-list-67 text-red",
-    component: Tables,
-    layout: "/admin"
-  },
+  // {
+  //   path: "/maps",
+  //   name: "Maps",
+  //   icon: "ni ni-pin-3 text-orange",
+  //   component: Maps,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/user-profile",
+  //   name: "User Profile",
+  //   icon: "ni ni-single-02 text-yellow",
+  //   component: Profile,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/tables",
+  //   name: "Tables",
+  //   icon: "ni ni-bullet-list-67 text-red",
+  //   component: Tables,
+  //   layout: "/admin"
+  // },
   {
     path: "/student",
     name: "Student",

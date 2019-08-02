@@ -245,7 +245,11 @@ class FindAllStudents {
         } = this.req
         const student = db.model('student', Student, 'students')
         student.find({}, (err, docs) => {
-            if (err) throw err
+            if (err) this.res.status(400).json({
+                results: {
+                    students: docs
+                }
+            })
             this.res.status(200).json({
                 results: {
                     students: docs
@@ -445,5 +449,5 @@ module.exports = {
     allStudentData: AllData,
     highscore: Highscore,
     updateStudent: UpdateStudent,
-    resetStudentPassword:ResetStudentPassword
+    resetStudentPassword: ResetStudentPassword
 }

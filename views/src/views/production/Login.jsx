@@ -88,13 +88,15 @@ class Login extends React.Component {
       axios({
         url: `http://localhost:8080/api/auth/login/admin`,
         method: 'post',
+        withCredentials: true,
         data: form
       })
         .then(response => {
           console.log(response)
+          localStorage.setItem('temp', form.email)
           if (this.state.remember) {
-            localStorage.setItem('email', form.email);
-            localStorage.setItem('token', response.data.results.token);
+            localStorage.setItem('token', 'it\'s in the cookies')
+            localStorage.setItem('email', form.email)
             localStorage.setItem('exp', new Date().getTime() + 3600000 /* 1 hour */)
           } else {
             localStorage.removeItem('email');
@@ -106,8 +108,8 @@ class Login extends React.Component {
   }
   redirect = () => {
     let { redirect } = this.state
-    if (redirect.includes(':3000')) {
-      redirect = redirect.split(':3000')
+    if (redirect.includes(':3002')) {
+      redirect = redirect.split(':3002')
       return <Redirect to={redirect[1]} />
     }
     return <Redirect to={redirect} />

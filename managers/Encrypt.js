@@ -2,13 +2,12 @@
  * Encryption Manager
  */
 const bcrypt = require('bcrypt')
-const saltRounds = 10;
 class Hash {
     constructor(passwordText, callback) {
         this.getHash(passwordText, callback)
     }
     getHash = (password, callback) => {
-        bcrypt.genSalt(saltRounds, function (err, salt) {
+        bcrypt.genSalt(process.env.TOKEN_SALT_ROUNDS, function (err, salt) {
             bcrypt.hash(password, salt, function (err, hash) {
                 // Store hash in your password DB.
                 callback(hash)

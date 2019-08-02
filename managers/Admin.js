@@ -139,12 +139,16 @@ class AuthenticateAdmin {
             }
         }
         createToken(params)
-            .then(token => this.res.status(200).json({
-                results: {
-                    token: token,
-                    message: `Successfully Authenticated.`
-                }
-            }))
+            .then(token => this.res.status(200)
+                .cookie('token', token, {
+                    maxAge: 1000 * 60 * 60 * 12 /* 12 hours */ ,
+                    httpOnly: true
+                })
+                .json({
+                    results: {
+                        message: `Successfully Authenticated.`
+                    }
+                }))
             .catch(err => this.res.status(500).json({
                 results: {
                     error: err,
