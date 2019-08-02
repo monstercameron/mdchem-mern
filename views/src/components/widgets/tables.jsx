@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { MDBDataTable } from 'mdbreact';
-import url from "../../variables/url.js"
+import { linode } from '../../variables/url'
 import axios from "axios"
 class Table extends Component {
     constructor(props) {
@@ -15,7 +15,7 @@ class Table extends Component {
     }
     fetchData = () => {
         axios({
-            url: `${url.testing}/api/players/list`,
+            url: `${linode}/api/players/list`,
             method: 'get',
             withCredentials: true
         })
