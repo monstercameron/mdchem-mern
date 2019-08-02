@@ -56,14 +56,19 @@ class Auth extends React.Component {
           <div className="header bg-gradient-info py-7 py-lg-8">
             <Container>
               <div className="header-body text-center mb-7">
+                <Row>
+                  <Col lg="5" className='mx-auto'>
+                    <img src={require('../assets/img/brand/logo.png')} alt='MDChem' className='d-block img-fluid' />
+                  </Col>
+                </Row>
                 <Row className="justify-content-center">
-                  <Col lg="5" md="6">
+                  <Col lg="5" md="6" className='rounded border mt-5' style={{backgroundColor:'rgba(0,0,0,.5)'}}>
                     <h1 className="text-white">Welcome!</h1>
                     <p className="text-lead text-light">
-                    Students will learn chemistry concepts such as names of elements,
-                     ions and compounds. As students progress through each level the
-                      challenges become more and more intense. You will need all your
-                       concentration to master MDChem.
+                      Students will learn chemistry concepts such as names of elements,
+                       ions and compounds. As students progress through each level the
+                        challenges become more and more intense. You will need all your
+                         concentration to master MDChem.
                     </p>
                   </Col>
                 </Row>

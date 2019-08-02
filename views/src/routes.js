@@ -16,11 +16,11 @@
 
 */
 import Index from "views/Index.jsx";
-import Profile from "views/examples/Profile.jsx";
-import Maps from "views/examples/Maps.jsx";
+// import Profile from "views/examples/Profile.jsx";
+// import Maps from "views/examples/Maps.jsx";
 import Register from "views/production/Register.jsx";
 import Login from "views/production/Login.jsx";
-import Tables from "views/examples/Tables.jsx";
+// import Tables from "views/examples/Tables.jsx";
 import Students from "views/production/Students.jsx";
 import SingleStudent from "views/production/SingleStudent.jsx";
 import Icons from "views/examples/Icons.jsx";

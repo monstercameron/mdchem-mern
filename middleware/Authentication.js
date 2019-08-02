@@ -5,7 +5,7 @@ const {
     verifyToken
 } = require('../managers/Authentication')
 const isAuthenticatedAdmin = (req, res, next) => {
-    verifyToken(req.cookies.headers)
+    verifyToken(req.cookies.token)
         .then(decoded => {
             if (decoded.role === 'admin') next()
             else res.status(401).json({
@@ -20,7 +20,7 @@ const isAuthenticatedAdmin = (req, res, next) => {
         }))
 }
 const isAuthenticatedStudent = (req, res, next) => {
-    verifyToken(req.headers.authorization)
+    verifyToken(req.cookies.token)
         .then(decoded => {
             if (decoded.role === 'student' || decoded.role === 'admin') next()
             else res.status(401).json({
