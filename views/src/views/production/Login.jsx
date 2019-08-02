@@ -19,6 +19,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import axios from 'axios'
 import emailValidator from "email-validator"
+import { linode } from '../../variables/url'
 // reactstrap components
 import {
   Button,
@@ -86,7 +87,7 @@ class Login extends React.Component {
     const form = this.buildLoginRequestForm()
     if (this.validate()) {
       axios({
-        url: `http://localhost:8080/api/auth/login/admin`,
+        url: `${linode}/api/auth/login/admin`,
         method: 'post',
         withCredentials: true,
         data: form
@@ -108,8 +109,8 @@ class Login extends React.Component {
   }
   redirect = () => {
     let { redirect } = this.state
-    if (redirect.includes(':3002')) {
-      redirect = redirect.split(':3002')
+    if (redirect.includes(':8080')) {
+      redirect = redirect.split(':8080')
       return <Redirect to={redirect[1]} />
     }
     return <Redirect to={redirect} />
