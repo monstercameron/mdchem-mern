@@ -86,7 +86,7 @@ class Login extends React.Component {
     const form = this.buildLoginRequestForm()
     if (this.validate()) {
       axios({
-        url: `http://localhost:8080/api/auth/login/admin`,
+        url: `http://192.168.1.105:3002/api/auth/login/admin`,
         method: 'post',
         withCredentials: true,
         data: form
@@ -103,7 +103,9 @@ class Login extends React.Component {
           }
           this.setState({ redirect: '/admin/index' })
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err.response)
+        })
     }
   }
   redirect = () => {

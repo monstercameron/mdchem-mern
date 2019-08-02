@@ -41,6 +41,7 @@ router
                 new authenticateStudent(req, res)
                 break
             case 'admin':
+                console.log('recvd')
                 new authenticateAdmin(req, res)
                 break
             default:
