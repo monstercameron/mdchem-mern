@@ -18,6 +18,7 @@
 import React from "react";
 import { Redirect } from "react-router-dom"
 import questions from "../../variables/SecurityQuestions"
+import URL from '../../variables/url'
 import zxcvbn from "zxcvbn"
 import axios from "axios"
 // reactstrap components
@@ -115,7 +116,7 @@ class Register extends React.Component {
       const form = this.buildRegistrationRequestForm()
       axios({
         method: 'post',
-        url: `http://localhost:8080/api/auth/register/admin`,
+        url: `${URL.testing}/api/auth/register/admin`,
         headers: {},
         data: form
       })

@@ -19,8 +19,42 @@ import React from "react";
 
 // reactstrap components
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
-
+import URL from '../../variables/url'
+import axios from 'axios'
 class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      student: {
+        avg: {
+          score: 999
+        },
+        count: 0,
+        class: 0,
+        completion:50
+      }
+    }
+  }
+
+
+  componentWillMount = () => {
+    //console.log(URL.testing)
+    this.studentCount()
+  }
+
+  studentCount = () => {
+    if (!this.state.student.count > 0) {
+      axios({
+        url: `${URL.testing}/api/players/count`,
+        method: 'get',
+        withCredentials: true
+      })
+        .then(res => {
+          this.setState({ student: Object.assign(this.state.student, {count:res.data.results.count}) })
+        })
+        .catch(err => console.log(err.response))
+    }
+  }
   render() {
     return (
       <>
@@ -38,10 +72,10 @@ class Header extends React.Component {
                             tag="h5"
                             className="text-uppercase text-muted mb-0"
                           >
-                            Traffic
+                            Average Score
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                            350,897
+                            {this.state.student.avg.score}
                           </span>
                         </div>
                         <Col className="col-auto">
@@ -50,12 +84,12 @@ class Header extends React.Component {
                           </div>
                         </Col>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
+                      {/* <p className="mt-3 mb-0 text-muted text-sm">
                         <span className="text-success mr-2">
                           <i className="fa fa-arrow-up" /> 3.48%
                         </span>{" "}
                         <span className="text-nowrap">Since last month</span>
-                      </p>
+                      </p> */}
                     </CardBody>
                   </Card>
                 </Col>
@@ -68,10 +102,10 @@ class Header extends React.Component {
                             tag="h5"
                             className="text-uppercase text-muted mb-0"
                           >
-                            New users
+                            Students
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                            2,356
+                            {this.state.student.count}
                           </span>
                         </div>
                         <Col className="col-auto">
@@ -80,12 +114,12 @@ class Header extends React.Component {
                           </div>
                         </Col>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
+                      {/* <p className="mt-3 mb-0 text-muted text-sm">
                         <span className="text-danger mr-2">
                           <i className="fas fa-arrow-down" /> 3.48%
                         </span>{" "}
                         <span className="text-nowrap">Since last week</span>
-                      </p>
+                      </p> */}
                     </CardBody>
                   </Card>
                 </Col>
@@ -98,9 +132,9 @@ class Header extends React.Component {
                             tag="h5"
                             className="text-uppercase text-muted mb-0"
                           >
-                            Sales
+                            Classes
                           </CardTitle>
-                          <span className="h2 font-weight-bold mb-0">924</span>
+                          <span className="h2 font-weight-bold mb-0">{this.state.student.class}</span>
                         </div>
                         <Col className="col-auto">
                           <div className="icon icon-shape bg-yellow text-white rounded-circle shadow">
@@ -108,12 +142,12 @@ class Header extends React.Component {
                           </div>
                         </Col>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
+                      {/* <p className="mt-3 mb-0 text-muted text-sm">
                         <span className="text-warning mr-2">
                           <i className="fas fa-arrow-down" /> 1.10%
                         </span>{" "}
                         <span className="text-nowrap">Since yesterday</span>
-                      </p>
+                      </p> */}
                     </CardBody>
                   </Card>
                 </Col>
@@ -126,10 +160,10 @@ class Header extends React.Component {
                             tag="h5"
                             className="text-uppercase text-muted mb-0"
                           >
-                            Performance
+                            Completion
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                            49,65%
+                            {this.state.student.completion}
                           </span>
                         </div>
                         <Col className="col-auto">
@@ -138,12 +172,12 @@ class Header extends React.Component {
                           </div>
                         </Col>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
+                      {/* <p className="mt-3 mb-0 text-muted text-sm">
                         <span className="text-success mr-2">
                           <i className="fas fa-arrow-up" /> 12%
                         </span>{" "}
                         <span className="text-nowrap">Since last month</span>
-                      </p>
+                      </p> */}
                     </CardBody>
                   </Card>
                 </Col>

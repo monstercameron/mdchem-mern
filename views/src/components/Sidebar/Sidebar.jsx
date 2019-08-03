@@ -81,19 +81,22 @@ class Sidebar extends React.Component {
   // creates the links that appear in the left menu / Sidebar
   createLinks = routes => {
     return routes.map((prop, key) => {
-      return (
-        <NavItem key={key}>
-          <NavLink
-            to={prop.layout + prop.path}
-            tag={NavLinkRRD}
-            onClick={this.closeCollapse}
-            activeClassName="active"
-          >
-            <i className={prop.icon} />
-            {prop.name}
-          </NavLink>
-        </NavItem>
-      );
+      if (prop.layout === '/admin') {
+        return (
+          <NavItem key={key}>
+            <NavLink
+              to={prop.layout + prop.path}
+              tag={NavLinkRRD}
+              onClick={this.closeCollapse}
+              activeClassName="active"
+            >
+              <i className={prop.icon} />
+              {prop.name}
+            </NavLink>
+          </NavItem>
+        )
+      }
+
     });
   };
   render() {
@@ -203,10 +206,10 @@ class Sidebar extends React.Component {
                         <img alt={logo.imgAlt} src={logo.imgSrc} />
                       </Link>
                     ) : (
-                      <a href={logo.outterLink}>
-                        <img alt={logo.imgAlt} src={logo.imgSrc} />
-                      </a>
-                    )}
+                        <a href={logo.outterLink}>
+                          <img alt={logo.imgAlt} src={logo.imgSrc} />
+                        </a>
+                      )}
                   </Col>
                 ) : null}
                 <Col className="collapse-close" xs="6">
@@ -242,10 +245,10 @@ class Sidebar extends React.Component {
             {/* Divider */}
             <hr className="my-3" />
             {/* Heading */}
-            <h6 className="navbar-heading text-muted">Documentation</h6>
+            {/* <h6 className="navbar-heading text-muted">Documentation</h6> */}
             {/* Navigation */}
-            <Nav className="mb-md-3" navbar>
-              <NavItem>
+            {/* <Nav className="mb-md-3" navbar> */}
+            {/* <NavItem>
                 <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/documentation/overview?ref=adr-admin-sidebar">
                   <i className="ni ni-spaceship" />
                   Getting started
@@ -262,8 +265,8 @@ class Sidebar extends React.Component {
                   <i className="ni ni-ui-04" />
                   Components
                 </NavLink>
-              </NavItem>
-            </Nav>
+              </NavItem> */}
+            {/* </Nav> */}
           </Collapse>
         </Container>
       </Navbar>

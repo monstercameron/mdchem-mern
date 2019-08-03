@@ -15,37 +15,29 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import React from "react"
+import { Route, Switch, Redirect } from "react-router-dom"
 // reactstrap components
-import { Container } from "reactstrap";
+import { Container } from "reactstrap"
 // core components
-import AdminNavbar from "components/Navbars/AdminNavbar.jsx";
-import AdminFooter from "components/Footers/AdminFooter.jsx";
-import Sidebar from "components/Sidebar/Sidebar.jsx";
-
-import routes from "routes.js";
+import AdminNavbar from "components/Navbars/AdminNavbar.jsx"
+import AdminFooter from "components/Footers/AdminFooter.jsx"
+import Sidebar from "components/Sidebar/Sidebar.jsx"
+import routes from "routes.js"
 
 class Admin extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      auth: null
-    }
+    this.state = {}
   }
   componentDidUpdate(e) {
-    document.documentElement.scrollTop = 0;
-    document.scrollingElement.scrollTop = 0;
-    this.refs.mainContent.scrollTop = 0;
+    document.documentElement.scrollTop = 0
+    document.scrollingElement.scrollTop = 0
+    this.refs.mainContent.scrollTop = 0
   }
   componentWillMount = () => {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      console.warn('User Must Authenticate!')
-      this.setState({ auth: false })
-    } else if (localStorage.getItem('exp') < new Date().getTime()) {
+    if (localStorage.getItem('exp') < new Date().getTime()) {
       console.warn('Token Expired, User Must Re-Authenticate!')
-      localStorage.removeItem('token')
       localStorage.removeItem('exp')
       this.setState({ auth: false })
     } else {
@@ -61,12 +53,12 @@ class Admin extends React.Component {
             component={prop.component}
             key={key}
           />
-        );
+        )
       } else {
-        return null;
+        return null
       }
-    });
-  };
+    })
+  }
   getBrandText = path => {
     for (let i = 0; i < routes.length; i++) {
       if (
@@ -74,14 +66,13 @@ class Admin extends React.Component {
           routes[i].layout + routes[i].path
         ) !== -1
       ) {
-        return routes[i].name;
+        return routes[i].name
       }
     }
-    return "Brand";
-  };
+    return "Brand"
+  }
   render() {
     if (!this.state.auth) {
-      console.log('Redirecting')
       return <Redirect to={'/auth/login'} />
     }
     return (
@@ -106,8 +97,8 @@ class Admin extends React.Component {
           </Container>
         </div>
       </>
-    );
+    )
   }
 }
 
-export default Admin;
+export default Admin 

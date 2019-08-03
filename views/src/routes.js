@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Index from "views/Index.jsx";
+import Index from "views/production/Index.jsx";
 // import Profile from "views/examples/Profile.jsx";
 // import Maps from "views/examples/Maps.jsx";
 import Register from "views/production/Register.jsx";

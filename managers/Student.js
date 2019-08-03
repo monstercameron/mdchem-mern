@@ -349,22 +349,26 @@ class Highscore {
         this.getHighscore()
     }
     getHighscore = () => {
-        const student = db.model('student', Student, 'test')
+        const student = db.model('students', Student)
         student.find({}, (err, highscores) => {
-                if (err) throw err
-                //console.log(docs)
-                this.res.json({
-                    results: {
-                        highscores: highscores
-                    }
-                })
+            if (err) return this.res.json({
+                results: {
+                    message: err
+                }
             })
-            .select('score')
-            .select('email')
-            .sort({
-                score: -1
+            //console.log(highscores)
+            this.res.json({
+                results: {
+                    highscores: highscores
+                }
             })
-            .limit(10)
+        })
+        .select('score')
+        .select('email')
+        .sort({
+            score: -1
+        })
+        .limit(10)
     }
 }
 /**

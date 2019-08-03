@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { MDBDataTable } from 'mdbreact';
-import url from "../../variables/url.js"
+import React, { Component } from 'react'
+import { MDBDataTable } from 'mdbreact'
+import URL from '../../variables/url'
 import axios from "axios"
 class Table extends Component {
     constructor(props) {
@@ -10,12 +10,12 @@ class Table extends Component {
         }
     }
     componentWillMount = () => {
-        this.setState({ url: url.testing })
+        this.setState({ url: URL.testing })
         this.fetchData()
     }
     fetchData = () => {
         axios({
-            url: `${url.testing}/api/players/list`,
+            url: `${URL.testing}/api/players/list`,
             method: 'get',
             withCredentials: true
         })

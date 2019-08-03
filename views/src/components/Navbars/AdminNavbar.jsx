@@ -34,8 +34,25 @@ import {
   Container,
   Media
 } from "reactstrap";
-
+import URL from '../../variables/url'
+import axios from 'axios'
 class AdminNavbar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { logout: false }
+  }
+  logOut = () => {
+    axios({
+      url: `${URL.testing}/api/auth/logout`,
+      method: 'get',
+      withCredentials: true
+    })
+      .then(res => {
+        console.log(res.data)
+        localStorage.setItem('exp', Date.now())
+      })
+      .catch(err => console.log(err.response))
+  }
   render() {
     return (
       <>
@@ -94,7 +111,7 @@ class AdminNavbar extends React.Component {
                     <span>Support</span>
                   </DropdownItem>
                   <DropdownItem divider />
-                  <DropdownItem href="#pablo" onClick={e => e.preventDefault()}>
+                  <DropdownItem href="/auth/login" onClick={e => this.logOut()}>
                     <i className="ni ni-user-run" />
                     <span>Logout</span>
                   </DropdownItem>

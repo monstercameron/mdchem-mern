@@ -19,6 +19,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import axios from 'axios'
 import emailValidator from "email-validator"
+import URL from '../../variables/url'
 // reactstrap components
 import {
   Button,
@@ -86,7 +87,7 @@ class Login extends React.Component {
     const form = this.buildLoginRequestForm()
     if (this.validate()) {
       axios({
-        url: `http://localhost:8080/api/auth/login/admin`,
+        url: `${URL.testing}/api/auth/login/admin`,
         method: 'post',
         withCredentials: true,
         data: form
@@ -95,7 +96,6 @@ class Login extends React.Component {
           console.log(response)
           localStorage.setItem('temp', form.email)
           if (this.state.remember) {
-            localStorage.setItem('token', 'it\'s in the cookies')
             localStorage.setItem('email', form.email)
             localStorage.setItem('exp', new Date().getTime() + 3600000 /* 1 hour */)
           } else {
@@ -115,7 +115,7 @@ class Login extends React.Component {
     return <Redirect to={redirect} />
   }
   render() {
-    console.log('state', this.state)
+    //console.log('state', this.state)
     if (this.state.redirect !== null) {
       return this.redirect()
     }

@@ -35,6 +35,35 @@ router
                 })
             })
     })
+    .post('/check', (req, res) => {
+        verifyToken(req.cookies.token)
+            .then(decoded => {
+                //console.log(decoded)
+                res.status(200).json({
+                    results: {
+                        message: true
+                    }
+                })
+            })
+            .catch(err => {
+                //console.log(err)
+                res.status(401).json({
+                    results: {
+                        message: err
+                    }
+                })
+            })
+    })
+    .get('/logout', (req, res) => {
+        res.cookie('token', {
+            maxAge: Date.now()
+        })
+        res.status(200).json({
+            results: {
+                message: 'User Cookie expired! User logged out!'
+            }
+        })
+    })
     .post('/login/:role', (req, res) => {
         switch (req.params.role) {
             case 'student':

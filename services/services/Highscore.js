@@ -2,16 +2,18 @@
  * Highscore cron job
  * Queries the database, checks all the level data and updates the score
  */
-const { allStudentData } = require('../../managers/Student')
+const {
+    allStudentData
+} = require('../../managers/Student')
 module.exports = class HighScoreUpdate {
     constructor() {
         this.update()
     }
     update = () => {
-        new allStudentData((students) => {
+        new allStudentData(students => {
             console.log(`Updating ${students.length} students hichscores`)
-            for(student of students){
-                //console.log(student)
+            for (let student of students) {
+                console.log(student)
                 let score = 0
                 if (student.data) {
                     for (let key of Object.keys(student.data)) {
@@ -19,7 +21,9 @@ module.exports = class HighScoreUpdate {
                         score += student.data[key].score
                     }
                 }
-                student.updateOne({ score: score }, () => {
+                student.updateOne({
+                    score: score
+                }, () => {
                     //console.log('updated!')
                 })
             }

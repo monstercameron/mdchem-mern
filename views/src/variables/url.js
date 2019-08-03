@@ -1,4 +1,4 @@
 export default {
-        production:`https://www.mdchem.app`,
-        testing:`http://localhost:8080`
-    }
+    production: `https://www.mdchem.app`,
+    testing: `http://localhost:8080`
+}
