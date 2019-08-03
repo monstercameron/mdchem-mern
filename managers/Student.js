@@ -1,7 +1,9 @@
 /**
  * Student Manager
  */
-const db = require('./Database')
+const {
+    db
+} = require('./Database')
 const Student = require('../models/schemas/student')
 const {
     Hash,
@@ -35,7 +37,7 @@ class AddStudent {
     }
     primaryhash = () => {
         new Hash(this.body.password, (hash) => {
-            const student = db.model('student', Student, 'students');
+            const student = db.model('student', Student);
             this._student = new student({
                 email: this.body.email,
                 role: this.body.role,
@@ -216,7 +218,7 @@ class CountStudent {
         this.count()
     }
     count = () => {
-        const student = db.model('student', Student, 'students');
+        const student = db.model('student', Student);
         student.countDocuments({}, (err, count) => {
             if (err) throw err
             this.res.json({
@@ -243,7 +245,7 @@ class FindAllStudents {
         const {
             filter
         } = this.req
-        const student = db.model('student', Student, 'students')
+        const student = db.model('student', Student)
         student.find({}, (err, docs) => {
             if (err) this.res.status(400).json({
                 results: {
@@ -271,7 +273,7 @@ class StudentEmailExists {
         this.query()
     }
     query = () => {
-        const student = db.model('student', Student, 'students')
+        const student = db.model('student', Student)
         student.findOne({
             email: this.email
         }, (err, docs) => {
@@ -293,7 +295,7 @@ class FindStudentById {
         this.find()
     }
     find = () => {
-        const student = db.model('student', Student, 'students')
+        const student = db.model('student', Student)
         student.findById(this.id, (err, docs) => {
             if (typeof this.callback === 'function') this.callback(docs)
             else this.res.json({
@@ -312,7 +314,7 @@ class FindStudentByEmail {
         this.find(body.email, callback)
     }
     find = (email, callback) => {
-        const student = db.model('student', Student, 'test')
+        const student = db.model('student', Student)
         student.findOne({
             email: email
         }, (err, docs) => {
@@ -329,7 +331,7 @@ class AllData {
         this.find(callback)
     }
     find = (callback) => {
-        const student = db.model('student', Student, 'students')
+        const student = db.model('student', Student)
         student.find({}, (err, docs) => {
             //console.log(docs)
             callback(docs)
@@ -351,24 +353,24 @@ class Highscore {
     getHighscore = () => {
         const student = db.model('students', Student)
         student.find({}, (err, highscores) => {
-            if (err) return this.res.json({
-                results: {
-                    message: err
-                }
+                if (err) return this.res.json({
+                    results: {
+                        message: err
+                    }
+                })
+                //console.log(highscores)
+                this.res.json({
+                    results: {
+                        highscores: highscores
+                    }
+                })
             })
-            //console.log(highscores)
-            this.res.json({
-                results: {
-                    highscores: highscores
-                }
+            .select('score')
+            .select('email')
+            .sort({
+                score: -1
             })
-        })
-        .select('score')
-        .select('email')
-        .sort({
-            score: -1
-        })
-        .limit(10)
+            .limit(10)
     }
 }
 /**

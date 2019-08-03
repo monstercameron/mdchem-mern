@@ -7,7 +7,7 @@ class Hash {
         this.getHash(passwordText, callback)
     }
     getHash = (password, callback) => {
-        bcrypt.genSalt(process.env.TOKEN_SALT_ROUNDS, function (err, salt) {
+        bcrypt.genSalt(parseInt(process.env.TOKEN_SALT_ROUNDS), function (err, salt) {
             bcrypt.hash(password, salt, function (err, hash) {
                 // Store hash in your password DB.
                 callback(hash)

@@ -1,7 +1,10 @@
 /**
  * Admin  Manager
  */
-const db = require('../managers/Database')
+const {
+    db,
+    con
+} = require('../managers/Database')
 const Admin = require('../models/schemas/admin')
 const {
     Hash,
@@ -20,6 +23,7 @@ class AddAdmin {
     constructor(req, res) {
         this.res = res
         this.body = req.body
+        console.log('the body: ',this.body)
         this.run()
     }
     run = () => {
@@ -35,12 +39,14 @@ class AddAdmin {
                     }
                 })
             }
+            //console.log('validate admin')
             this.primaryhash()
         })
     }
     primaryhash = () => {
         new Hash(this.body.password, (hash) => {
-            const admin = db.model('admin', Admin, 'admin');
+            console.log(hash)
+            const admin = db.model('admin', Admin);
             this._admin = new admin({
                 name: this.body.name,
                 email: this.body.email,
@@ -50,7 +56,7 @@ class AddAdmin {
                     question: this.body.recovery.question
                 }
             })
-            //console.log(this._admin)
+            //console.log('primary hash')
             this.recoveryHash()
         })
     }
@@ -61,19 +67,20 @@ class AddAdmin {
         } = this.body.recovery
         new Hash(question + answer, (hash) => {
             this._admin.recovery.hash = hash
-            //console.log(this._admin)
+            console.log(hash)
+            //console.log('recovery hash')
             this.saveAdmin()
             //this.res.send('works')
         })
     }
     saveAdmin = () => {
         this._admin.save((err, model) => {
-            if (err) throw this.res.status(500).json({
+            if (err) return this.res.status(500).json({
                 results: {
                     error: err
                 }
             })
-            // console.log(model)
+            //console.log('save admin')
             this.res.status(200).json({
                 results: {
                     message: `Admin ${model.email} saved`
@@ -99,7 +106,8 @@ class AuthenticateAdmin {
     }
     emailExists = () => {
         new AdminEmailExists(this.body.email, (result) => {
-            if (!result) this.res.status(400).json({
+            console.log('the results',result)
+            if (!result) return this.res.status(400).json({
                 results: {
                     message: `user ${this.body.email} doesn't exist`
                 }
@@ -110,6 +118,7 @@ class AuthenticateAdmin {
         })
     }
     checkPassword = () => {
+        console.log(this._admin)
         const {
             password
         } = this.body
@@ -170,7 +179,7 @@ class AdminEmailExists {
         this.query()
     }
     query = () => {
-        const admin = db.model('admin', Admin, 'admin')
+        const admin = db.model('admin', Admin)
         admin.findOne({
             email: this.email
         }, (err, docs) => {

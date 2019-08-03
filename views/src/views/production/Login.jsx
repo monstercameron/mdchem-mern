@@ -103,13 +103,13 @@ class Login extends React.Component {
           }
           this.setState({ redirect: '/admin/index' })
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err.response))
     }
   }
   redirect = () => {
     let { redirect } = this.state
-    if (redirect.includes(':3002')) {
-      redirect = redirect.split(':3002')
+    if (redirect.includes(':300')) {
+      redirect = redirect.split(':300')
       return <Redirect to={redirect[1]} />
     }
     return <Redirect to={redirect} />
