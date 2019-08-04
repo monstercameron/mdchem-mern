@@ -2,7 +2,17 @@
  * Database Manager
  */
 const mongoose = require('mongoose')
-const DBURL = process.env.NODE_ENV === 'development' ? process.env.MONGO_TEST_CONN : process.env.MONGO_LOCAL_CONN
+let DBURL
+switch (process.env.NODE_ENV) {
+  case 'development':
+    DBURL = process.env.MONGO_DEV_CONN
+    break
+  case 'test':
+    DBURL = process.env.MONGO_TEST_CONN
+    break
+  default:
+    DBURL = process.env.MONGO_LIVE_CONN
+}
 mongoose.connect(DBURL, {
   useNewUrlParser: true
 })
