@@ -5,6 +5,9 @@ const express = require('express')
 const router = express.Router()
 const highScoreService = require('../services/services/Highscore')
 const {
+    averageScore
+} = require('../managers/Query')
+const {
     findAllStudents,
     countStudent,
     highscore
@@ -24,5 +27,8 @@ router
         res.json({
             message: `High Score Manually Updated`
         })
+    })
+    .get('/average', (req, res) => {
+        new averageScore(res, res)
     })
 module.exports = router

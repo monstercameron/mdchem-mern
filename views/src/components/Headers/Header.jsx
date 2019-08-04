@@ -40,12 +40,27 @@ class Header extends React.Component {
   componentWillMount = () => {
     //console.log(URL.testing)
     this.studentCount()
+    this.studentAverageScore()
   }
 
   studentCount = () => {
     if (!this.state.student.count > 0) {
       axios({
         url: `${URL.testing}/api/players/count`,
+        method: 'get',
+        withCredentials: true
+      })
+        .then(res => {
+          this.setState({ student: Object.assign(this.state.student, {avg:{score:res.data.results.average}}) })
+        })
+        .catch(err => console.log(err.response))
+    }
+  }
+
+  studentAverageScore = () => {
+    if (!this.state.student.count > 0) {
+      axios({
+        url: `${URL.testing}/api/players/average`,
         method: 'get',
         withCredentials: true
       })
