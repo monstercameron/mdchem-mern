@@ -15,9 +15,21 @@ const {
  */
 class AddStudent {
     constructor(req, res) {
-        this.body = req.body
+        this.body = this.bodyShim(req.body)
         this.res = res
         this.run()
+    }
+    bodyShim = (body) => {
+        return {
+            email: body.email,
+            role: 'student',
+            recovery: {
+                question: body.question
+            },
+            meta: {
+                group: body.group
+            }
+        }
     }
     run = () => {
         this.validateStudent()
