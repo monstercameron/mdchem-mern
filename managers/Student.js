@@ -15,7 +15,7 @@ const {
  */
 class AddStudent {
     constructor(req, res) {
-	console.log('add student:',req.body)
+        console.log('add student:', req.body)
         this.body = this.bodyShim(req.body)
         this.res = res
         this.run()
@@ -27,7 +27,7 @@ class AddStudent {
             password: body.password,
             recovery: {
                 question: body.question,
-                answer:body.answer
+                answer: body.answer
             },
             meta: {
                 group: body.group
@@ -152,7 +152,7 @@ class UpdateStudent {
  */
 class AuthenticateStudent {
     constructor(req, res) {
-	console.log('req body:',req.body)
+        console.log('req body:', req.body)
         this.res = res
         this.body = req.body
         this.run()
@@ -205,12 +205,16 @@ class AuthenticateStudent {
             }
         }
         createToken(params)
-            .then(token => this.res.status(200).json({
-                results: {
-                    token: token,
-                    message: `Successfully Authenticated.`
-                }
-            }))
+            .then(token => this.res.status(200)
+                .cookie('token', token, {
+                    maxAge: 1000 * 60 * 60 * 12 /* 12 hours */ ,
+                    httpOnly: true
+                })
+                .json({
+                    results: {
+                        message: `Successfully Authenticated.`
+                    }
+                }))
             .catch(err => this.res.status(500).json({
                 results: {
                     error: err,
