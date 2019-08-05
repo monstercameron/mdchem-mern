@@ -10,6 +10,7 @@ class Hash {
         bcrypt.genSalt(parseInt(process.env.TOKEN_SALT_ROUNDS), function (err, salt) {
             bcrypt.hash(password, salt, function (err, hash) {
                 // Store hash in your password DB.
+                console.log(hash)
                 callback(hash)
             });
         });
