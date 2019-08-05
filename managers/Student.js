@@ -117,6 +117,7 @@ class DeleteStudent {
  */
 class UpdateStudent {
     constructor(req, res) {
+        console.log(req.body)
         this.res = res
         this.req = req
         this.body = req.body
@@ -304,7 +305,7 @@ class StudentEmailExists {
  */
 class FindStudentById {
     constructor(req, res, callback) {
-        this.id = req.body.id
+        this.id = req.cookies.id
         this.res = res
         this.callback = callback
         this.run()
