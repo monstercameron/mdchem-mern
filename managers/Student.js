@@ -129,7 +129,7 @@ class UpdateStudent {
     dataBuilder = (body) => {
         const {
             levelID
-        } = boder
+        } = body
         return {
             levelID: {
                 score: body.score,
