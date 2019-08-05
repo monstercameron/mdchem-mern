@@ -15,7 +15,7 @@ const {
  */
 class AddStudent {
     constructor(req, res) {
-	//console.log(req.body)
+	console.log('add student:',req.body)
         this.body = this.bodyShim(req.body)
         this.res = res
         this.run()
