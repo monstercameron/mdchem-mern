@@ -4,6 +4,7 @@
 const bcrypt = require('bcrypt')
 class Hash {
     constructor(passwordText, callback) {
+        console.log(passwordText)
         this.getHash(passwordText, callback)
     }
     getHash = (password, callback) => {
