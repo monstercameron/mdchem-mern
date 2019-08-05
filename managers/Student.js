@@ -170,7 +170,7 @@ class AuthenticateStudent {
                     message: `user ${this.body.email} doesn't exist`
                 }
             })
-            console.log(result)
+            //console.log(result)
             this._student = result
             this.checkPassword()
         })
@@ -210,6 +210,7 @@ class AuthenticateStudent {
                     maxAge: 1000 * 60 * 60 * 12 /* 12 hours */ ,
                     httpOnly: true
                 })
+                .cookie('id', this._student._id)
                 .json({
                     results: {
                         message: `Successfully Authenticated.`
