@@ -24,8 +24,10 @@ class AddStudent {
         return {
             email: body.email,
             role: 'student',
+            password: body.password,
             recovery: {
-                question: body.question
+                question: body.question,
+                answer:body.answer
             },
             meta: {
                 group: body.group
