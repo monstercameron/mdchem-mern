@@ -152,7 +152,6 @@ class UpdateStudent {
  */
 class AuthenticateStudent {
     constructor(req, res) {
-        console.log('req body:', req.body)
         this.res = res
         this.body = req.body
         this.run()
@@ -170,7 +169,7 @@ class AuthenticateStudent {
                     message: `user ${this.body.email} doesn't exist`
                 }
             })
-            //console.log(result)
+            console.log(result._id)
             this._student = result
             this.checkPassword()
         })
