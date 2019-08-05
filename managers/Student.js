@@ -15,6 +15,7 @@ const {
  */
 class AddStudent {
     constructor(req, res) {
+	//console.log(req.body)
         this.body = this.bodyShim(req.body)
         this.res = res
         this.run()
@@ -149,6 +150,7 @@ class UpdateStudent {
  */
 class AuthenticateStudent {
     constructor(req, res) {
+	console.log('req body:',req.body)
         this.res = res
         this.body = req.body
         this.run()
@@ -166,7 +168,7 @@ class AuthenticateStudent {
                     message: `user ${this.body.email} doesn't exist`
                 }
             })
-            //console.log(result)
+            console.log(result)
             this._student = result
             this.checkPassword()
         })

@@ -36,6 +36,7 @@ router
             })
     })
     .post('/login/:role', (req, res) => {
+	console.log(req.body)
         switch (req.params.role) {
             case 'student':
                 new authenticateStudent(req, res)
