@@ -120,15 +120,27 @@ class UpdateStudent {
         console.log(req.body)
         this.res = res
         this.req = req
-        this.body = req.body
+        this.body = this.dataBuilder(req.body)
         this.run()
     }
     run = () => {
         this.update()
     }
+    dataBuilder = (body) => {
+        const {
+            levelID
+        } = boder
+        return {
+            levelID: {
+                score: body.score,
+                correct: body.correcData,
+                incorrect: body.incorrectData
+            }
+        }
+    }
     update = () => {
         new FindStudentById(this.req, this.res, (result) => {
-            const updatedData = this.body.data
+            const updatedData = this.body
             let {
                 data
             } = result
