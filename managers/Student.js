@@ -131,7 +131,7 @@ class UpdateStudent {
             levelID
         } = body
         return {
-            levelID: {
+            [levelID]: {
                 score: body.score,
                 correct: body.correctData,
                 incorrect: body.incorrectData
