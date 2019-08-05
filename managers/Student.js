@@ -133,7 +133,7 @@ class UpdateStudent {
         return {
             levelID: {
                 score: body.score,
-                correct: body.correcData,
+                correct: body.correctData,
                 incorrect: body.incorrectData
             }
         }
