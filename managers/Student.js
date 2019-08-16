@@ -25,8 +25,10 @@ class AddStudent {
         return {
             email: body.email,
             role: 'student',
+            password: body.password,
             recovery: {
-                question: body.question
+                question: body.question,
+                answer: body.answer
             },
             meta: {
                 group: body.group
@@ -118,15 +120,27 @@ class UpdateStudent {
     constructor(req, res) {
         this.res = res
         this.req = req
-        this.body = req.body
+        this.body = this.dataBuilder(req.body)
         this.run()
     }
     run = () => {
         this.update()
     }
+    dataBuilder = (body) => {
+        const {
+            levelID
+        } = body
+        return {
+            [levelID]: {
+                score: body.score,
+                correct: body.correctData,
+                incorrect: body.incorrectData
+            }
+        }
+    }
     update = () => {
         new FindStudentById(this.req, this.res, (result) => {
-            const updatedData = this.body.data
+            const updatedData = this.body
             let {
                 data
             } = result
@@ -169,6 +183,7 @@ class AuthenticateStudent {
                 }
             })
             //console.log(result)
+            console.log(result._id)
             this._student = result
             this.checkPassword()
         })
@@ -203,12 +218,17 @@ class AuthenticateStudent {
             }
         }
         createToken(params)
-            .then(token => this.res.status(200).json({
-                results: {
-                    token: token,
-                    message: `Successfully Authenticated.`
-                }
-            }))
+            .then(token => this.res.status(200)
+                .cookie('token', token, {
+                    maxAge: 1000 * 60 * 60 * 12 /* 12 hours */ ,
+                    httpOnly: true
+                })
+                .cookie('id', this._student._id)
+                .json({
+                    results: {
+                        message: `Successfully Authenticated.`
+                    }
+                }))
             .catch(err => this.res.status(500).json({
                 results: {
                     error: err,
@@ -298,7 +318,7 @@ class StudentEmailExists {
  */
 class FindStudentById {
     constructor(req, res, callback) {
-        this.id = req.body.id
+        this.id = req.cookies.id
         this.res = res
         this.callback = callback
         this.run()

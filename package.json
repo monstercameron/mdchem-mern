@@ -6,7 +6,7 @@
   "scripts": {
     "test": "clear & NODE_ENV=test npx jest --detectOpenHandles --config tests/jest.config.js",
     "start": "clear & npx nodemon server.js",
-    "start-dev": "clear &  NODE_ENV=development npx nodemon server.js",
+    "dev": "clear &  NODE_ENV=development npx nodemon server.js",
     "build": "clear & echo 'Installing server dependencies' & npm i & clear & echo 'Installing React dependencies' & npm i --prefix views & clear & echo  'Bundling  React app'  & npm run build --prefix views & clear & npm start"
   },
   "author": "Earl Cameron",

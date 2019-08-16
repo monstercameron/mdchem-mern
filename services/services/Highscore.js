@@ -12,7 +12,7 @@ module.exports = class HighScoreUpdate {
     update = () => {
         new allStudentData(students => {
             console.log(`Updating ${students.length} students hichscores`)
-            for (let student of students) {
+            for (const student of students) {
                 console.log(student)
                 let score = 0
                 if (student.data) {
