@@ -62,7 +62,7 @@ var routes = [
   //   layout: "/admin"
   // },
   {
-    path: "/student",
+    path: "/student/:id",
     name: "Student",
     icon: "ni ni-single-02 text-red",
     component: SingleStudent,

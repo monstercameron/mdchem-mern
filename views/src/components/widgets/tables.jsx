@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { MDBDataTable } from 'mdbreact'
 import URL from '../../variables/url'
 import axios from "axios"
 class Table extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            url: null
-        }
+        this.state = {}
     }
     componentWillMount = () => {
-        this.setState({ url: URL.testing })
         this.fetchData()
     }
     fetchData = () => {
@@ -46,7 +44,8 @@ class Table extends Component {
         }
         data.forEach(elem => {
             //console.log(elem)
-            newData.rows.push({ email: elem.email, id: elem._id })
+            const endPoint = `student/${elem._id}`
+            newData.rows.push({ email: <Link to={endPoint}>{elem.email}</Link>, id: elem._id })
         })
 
         this.setState({ data: newData })

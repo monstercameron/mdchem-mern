@@ -9,7 +9,7 @@ const {
     updateStudent
 } = require('../managers/Student')
 router
-    .get('/', (req, res) => {
+    .get('/:id', (req, res) => {
         new findStudentById(req, res)
     })
     .patch('/', (req, res) => {

@@ -318,7 +318,7 @@ class StudentEmailExists {
  */
 class FindStudentById {
     constructor(req, res, callback) {
-        this.id = req.cookies.id
+        this.id = req.cookies.id ? req.cookies.id : req.params.id
         this.res = res
         this.callback = callback
         this.run()
@@ -330,9 +330,9 @@ class FindStudentById {
         const student = db.model('student', Student)
         student.findById(this.id, (err, docs) => {
             if (typeof this.callback === 'function') this.callback(docs)
-            else this.res.json({
+            else this.res.status(200).json({
                 results: {
-                    students: docs
+                    student: docs
                 }
             })
         }).select('-hash -recovery')
