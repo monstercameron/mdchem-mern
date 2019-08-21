@@ -47,7 +47,7 @@ class Table extends Component {
         }
         data.forEach(elem => {
             //console.log(elem)
-            const endPoint = `student/${elem._id}`
+            const endPoint = `/admin/student/${elem._id}`
             newData.rows.push({ email: <Link to={endPoint}>{elem.email}</Link>, id: elem._id })
         })
 
