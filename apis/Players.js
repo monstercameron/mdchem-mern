@@ -1,9 +1,11 @@
 /**
  * Player Route
  */
-const express = require('express')
-const router = express.Router()
+const router = require('express').Router()
 const highScoreService = require('../services/services/Highscore')
+const {
+    countStudentsPerClass
+} = require('../managers/Student')
 const {
     findAllStudents,
     countStudent,
@@ -13,6 +15,7 @@ router
     .get('/list', (req, res) => {
         new findAllStudents(req, res)
     })
+    .get('/list/:group', countStudentsPerClass)
     .get('/highscore', (req, res) => {
         new highscore(req, res)
     })

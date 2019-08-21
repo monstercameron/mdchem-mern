@@ -23,12 +23,12 @@ import {
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
-  Form,
-  FormGroup,
-  InputGroupAddon,
-  InputGroupText,
-  Input,
-  InputGroup,
+  // Form,
+  // FormGroup,
+  // InputGroupAddon,
+  // InputGroupText,
+  // Input,
+  // InputGroup,
   Navbar,
   Nav,
   Container,
@@ -64,7 +64,7 @@ class AdminNavbar extends React.Component {
             >
               {this.props.brandText}
             </Link>
-            <Form className="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
+            {/* <Form className="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
               <FormGroup className="mb-0">
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
@@ -75,13 +75,13 @@ class AdminNavbar extends React.Component {
                   <Input placeholder="Search" type="text" />
                 </InputGroup>
               </FormGroup>
-            </Form>
+            </Form> */}
             <Nav className="align-items-center d-none d-md-flex" navbar>
               <UncontrolledDropdown nav>
                 <DropdownToggle className="pr-0" nav>
                   <Media className="align-items-center">
                     <span className="avatar avatar-sm rounded-circle">
-                      <i className=" ni ni-single-02"></i>
+                      <i className=" ni ni-single-02" />
                     </span>
                     <Media className="ml-2 d-none d-lg-block">
                       <span className="mb-0 text-sm font-weight-bold">
@@ -91,28 +91,28 @@ class AdminNavbar extends React.Component {
                   </Media>
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-menu-arrow" right>
-                  <DropdownItem className="noti-title" header tag="div">
+                  {/* <DropdownItem className="noti-title" header tag="div">
                     <h6 className="text-overflow m-0">Welcome!</h6>
-                  </DropdownItem>
-                  <DropdownItem to="/admin/user-profile" tag={Link}>
+                  </DropdownItem> */}
+                  {/* <DropdownItem to="/admin/user-profile" tag={Link}>
                     <i className="ni ni-single-02" />
                     <span>My profile</span>
+                  </DropdownItem> */}
+                  <DropdownItem to="/admin/students" tag={Link}>
+                    <i className="fa fa-users text-red" />
+                    <span>My Students</span>
                   </DropdownItem>
-                  <DropdownItem to="/admin/user-profile" tag={Link}>
-                    <i className="ni ni-settings-gear-65" />
-                    <span>Settings</span>
+                  <DropdownItem to="/admin/groups" tag={Link}>
+                    <i className="fa fa-list-ol text-red" />
+                    <span>My Groups</span>
                   </DropdownItem>
-                  <DropdownItem to="/admin/user-profile" tag={Link}>
-                    <i className="ni ni-calendar-grid-58" />
-                    <span>Activity</span>
-                  </DropdownItem>
-                  <DropdownItem to="/admin/user-profile" tag={Link}>
-                    <i className="ni ni-support-16" />
-                    <span>Support</span>
+                  <DropdownItem to="/admin/settings" tag={Link}>
+                    <i className="fa fa-cogs text-red" />
+                    <span>My Settings</span>
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem href="/auth/login" onClick={e => this.logOut()}>
-                    <i className="ni ni-user-run" />
+                    <i className="ni ni-user-run text-red" />
                     <span>Logout</span>
                   </DropdownItem>
                 </DropdownMenu>

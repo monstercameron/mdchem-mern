@@ -1,21 +1,12 @@
 /**
  * Admin Route
  */
-const express = require('express')
+const router = require('express').Router()
 const {
-    Hash
-} = require('../managers/Encrypt')
-const router = express.Router()
+    adminGroups,
+    addAdminGroups
+} = require('../managers/Admin')
 router
-    .get('/', (req, res) => {
-        //console.log(req.cookies)
-        new Hash('test', (hash) => {
-            console.log(hash)
-            res.send(hash)
-        })
-        //res.send('admin route')
-    })
-    .post('/', (req, res) => {
-        res.send('admin route')
-    })
+.post('/groups', adminGroups)
+.post('/groups/add', addAdminGroups)
 module.exports = router

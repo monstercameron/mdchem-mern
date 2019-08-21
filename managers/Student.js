@@ -352,7 +352,7 @@ class FindStudentByEmail {
         }, (err, docs) => {
             //console.log(docs)
             callback(docs)
-        })
+        }).select('-hash -recovery')
     }
 }
 /**
@@ -475,6 +475,33 @@ class ResetStudentPassword {
         })
     }
 }
+
+/**
+ * @name Admin Groups
+ * @description queries database and return a list of groups for specified admin
+ */
+const countStudentsPerClass = async (req, res) => {
+    try {
+        const student = db.model('student', Student)
+        const query = await student.countDocuments({
+            meta: {
+                group:req.params.group
+            }
+        })
+        // console.log(query)
+        res.json({
+            results: {
+                count: query
+            }
+        })
+    } catch (error) {
+        res.json({
+            results: {
+                error: error.message
+            }
+        })
+    }
+}
 module.exports = {
     addStudent: AddStudent,
     deleteStudent: DeleteStudent,
@@ -487,5 +514,6 @@ module.exports = {
     allStudentData: AllData,
     highscore: Highscore,
     updateStudent: UpdateStudent,
-    resetStudentPassword: ResetStudentPassword
+    resetStudentPassword: ResetStudentPassword,
+    countStudentsPerClass
 }

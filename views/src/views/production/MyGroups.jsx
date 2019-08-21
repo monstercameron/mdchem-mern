@@ -15,8 +15,8 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
-import { withRouter, Link } from 'react-router-dom'
+import React from "react"
+import { withRouter } from 'react-router-dom'
 // reactstrap components
 import {
   Card,
@@ -25,40 +25,60 @@ import {
   Container,
   Row,
   Col,
-  Button
-} from "reactstrap";
+  Button,
+  Form,
+  FormGroup,
+  Input
+} from "reactstrap"
 // core components
 import Header from "components/Headers/Header.jsx"
 import URL from '../../variables/url'
+import Group from '../../components/widgets/Group'
 import axios from 'axios'
 class StudentInfo extends React.Component {
-  state = { student: { _id: '', meta: {}, data: {} } }
+  state = { open: false, notes: '', id: '' }
   componentWillMount = () => {
-    this.getStudentById()
+    this.getAdminGroups()
   }
-  getStudentById = async () => {
-    try {
-      const query = await axios({
-        url: `${URL.testing}/api/player/${this.props.match.params.id}`,
-        method: 'get',
-        withCredentials: true
+  getAdminGroups = async () => {
+    const groups = await axios({
+      url: `${URL.testing}/api/admin/groups`,
+      method: 'post',
+      withCredentials: true,
+      data: { email: localStorage.getItem('email') }
+    })
+    // console.log(groups)
+    this.setState({ groups: groups.data.results.groups })
+  }
+  displayGroups = () => {
+    if (this.state.groups)
+      return this.state.groups.map((group, index) => {
+        return <Group key={index} group={group} />
       })
-      if (query.data.results.student) this.setState({ student: query.data.results.student })
-    } catch (error) {
-      console.log(error)
+  }
+  addGroup = async () => {
+    const addGroup = await axios({
+      url: `${URL.testing}/api/admin/groups/add`,
+      method: 'post',
+      withCredentials: true,
+      data: { ...this.groupForm() }
+    })
+    console.log(addGroup)
+    if(addGroup.status === 200){
+      this.setState({open:!this.state.open})
+      this.getAdminGroups()
+      this.forceUpdate()
     }
   }
-  dataSetVisualizer = () => {
-    if (Object.keys(this.state.student.data).length > 0) {
-
-      for (const key in this.state.student.data) {
-        console.log(this.state.student.data[key])
-      }
-
+  groupForm = () => {
+    return  {
+      email: localStorage.getItem('email'),
+      id: this.state.id,
+      notes: this.state.notes
     }
   }
   render() {
-    console.log('student:', this.state)
+    console.log(this.state)
     return (
       <>
         <Header />
@@ -67,54 +87,46 @@ class StudentInfo extends React.Component {
           {/* Table */}
           <Row>
             <Col>
-              <Row>
-                <Col sm={3} 
-                  className='mb-3 text-white border p-2 ml-3 rounded' 
-                  style={{ backgroundColor: 'white', a:{active:'red'} }}
-                >
-                  <Link to='/admin/students'>
-                    <i className="ni ni-bold-left"></i> Back To All Students
-                  </Link>
-                </Col>
-              </Row>
               <Card className="shadow">
                 <CardHeader className="border-0">
-                  <Row>
-                    <Col sm={9}>
-                      <h3 className="mb-0 d-inline-block">ID: </h3> {this.state.student._id}
-                      <br></br>
-                      <h3 className="mb-0 d-inline-block">Email: </h3> {this.state.student.email}
-                      <br></br>
-                      <h3 className="mb-0 d-inline-block">Score: </h3> {this.state.student.score}
-                      <br></br>
-                      <h3 className="mb-0 d-inline-block">Group: </h3> {this.state.student.meta.group}
-                    </Col>
-                    <Col sm={3}>
-                      <Row>
-                        <Col>
-                          <Button className='btn-block' color='danger'>Unsubscribe</Button>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col className='mt-3'>
-                          <Button className='btn-block' color='warning'>Reset</Button>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
+                  <Container>
+                    <Row>
+                      <Col>
+                        <h3 className='d-inline-block'>My Groups</h3>
+                      </Col>
+                      <Col sm={2} className='text-center'>
+                        <Button className='btn-block' color={!this.state.open ? 'success' : 'danger'} alt='Add Group' onClick={() => this.setState({ open: !this.state.open })}>
+                          {!this.state.open ? <i className="fa fa-plus-square" aria-hidden="true" /> : <i className="fa fa-minus-square" aria-hidden="true" />}
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Container>
                 </CardHeader>
                 <Container>
                   <Row>
                     <Col>
-                      Student DATA
+                      {/* hidden class add */}
+                      <Col sm={12} className='border rounded p-2 shadow-lg' style={this.state.open ? { height: 'auto', visibility:'visible' } : { height: '0', visibility:'hidden' }}>
+                        <Form>
+                          <FormGroup>
+                            <Input className='mb-2' type="text" name="id" id="id" placeholder="Group ID" onChange={e => this.setState({ id: e.target.value })} />
+                            <Input type="text" name="notes" id="notes" placeholder="Notes" onChange={e => this.setState({ notes: e.target.value })} />
+                          </FormGroup>
+                          <Button className='btn-block' color='primary' onClick={e => this.addGroup()}>Add Group</Button>
+                        </Form>
+                      </Col>
+                      {this.displayGroups()}
                     </Col>
-                  </Row>
-                  <Row>
-                    {this.dataSetVisualizer()}
                   </Row>
                 </Container>
                 <CardFooter className="py-4">
-                  {/* things go here */}
+                  <Container>
+                    <Row>
+                      <Col>
+                        Footer
+                      </Col>
+                    </Row>
+                  </Container>
                 </CardFooter>
               </Card>
             </Col>

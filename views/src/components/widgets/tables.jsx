@@ -82,7 +82,7 @@ class Table extends Component {
     render() {
         //console.log(`state`, this.state)
         return (
-            <div className="p-4">
+            <div className="p-4" style={{transition:'1s'}}>
                 <MDBDataTable
                     data={this.state.data}
                 />

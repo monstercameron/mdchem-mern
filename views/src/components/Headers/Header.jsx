@@ -69,7 +69,7 @@ class Header extends React.Component {
                       <Row>
                         <div className="col">
                           <CardTitle
-                            tag="h5"
+                            tag="h6"
                             className="text-uppercase text-muted mb-0"
                           >
                             Average Score
@@ -99,7 +99,7 @@ class Header extends React.Component {
                       <Row>
                         <div className="col">
                           <CardTitle
-                            tag="h5"
+                            tag="h6"
                             className="text-uppercase text-muted mb-0"
                           >
                             Students
@@ -129,7 +129,7 @@ class Header extends React.Component {
                       <Row>
                         <div className="col">
                           <CardTitle
-                            tag="h5"
+                            tag="h6"
                             className="text-uppercase text-muted mb-0"
                           >
                             Classes
@@ -157,7 +157,7 @@ class Header extends React.Component {
                       <Row>
                         <div className="col">
                           <CardTitle
-                            tag="h5"
+                            tag="h6"
                             className="text-uppercase text-muted mb-0"
                           >
                             Completion

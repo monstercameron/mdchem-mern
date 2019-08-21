@@ -23,7 +23,7 @@ class AddAdmin {
     constructor(req, res) {
         this.res = res
         this.body = req.body
-        console.log('the body: ',this.body)
+        console.log('the body: ', this.body)
         this.run()
     }
     run = () => {
@@ -106,7 +106,7 @@ class AuthenticateAdmin {
     }
     emailExists = () => {
         new AdminEmailExists(this.body.email, (result) => {
-            console.log('the results',result)
+            console.log('the results', result)
             if (!result) return this.res.status(400).json({
                 results: {
                     message: `user ${this.body.email} doesn't exist`
@@ -257,9 +257,65 @@ class ResetAdminPassword {
         })
     }
 }
+/**
+ * @name Admin Groups
+ * @description queries database and return a list of groups for specified admin
+ */
+const adminGroups = async (req, res) => {
+    try {
+        const admin = db.model('admin', Admin)
+        const query = await admin.findOne({
+            email: req.body.email
+        }).select('-hash -recovery')
+        console.log(query)
+        res.json({
+            results: {
+                groups: query ? query.meta.mygroups : null
+            }
+        })
+    } catch (error) {
+        res.json({
+            results: {
+                error: error.message
+            }
+        })
+    }
+}
+/**
+ * @name Add Admin Groups
+ * @description appends a new  group tothe admin object
+ */
+const addAdminGroups = async (req, res) => {
+    try {
+        const admin = db.model('admin', Admin)
+        const query = await admin.findOne({
+            email: req.body.email
+        }).select('-hash -recovery')
+
+        console.log(query)
+
+        query.meta.mygroups.push({id:req.body.id,notes:req.body.notes})
+        await query.save()
+
+        console.log(query)
+        res.json({
+            results: {
+                message: 'Admin Updated'
+            }
+        })
+    } catch (error) {
+        res.json({
+            results: {
+                error: error.message
+            }
+        })
+    }
+}
 module.exports = {
     addAdmin: AddAdmin,
     authenticateAdmin: AuthenticateAdmin,
     adminEmailExist: AdminEmailExists,
-    resetAdminPassword: ResetAdminPassword
+    resetAdminPassword: ResetAdminPassword,
+    adminGroups,
+    addAdminGroups
 }

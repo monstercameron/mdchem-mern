@@ -15,31 +15,32 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Index from "views/production/Index.jsx";
-// import Profile from "views/examples/Profile.jsx";
-// import Maps from "views/examples/Maps.jsx";
-import Register from "views/production/Register.jsx";
-import Login from "views/production/Login.jsx";
-// import Tables from "views/examples/Tables.jsx";
-import Students from "views/production/Students.jsx";
-import SingleStudent from "views/production/SingleStudent.jsx";
-import Icons from "views/examples/Icons.jsx";
+// import Profile from "views/examples/Profile.jsx"
+// import Maps from "views/examples/Maps.jsx"
+// import Tables from "views/examples/Tables.jsx"
+// import Icons from "views/examples/Icons.jsx"
+import Index from "views/production/Index.jsx"
+import Register from "views/production/Register.jsx"
+import Login from "views/production/Login.jsx"
+import Students from "views/production/Students.jsx"
+import SingleStudent from "views/production/SingleStudent.jsx"
+import MyGroups from "views/production/MyGroups.jsx"
+import Settings from "views/production/Settings.jsx"
 
-var routes = [
-  {
+var routes = [{
     path: "/index",
     name: "Dashboard",
-    icon: "ni ni-tv-2 text-primary",
+    icon: "ni ni-tv-2 text-red",
     component: Index,
     layout: "/admin"
   },
-  {
-    path: "/icons",
-    name: "Icons",
-    icon: "ni ni-planet text-blue",
-    component: Icons,
-    layout: "/admin"
-  },
+  // {
+  //   path: "/icons",
+  //   name: "Icons",
+  //   icon: "ni ni-planet text-blue",
+  //   component: Icons,
+  //   layout: "/admin"
+  // },
   // {
   //   path: "/maps",
   //   name: "Maps",
@@ -64,15 +65,38 @@ var routes = [
   {
     path: "/student/:id",
     name: "Student",
-    icon: "ni ni-single-02 text-red",
+    icon: "fa fa-user text-red",
     component: SingleStudent,
-    layout: "/admin"
+    layout: "/admin",
+    hidden: true
+  },
+  {
+    path: "/students/:group",
+    name: "My Students",
+    icon: "fa fa-users text-red",
+    component: Students,
+    layout: "/admin",
+    hidden: true
   },
   {
     path: "/students",
-    name: "Students",
-    icon: "ni ni-bullet-list-67 text-red",
+    name: "My Students",
+    icon: "fa fa-users text-red",
     component: Students,
+    layout: "/admin"
+  },
+  {
+    path: "/groups",
+    name: "My Groups",
+    icon: "fa fa-list-ol text-red",
+    component: MyGroups,
+    layout: "/admin"
+  },
+  {
+    path: "/settings",
+    name: "My Settings",
+    icon: "fa fa-cogs text-red",
+    component: Settings,
     layout: "/admin"
   },
   {

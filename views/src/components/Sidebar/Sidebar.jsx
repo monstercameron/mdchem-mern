@@ -81,7 +81,7 @@ class Sidebar extends React.Component {
   // creates the links that appear in the left menu / Sidebar
   createLinks = routes => {
     return routes.map((prop, key) => {
-      if (prop.layout === '/admin') {
+      if (prop.layout === '/admin' && !prop.hidden) {
         return (
           <NavItem key={key}>
             <NavLink
@@ -140,7 +140,7 @@ class Sidebar extends React.Component {
           ) : null}
           {/* User */}
           <Nav className="align-items-center d-md-none">
-            <UncontrolledDropdown nav>
+            {/* <UncontrolledDropdown nav>
               <DropdownToggle nav className="nav-link-icon">
                 <i className="ni ni-bell-55" />
               </DropdownToggle>
@@ -154,41 +154,38 @@ class Sidebar extends React.Component {
                 <DropdownItem divider />
                 <DropdownItem>Something else here</DropdownItem>
               </DropdownMenu>
-            </UncontrolledDropdown>
+            </UncontrolledDropdown> */}
             <UncontrolledDropdown nav>
               <DropdownToggle nav>
                 <Media className="align-items-center">
                   <span className="avatar avatar-sm rounded-circle">
-                    <img
-                      alt="..."
-                      src={require("assets/img/theme/team-1-800x800.jpg")}
-                    />
+                    <i className=" ni ni-single-02" />
                   </span>
                 </Media>
               </DropdownToggle>
               <DropdownMenu className="dropdown-menu-arrow" right>
-                <DropdownItem className="noti-title" header tag="div">
-                  <h6 className="text-overflow m-0">Welcome!</h6>
+                {/* <DropdownItem className="noti-title" header tag="div">
+                    <h6 className="text-overflow m-0">Welcome!</h6>
+                  </DropdownItem> */}
+                {/* <DropdownItem to="/admin/user-profile" tag={Link}>
+                    <i className="ni ni-single-02" />
+                    <span>My profile</span>
+                  </DropdownItem> */}
+                <DropdownItem to="/admin/students" tag={Link}>
+                  <i className="fa fa-users text-red" />
+                  <span>My Students</span>
                 </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
-                  <i className="ni ni-single-02" />
-                  <span>My profile</span>
+                <DropdownItem to="/admin/groups" tag={Link}>
+                  <i className="fa fa-list-ol text-red" />
+                  <span>My Groups</span>
                 </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
-                  <i className="ni ni-settings-gear-65" />
-                  <span>Settings</span>
-                </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
-                  <i className="ni ni-calendar-grid-58" />
-                  <span>Activity</span>
-                </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
-                  <i className="ni ni-support-16" />
-                  <span>Support</span>
+                <DropdownItem to="/admin/settings" tag={Link}>
+                  <i className="fa fa-cogs text-red" />
+                  <span>My Settings</span>
                 </DropdownItem>
                 <DropdownItem divider />
-                <DropdownItem href="#pablo" onClick={e => e.preventDefault()}>
-                  <i className="ni ni-user-run" />
+                <DropdownItem href="/auth/login" onClick={e => this.logOut()}>
+                  <i className="ni ni-user-run text-red" />
                   <span>Logout</span>
                 </DropdownItem>
               </DropdownMenu>
@@ -225,7 +222,7 @@ class Sidebar extends React.Component {
               </Row>
             </div>
             {/* Form */}
-            <Form className="mt-4 mb-3 d-md-none">
+            {/* <Form className="mt-4 mb-3 d-md-none">
               <InputGroup className="input-group-rounded input-group-merge">
                 <Input
                   aria-label="Search"
@@ -239,7 +236,7 @@ class Sidebar extends React.Component {
                   </InputGroupText>
                 </InputGroupAddon>
               </InputGroup>
-            </Form>
+            </Form> */}
             {/* Navigation */}
             <Nav navbar>{this.createLinks(routes)}</Nav>
             {/* Divider */}

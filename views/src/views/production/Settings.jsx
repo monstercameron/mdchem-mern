@@ -16,19 +16,26 @@
 
 */
 import React from "react";
-import DataTable from "../../components/widgets/tables"
+import { withRouter } from 'react-router-dom'
 // reactstrap components
 import {
   Card,
   CardHeader,
   CardFooter,
   Container,
-  Row
+  Row,
+  Col
 } from "reactstrap";
 // core components
-import Header from "components/Headers/Header.jsx";
-class Tables extends React.Component {
+import Header from "components/Headers/Header.jsx"
+// import URL from '../../variables/url'
+// import axios from 'axios'
+class StudentInfo extends React.Component {
+  state = {}
+  componentWillMount = () => {
+  }
   render() {
+    console.log('student:', this.state)
     return (
       <>
         <Header />
@@ -36,21 +43,39 @@ class Tables extends React.Component {
         <Container className="mt--7" fluid>
           {/* Table */}
           <Row>
-            <div className="col">
+            <Col>
               <Card className="shadow">
                 <CardHeader className="border-0">
-                  <h3 className="mb-0">My Students</h3>
+                  <Container>
+                    <Row>
+                      <Col>
+                        <h3>My Settings</h3>
+                      </Col>
+                    </Row>
+                  </Container>
                 </CardHeader>
-                <DataTable />
+                <Container>
+                  <Row>
+                    <Col>
+                      Body
+                      </Col>
+                  </Row>
+                </Container>
                 <CardFooter className="py-4">
-                  things go here
+                  <Container>
+                    <Row>
+                      <Col>
+                        Footer
+                      </Col>
+                    </Row>
+                  </Container>
                 </CardFooter>
               </Card>
-            </div>
+            </Col>
           </Row>
         </Container>
       </>
     );
   }
 }
-export default Tables;
+export default withRouter(StudentInfo)
