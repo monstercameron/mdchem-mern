@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { MDBDataTable } from 'mdbreact'
 import URL from '../../variables/url'
 import axios from "axios"
@@ -11,9 +11,12 @@ class Table extends Component {
     componentWillMount = () => {
         this.fetchData()
     }
+    hasGroupId = () => {
+        return this.props.match.params.group ? this.props.match.params.group : ''
+    }
     fetchData = () => {
         axios({
-            url: `${URL.testing}/api/players/list`,
+            url: `${URL.testing}/api/players/list/?group=${this.hasGroupId()}`,
             method: 'get',
             withCredentials: true
         })
@@ -82,7 +85,7 @@ class Table extends Component {
     render() {
         //console.log(`state`, this.state)
         return (
-            <div className="p-4" style={{transition:'1s'}}>
+            <div className="p-4" style={{ transition: '1s' }}>
                 <MDBDataTable
                     data={this.state.data}
                 />
@@ -91,4 +94,4 @@ class Table extends Component {
     }
 }
 
-export default Table;
+export default withRouter(Table)

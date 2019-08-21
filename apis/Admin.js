@@ -4,9 +4,13 @@
 const router = require('express').Router()
 const {
     adminGroups,
-    addAdminGroups
+    addAdminGroups,
+    deleteAdminGroups
 } = require('../managers/Admin')
-router
-.post('/groups', adminGroups)
-.post('/groups/add', addAdminGroups)
+const {
+    isAuthAdmin
+} = require('../middleware/Authentication')
 module.exports = router
+    .post('/groups', isAuthAdmin, adminGroups)
+    .post('/groups/add', isAuthAdmin, addAdminGroups)
+    .post('/groups/delete', isAuthAdmin, deleteAdminGroups)

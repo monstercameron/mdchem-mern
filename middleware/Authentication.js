@@ -7,8 +7,12 @@ const {
 const isAuthenticatedAdmin = (req, res, next) => {
     verifyToken(req.cookies.token)
         .then(decoded => {
-            if (decoded.role === 'admin') next()
-            else res.status(401).json({
+            if (decoded.role === 'admin') {
+                res.locals = {
+                    ...decoded
+                }
+                next()
+            } else res.status(401).json({
                 message: `Unauthorized.`
             })
         })
@@ -22,8 +26,12 @@ const isAuthenticatedAdmin = (req, res, next) => {
 const isAuthenticatedStudent = (req, res, next) => {
     verifyToken(req.cookies.token)
         .then(decoded => {
-            if (decoded.role === 'student' || decoded.role === 'admin') next()
-            else res.status(401).json({
+            if (decoded.role === 'student' || decoded.role === 'admin') {
+                res.locals = {
+                    ...decoded
+                }
+                next()
+            } else res.status(401).json({
                 result: {
                     message: `Unauthorized.`
                 }

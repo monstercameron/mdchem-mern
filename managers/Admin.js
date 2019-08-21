@@ -141,7 +141,9 @@ class AuthenticateAdmin {
     generateToken = () => {
         const params = {
             payload: {
-                role: `admin`
+                role: `admin`,
+                email: this.body.email,
+                id: this._admin._id
             },
             options: {
                 expiresIn: 60 * 60 * 24 // 24 hours
@@ -294,10 +296,41 @@ const addAdminGroups = async (req, res) => {
 
         console.log(query)
 
-        query.meta.mygroups.push({id:req.body.id,notes:req.body.notes})
+        query.meta.mygroups.push({
+            id: req.body.id,
+            notes: req.body.notes
+        })
         await query.save()
 
         console.log(query)
+        res.json({
+            results: {
+                message: 'Admin Updated'
+            }
+        })
+    } catch (error) {
+        res.json({
+            results: {
+                error: error.message
+            }
+        })
+    }
+}
+/**
+ * @name Delete Admin Groups
+ * @description Removes a group from the admin object
+ */
+const deleteAdminGroups = async (req, res) => {
+    try {
+        const admin = db.model('admin', Admin)
+        const query = await admin.findOne({
+            email: res.locals.email
+        }).select('-hash -recovery')
+        // console.log(query)
+        const updatedGroups = query.meta.mygroups.filter((group) => group.id !== req.body.group)
+        query.meta.mygroups = updatedGroups
+        await query.save()
+        // console.log(query)
         res.json({
             results: {
                 message: 'Admin Updated'
@@ -317,5 +350,6 @@ module.exports = {
     adminEmailExist: AdminEmailExists,
     resetAdminPassword: ResetAdminPassword,
     adminGroups,
-    addAdminGroups
+    addAdminGroups,
+    deleteAdminGroups
 }

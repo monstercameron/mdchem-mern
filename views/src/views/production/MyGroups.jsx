@@ -53,7 +53,7 @@ class StudentInfo extends React.Component {
   displayGroups = () => {
     if (this.state.groups)
       return this.state.groups.map((group, index) => {
-        return <Group key={index} group={group} />
+        return <Group key={index} group={group} email={localStorage.getItem('email')} />
       })
   }
   addGroup = async () => {
@@ -64,21 +64,21 @@ class StudentInfo extends React.Component {
       data: { ...this.groupForm() }
     })
     console.log(addGroup)
-    if(addGroup.status === 200){
-      this.setState({open:!this.state.open})
+    if (addGroup.status === 200) {
+      this.setState({ open: !this.state.open })
       this.getAdminGroups()
       this.forceUpdate()
     }
   }
   groupForm = () => {
-    return  {
+    return {
       email: localStorage.getItem('email'),
       id: this.state.id,
       notes: this.state.notes
     }
   }
   render() {
-    console.log(this.state)
+    // console.log(this.state)
     return (
       <>
         <Header />
@@ -106,7 +106,7 @@ class StudentInfo extends React.Component {
                   <Row>
                     <Col>
                       {/* hidden class add */}
-                      <Col sm={12} className='border rounded p-2 shadow-lg' style={this.state.open ? { height: 'auto', visibility:'visible' } : { height: '0', visibility:'hidden' }}>
+                      <Col sm={12} className='border rounded p-2 shadow-lg' style={this.state.open ? { height: 'auto', visibility: 'visible' } : { height: '0', visibility: 'hidden' }}>
                         <Form>
                           <FormGroup>
                             <Input className='mb-2' type="text" name="id" id="id" placeholder="Group ID" onChange={e => this.setState({ id: e.target.value })} />
@@ -123,7 +123,7 @@ class StudentInfo extends React.Component {
                   <Container>
                     <Row>
                       <Col>
-                        Footer
+                        {/* Footer */}
                       </Col>
                     </Row>
                   </Container>

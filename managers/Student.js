@@ -278,7 +278,11 @@ class FindAllStudents {
             filter
         } = this.req
         const student = db.model('student', Student)
-        student.find({}, (err, docs) => {
+        const where = this.req.query.group ? {
+            'meta.group': this.req.query.group
+        } : {}
+
+        student.find(where, (err, docs) => {
             if (err) this.res.status(400).json({
                 results: {
                     students: docs
@@ -485,7 +489,7 @@ const countStudentsPerClass = async (req, res) => {
         const student = db.model('student', Student)
         const query = await student.countDocuments({
             meta: {
-                group:req.params.group
+                group: req.params.group
             }
         })
         // console.log(query)

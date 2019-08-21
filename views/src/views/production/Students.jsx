@@ -15,7 +15,8 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React from "react"
+import { withRouter } from 'react-router-dom'
 import DataTable from "../../components/widgets/tables"
 // reactstrap components
 import {
@@ -24,10 +25,13 @@ import {
   CardFooter,
   Container,
   Row
-} from "reactstrap";
+} from "reactstrap"
 // core components
-import Header from "components/Headers/Header.jsx";
+import Header from "components/Headers/Header.jsx"
 class Tables extends React.Component {
+  hasGroupId = () => {
+    return this.props.match.params.group ? `In  Group: ${this.props.match.params.group}` : ''
+  }
   render() {
     return (
       <>
@@ -39,7 +43,7 @@ class Tables extends React.Component {
             <div className="col">
               <Card className="shadow">
                 <CardHeader className="border-0">
-                  <h3 className="mb-0">My Students</h3>
+                  <h3 className="mb-0">My Students {this.hasGroupId()}</h3>
                 </CardHeader>
                 <DataTable />
                 <CardFooter className="py-4">
@@ -50,7 +54,7 @@ class Tables extends React.Component {
           </Row>
         </Container>
       </>
-    );
+    )
   }
 }
-export default Tables;
+export default withRouter(Tables)

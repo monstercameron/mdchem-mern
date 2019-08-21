@@ -12,10 +12,10 @@ const {
     highscore
 } = require('../managers/Student')
 router
-    .get('/list', (req, res) => {
+    .get('/count/:group', countStudentsPerClass)
+    .get('/list/', (req, res) => {
         new findAllStudents(req, res)
     })
-    .get('/list/:group', countStudentsPerClass)
     .get('/highscore', (req, res) => {
         new highscore(req, res)
     })

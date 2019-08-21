@@ -1,0 +1,25 @@
+MVP status
+
+//backend features
+count the amount of classes
+calculate completion rating
+backend email alerts
+
+//client  features
+caching results clientside
+client email verification
+client info update
+client  forgot password
+student data page stats and raw data
+reports
+
+//code
+make classes aync functions
+clean up code/filenames
+try catch errors
+
+//app
+update login screen
+update signup screen
+add forgot password screen
+cache network requests until the networkis connected
