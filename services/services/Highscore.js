@@ -11,9 +11,9 @@ module.exports = class HighScoreUpdate {
     }
     update = () => {
         new allStudentData(students => {
-            console.log(`Updating ${students.length} students hichscores`)
+            console.log(`Updating ${students.length} students highscores`)
             for (const student of students) {
-                console.log(student)
+                //console.log(student)
                 let score = 0
                 if (student.data) {
                     for (let key of Object.keys(student.data)) {

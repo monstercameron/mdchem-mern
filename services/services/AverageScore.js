@@ -27,12 +27,12 @@ module.exports = class HighScoreUpdate {
                         average: (score / students.length)
                     })
                     aStat.save((err, model) => {
-                        console.log(`Average Stats updated`)
+                        //console.log(`Average Stats updated`)
                     })
                 } else {
                     res.average = score / students.length
                     res.save((err, model) => {
-                        console.log(`Average Stats updated`)
+                        //console.log(`Average Stats updated`)
                     })
                 }
             })
