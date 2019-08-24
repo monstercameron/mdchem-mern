@@ -25,14 +25,16 @@ import {
   Container,
   Row,
   Col,
+  Input,
   Button
 } from "reactstrap";
 // core components
 import Header from "components/Headers/Header.jsx"
 import URL from '../../variables/url'
 import axios from 'axios'
+import Data from '../../components/widgets/Data'
 class StudentInfo extends React.Component {
-  state = { student: { _id: '', meta: {}, data: {} } }
+  state = { student: { _id: '', meta: {}, data: {} }, changeGroup: false, newGroup: '' }
   componentWillMount = () => {
     this.getStudentById()
   }
@@ -49,13 +51,34 @@ class StudentInfo extends React.Component {
     }
   }
   dataSetVisualizer = () => {
-    if (Object.keys(this.state.student.data).length > 0) {
-
-      for (const key in this.state.student.data) {
-        console.log(this.state.student.data[key])
-      }
-
+    if (this.state.student.data) {
+      return Object.keys(this.state.student.data).map((data, index) => {
+        return <Data key={index} levelId={data} {...this.state.student.data[data]} />
+      })
     }
+  }
+  changeGroupInput = () => {
+    if (this.state.changeGroup) {
+      return (
+        <Row>
+          <Col sm={4}>
+            <Input
+              className='btn-block'
+              placeholder={this.state.student.meta.group}
+              onChange={e => this.setState({ newGroup: e.target.value })}
+            />
+          </Col>
+          <Col sm={4}>
+            <Button className='btn-block' color='primary' onClick={e => this.changeGroupRequest()}>Update</Button>
+          </Col>
+        </Row>
+      )
+    } else {
+      return this.state.student.meta.group
+    }
+  }
+  changeGroupRequest = () => {
+    this.setState({ changeGroup: !this.state.changeGroup })
   }
   render() {
     console.log('student:', this.state)
@@ -68,9 +91,9 @@ class StudentInfo extends React.Component {
           <Row>
             <Col>
               <Row>
-                <Col sm={3} 
-                  className='mb-3 text-white border p-2 ml-3 rounded' 
-                  style={{ backgroundColor: 'white', a:{active:'red'} }}
+                <Col sm={3}
+                  className='mb-3 text-white border p-2 ml-3 rounded'
+                  style={{ backgroundColor: 'white', a: { active: 'red' } }}
                 >
                   <Link to='/admin/students'>
                     <i className="ni ni-bold-left"></i> Back To All Students
@@ -78,16 +101,19 @@ class StudentInfo extends React.Component {
                 </Col>
               </Row>
               <Card className="shadow">
-                <CardHeader className="border-0">
+                <CardHeader className="">
                   <Row>
-                    <Col sm={9}>
-                      <h3 className="mb-0 d-inline-block">ID: </h3> {this.state.student._id}
-                      <br></br>
-                      <h3 className="mb-0 d-inline-block">Email: </h3> {this.state.student.email}
-                      <br></br>
-                      <h3 className="mb-0 d-inline-block">Score: </h3> {this.state.student.score}
-                      <br></br>
-                      <h3 className="mb-0 d-inline-block">Group: </h3> {this.state.student.meta.group}
+                    <Col sm={9} className=''>
+                      <Row>
+                        <Col sm={3} className=''><h3>ID:</h3></Col>
+                        <Col sm={9} className=''>{this.state.student._id}</Col>
+                        <Col sm={3} className=''><h3>Email:</h3></Col>
+                        <Col sm={9} className=''>{this.state.student.email}</Col>
+                        <Col sm={3} className=''><h3>Score:</h3></Col>
+                        <Col sm={9} className=''>{this.state.student.score}</Col>
+                        <Col sm={3} className=''><h3>Group:</h3></Col>
+                        <Col sm={9} className=''>{this.changeGroupInput()}</Col>
+                      </Row>
                     </Col>
                     <Col sm={3}>
                       <Row>
@@ -100,13 +126,20 @@ class StudentInfo extends React.Component {
                           <Button className='btn-block' color='warning'>Reset</Button>
                         </Col>
                       </Row>
+                      <Row>
+                        <Col className='mt-3'>
+                          <Button className='btn-block' color='primary' onClick={_ => this.setState({ changeGroup: !this.state.changeGroup })}>
+                            Change Group {this.state.changeGroup?'-':'+'}
+                          </Button>
+                        </Col>
+                      </Row>
                     </Col>
                   </Row>
                 </CardHeader>
-                <Container>
+                <Container fluid>
                   <Row>
                     <Col>
-                      Student DATA
+                      <h3>Student dataset</h3>
                     </Col>
                   </Row>
                   <Row>

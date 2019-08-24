@@ -15,7 +15,7 @@ module.exports = class HighScoreUpdate {
     }
     update = () => {
         new allStudentData(students => {
-            console.log(`Averaging ${students.length} students hichscores`)
+            console.log(`Averaging ${students.length} students scores`)
             let score = 0
             for (let student of students) {
                 score += student.score

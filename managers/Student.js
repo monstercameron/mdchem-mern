@@ -211,16 +211,17 @@ class AuthenticateStudent {
     generateToken = () => {
         const params = {
             payload: {
-                role: `student`
+                role: `student`,
+                id: this._student._id
             },
             options: {
-                expiresIn: 60 * 15 // 15 minutes
+                expiresIn: 1000 * 60 * 60 * 24 * 7 /* 1  week */ 
             }
         }
         createToken(params)
             .then(token => this.res.status(200)
                 .cookie('token', token, {
-                    maxAge: 1000 * 60 * 60 * 12 /* 12 hours */ ,
+                    maxAge: 1000 * 60 * 60 * 24 * 7 /* 1  week */ ,
                     httpOnly: true
                 })
                 .cookie('id', this._student._id)

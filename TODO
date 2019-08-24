@@ -3,15 +3,25 @@ MVP status
 //backend features
 count the amount of classes
 calculate completion rating
-backend email alerts
+admin approval for other admins
+node mailer integration/backend email alerts
+check scores to see if higher else overwrite old score
+student data deletion api
+student update class api
+server log api
+update service chron job
+update landing page
 
 //client  features
 caching results clientside
 client email verification
 client info update
 client  forgot password
-student data page stats and raw data
+bad badword rejection
 reports
+internal messages
+list of admins
+download server logs
 
 //code
 make classes aync functions
@@ -22,4 +32,5 @@ try catch errors
 update login screen
 update signup screen
 add forgot password screen
-cache network requests until the networkis connected
+cache network requests until the network is connected
+toast notifications to signup/login screen

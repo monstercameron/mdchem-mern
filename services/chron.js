@@ -15,7 +15,7 @@ cron.schedule("*/59 * * * *", function () {
  * Run Service Every Minute dev
  */
 cron.schedule('* * * * *', () => {
-  console.log('running a task every minute a')
+  console.log('running a task every minute')
   new highScoreService()
   new averageScoreService()
 })
