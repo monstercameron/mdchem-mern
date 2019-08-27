@@ -5,6 +5,7 @@ const {
     db
 } = require('./Database')
 const Student = require('../models/schemas/student')
+const Stat = require('../models/schemas/stats')
 const {
     Hash,
     Compare
@@ -211,16 +212,19 @@ class AuthenticateStudent {
     generateToken = () => {
         const params = {
             payload: {
-                role: `student`
+                role: `student`,
+                id: this._student._id
             },
             options: {
-                expiresIn: 60 * 15 // 15 minutes
+                expiresIn: 1000 * 60 * 60 * 24 * 7 /* 1  week */
+                // expiresIn: 1000 * 30 /* 30 seconds */
             }
         }
         createToken(params)
             .then(token => this.res.status(200)
                 .cookie('token', token, {
-                    maxAge: 1000 * 60 * 60 * 12 /* 12 hours */ ,
+                    maxAge: 1000 * 60 * 60 * 24 * 7 /* 1  week */ ,
+                    // maxAge: 1000 * 30 /* 30 seconds */ ,
                     httpOnly: true
                 })
                 .cookie('id', this._student._id)
@@ -506,6 +510,23 @@ const countStudentsPerClass = async (req, res) => {
         })
     }
 }
+const averageScore = async (req, res) => {
+    try {
+        const stat = db.model('stats', Stat)
+        const query = await stat.findOne({})
+        //console.log(query)
+        res.json({
+            results: {
+                average: query.average
+            }
+        })
+    } catch (e) {
+        res.json({
+            error: e
+        })
+    }
+
+}
 module.exports = {
     addStudent: AddStudent,
     deleteStudent: DeleteStudent,
@@ -519,5 +540,6 @@ module.exports = {
     highscore: Highscore,
     updateStudent: UpdateStudent,
     resetStudentPassword: ResetStudentPassword,
-    countStudentsPerClass
+    countStudentsPerClass,
+    averageScore
 }

@@ -22,7 +22,7 @@ router
                 //console.log(decoded)
                 res.status(200).json({
                     results: {
-                        message: false
+                        message: decoded
                     }
                 })
             })
@@ -52,6 +52,17 @@ router
                         message: err
                     }
                 })
+            })
+    })
+    .get('/ping', (req, res) => {
+        verifyToken(req.cookies.token)
+            .then(decoded => {
+                //console.log(decoded)
+                res.status(200).send('true')
+            })
+            .catch(err => {
+                //console.log(err)
+                res.status(400).json('false')
             })
     })
     .get('/logout', (req, res) => {

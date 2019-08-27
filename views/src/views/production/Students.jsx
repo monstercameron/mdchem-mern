@@ -47,7 +47,7 @@ class Tables extends React.Component {
                 </CardHeader>
                 <DataTable />
                 <CardFooter className="py-4">
-                  things go here
+                  {/* things go here */}
                 </CardFooter>
               </Card>
             </div>

@@ -344,6 +344,31 @@ const deleteAdminGroups = async (req, res) => {
         })
     }
 }
+/**
+ * @name Count Admin Groups
+ * @description counts the number of groups amongst all admins
+ */
+const countAdminGroups = async (req, res) => {
+    try {
+        const admins = db.model('Admins', Admin)
+        const query = await admins.find({})
+        let count = 0
+        for (const admin of query) {
+            count += admin.meta.mygroups.length
+        }
+        // console.log('count:', count)
+        res.json({
+            results: {
+                count: count
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        res.json({
+            error: error.response
+        })
+    }
+}
 module.exports = {
     addAdmin: AddAdmin,
     authenticateAdmin: AuthenticateAdmin,
@@ -351,5 +376,6 @@ module.exports = {
     resetAdminPassword: ResetAdminPassword,
     adminGroups,
     addAdminGroups,
-    deleteAdminGroups
+    deleteAdminGroups,
+    countAdminGroups
 }

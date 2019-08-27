@@ -26,22 +26,18 @@ class Header extends React.Component {
     super(props);
     this.state = {
       student: {
-        avg: {
-          score: 999
-        },
+        average: 0,
         count: 0,
         class: 0,
-        completion:50
+        completion: 50
       }
     }
   }
-
-
   componentWillMount = () => {
-    //console.log(URL.testing)
     this.studentCount()
+    this.studentAvgScore()
+    this.getGroupCount()
   }
-
   studentCount = () => {
     if (!this.state.student.count > 0) {
       axios({
@@ -50,12 +46,45 @@ class Header extends React.Component {
         withCredentials: true
       })
         .then(res => {
-          this.setState({ student: Object.assign(this.state.student, {count:res.data.results.count}) })
+          this.setState({ student: Object.assign(this.state.student, { count: res.data.results.count }) })
         })
         .catch(err => console.log(err.response))
     }
   }
+  studentAvgScore = async () => {
+    if (!localStorage.getItem('avg') || localStorage.getItem('avg') === '0') {
+      try {
+        const query = await axios({
+          url: `${URL.testing}/api/players/average`,
+          method: 'get',
+          withCredentials: true
+        })
+        localStorage.setItem('avg', query.data.results.average)
+      } catch (error) {
+        console.log(error.response)
+      }
+    }
+    this.setState({ student: Object.assign(this.state.student, { average: localStorage.getItem('avg') }) })
+  }
+  getGroupCount = async () => {
+    if (!localStorage.getItem('group') || localStorage.getItem('group') === '0') {
+      try {
+        const query = await axios({
+          url: `${URL.testing}/api/admin/groups/count`,
+          method: 'get',
+          withCredentials: true,
+        })
+        localStorage.setItem('group', query.data.results.count)
+        console.log('this ran', query.data)
+        // alert(query.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    this.setState({ student: Object.assign(this.state.student, { class: localStorage.getItem('group') }) })
+  }
   render() {
+    // console.log('header state', this.state)
     return (
       <>
         <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
@@ -63,7 +92,7 @@ class Header extends React.Component {
             <div className="header-body">
               {/* Card stats */}
               <Row>
-                <Col lg="6" xl="3">
+                <Col lg="6" xl="4">
                   <Card className="card-stats mb-4 mb-xl-0">
                     <CardBody>
                       <Row>
@@ -74,8 +103,8 @@ class Header extends React.Component {
                           >
                             Average Score
                           </CardTitle>
-                          <span className="h2 font-weight-bold mb-0">
-                            {this.state.student.avg.score}
+                          <span className="h3 font-weight-bold mb-0">
+                            {this.state.student.average}
                           </span>
                         </div>
                         <Col className="col-auto">
@@ -93,7 +122,7 @@ class Header extends React.Component {
                     </CardBody>
                   </Card>
                 </Col>
-                <Col lg="6" xl="3">
+                <Col lg="6" xl="4">
                   <Card className="card-stats mb-4 mb-xl-0">
                     <CardBody>
                       <Row>
@@ -104,7 +133,7 @@ class Header extends React.Component {
                           >
                             Students
                           </CardTitle>
-                          <span className="h2 font-weight-bold mb-0">
+                          <span className="h3 font-weight-bold mb-0">
                             {this.state.student.count}
                           </span>
                         </div>
@@ -123,7 +152,7 @@ class Header extends React.Component {
                     </CardBody>
                   </Card>
                 </Col>
-                <Col lg="6" xl="3">
+                <Col lg="6" xl="4">
                   <Card className="card-stats mb-4 mb-xl-0">
                     <CardBody>
                       <Row>
@@ -151,8 +180,8 @@ class Header extends React.Component {
                     </CardBody>
                   </Card>
                 </Col>
-                <Col lg="6" xl="3">
-                  <Card className="card-stats mb-4 mb-xl-0">
+                <Col lg="6" xl="4">
+                  {/* <Card className="card-stats mb-4 mb-xl-0">
                     <CardBody>
                       <Row>
                         <div className="col">
@@ -162,7 +191,7 @@ class Header extends React.Component {
                           >
                             Completion
                           </CardTitle>
-                          <span className="h2 font-weight-bold mb-0">
+                          <span className="h3 font-weight-bold mb-0">
                             {this.state.student.completion}
                           </span>
                         </div>
@@ -172,14 +201,14 @@ class Header extends React.Component {
                           </div>
                         </Col>
                       </Row>
-                      {/* <p className="mt-3 mb-0 text-muted text-sm">
+                      <p className="mt-3 mb-0 text-muted text-sm">
                         <span className="text-success mr-2">
                           <i className="fas fa-arrow-up" /> 12%
                         </span>{" "}
                         <span className="text-nowrap">Since last month</span>
-                      </p> */}
+                      </p>
                     </CardBody>
-                  </Card>
+                  </Card> */}
                 </Col>
               </Row>
             </div>

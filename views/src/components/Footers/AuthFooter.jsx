@@ -33,8 +33,7 @@ class Login extends React.Component {
                   © 2019{" "}
                   <a
                     className="font-weight-bold ml-1"
-                    href="https://www.mdchem.app?ref=adr-auth-footer"
-                    target="_blank"
+                    href="https://www.mdchem.app"
                   >
                     MDChem
                   </a>
@@ -42,7 +41,7 @@ class Login extends React.Component {
               </Col>
               <Col xl="6">
                 <Nav className="nav-footer justify-content-center justify-content-xl-end">
-                  <NavItem>
+                  {/* <NavItem>
                     <NavLink
                       href=""
                       target="_blank"
@@ -65,7 +64,7 @@ class Login extends React.Component {
                     >
                       Open Source Licenses
                     </NavLink>
-                  </NavItem>
+                  </NavItem> */}
                 </Nav>
               </Col>
             </Row>
