@@ -10,13 +10,14 @@ const cron = require('node-cron')
 cron.schedule("*/59 * * * *", function () {
   console.log("Hourly Cron task");
   new highScoreService()
+  new averageScoreService()
 })
 /**
  * Run Service Every Minute dev
  */
-cron.schedule('* * * * *', () => {
-  console.log('running a task every minute')
-  new highScoreService()
-  new averageScoreService()
-})
+// cron.schedule('* * * * *', () => {
+//   console.log('running a task every minute')
+//   new highScoreService()
+//   new averageScoreService()
+// })
 module.exports = cron
