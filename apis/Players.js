@@ -4,9 +4,8 @@
 const router = require('express').Router()
 const highScoreService = require('../services/services/Highscore')
 const {
-    countStudentsPerClass
-} = require('../managers/Student')
-const {
+    averageScore,
+    countStudentsPerClass,
     findAllStudents,
     countStudent,
     highscore
@@ -19,13 +18,16 @@ router
     .get('/highscore', (req, res) => {
         new highscore(req, res)
     })
+    .get('/average', averageScore)
     .get('/count', (req, res) => {
         new countStudent(req, res)
     })
-    .post('/highscore/update', (req, res) => {
+    .get('/highscore/update', (req, res) => {
         new highScoreService()
         res.json({
-            message: `High Score Manually Updated`
+            results:{
+                message: `High Score Manually Updated`
+            }
         })
     })
 module.exports = router

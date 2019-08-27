@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Col, Row, Container } from 'reactstrap'
+import { Col, Row, Container, Button } from 'reactstrap'
 import Axios from 'axios';
 import URL from '../../variables/url'
 import { Table } from 'reactable'
@@ -20,6 +20,18 @@ class Highscore extends Component {
             .then(res => this.setState({ highscore: res.data.results.highscores }))
             .catch(err => console.log(err.response))
     }
+    manualRefresh = async () => {
+        try {
+            const query = await Axios({
+                url: `${URL.testing}/api/players/highscore/update`,
+                method: 'get',
+                withCredentials: true,
+            })
+            alert(query.data.results.message)
+        } catch (error) {
+            alert(error.response)
+        }
+    }
     render() {
         return (
             <Container>
@@ -29,8 +41,13 @@ class Highscore extends Component {
                         className='shadow-lg rounded m-2 p-5'
                     >
                         <Row>
-                            <Col className='mx-auto m-2 text-center pb-3'>
+                            <Col sm={10} className='mx-auto m-2 text-center pb-3'>
                                 <h3>Top 10 Highscores</h3>
+                            </Col>
+                            <Col sm={2} >
+                                <Button color='primary' onClick={this.manualRefresh}>
+                                    <i className="fa fa-refresh" aria-hidden="true">refresh</i>
+                                </Button>
                             </Col>
                         </Row>
                         <Row>
@@ -39,13 +56,6 @@ class Highscore extends Component {
                             </Col>
                         </Row>
                     </Col>
-                    <Col
-                        lg={4}
-                        style={{ backgroundColor: 'white' }}
-                        className='shadow-lg rounded m-2 p-5'
-                    >
-                        messages feed
-                </Col>
                 </Row>
             </Container>
         )

@@ -18,7 +18,8 @@
 import React from "react"
 import {
   Container,
-  Row
+  Row,
+  // Col
 } from "reactstrap";
 import Highscore from '../../components/widgets/highscore'
 import Header from "components/Headers/Header.jsx"
@@ -31,6 +32,13 @@ class Index extends React.Component {
         <Container className="mt--7" fluid>
           <Row>
             <Highscore />
+            {/* <Col
+              lg={4}
+              style={{ backgroundColor: 'white' }}
+              className='shadow-lg rounded m-2 p-5'
+            >
+              messages feed
+            </Col> */}
           </Row>
         </Container>
       </>

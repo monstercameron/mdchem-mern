@@ -5,7 +5,8 @@ const router = require('express').Router()
 const {
     adminGroups,
     addAdminGroups,
-    deleteAdminGroups
+    deleteAdminGroups,
+    countAdminGroups
 } = require('../managers/Admin')
 const {
     isAuthAdmin
@@ -14,3 +15,4 @@ module.exports = router
     .post('/groups', isAuthAdmin, adminGroups)
     .post('/groups/add', isAuthAdmin, addAdminGroups)
     .post('/groups/delete', isAuthAdmin, deleteAdminGroups)
+    .get('/groups/count', isAuthAdmin, countAdminGroups)

@@ -21,7 +21,7 @@ class Table extends Component {
             withCredentials: true
         })
             .then(response => {
-                console.log(response.data)
+                // console.log(response.data)
                 this.formatData(response.data.results.students)
             })
             .catch(err => console.log(err))
