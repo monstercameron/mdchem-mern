@@ -61,7 +61,7 @@ class Header extends React.Component {
         })
         localStorage.setItem('avg', query.data.results.average)
       } catch (error) {
-        console.log(error.response)
+        console.log(error)
       }
     }
     this.setState({ student: Object.assign(this.state.student, { average: localStorage.getItem('avg') }) })
@@ -78,7 +78,7 @@ class Header extends React.Component {
         console.log('this ran', query.data)
         // alert(query.data)
       } catch (error) {
-        console.log(error.response)
+        console.log(error)
       }
     }
     this.setState({ student: Object.assign(this.state.student, { class: localStorage.getItem('group') }) })
