@@ -10,14 +10,10 @@ const {
     countStudent,
     highscore
 } = require('../managers/Student')
-router
+module.exports = router
     .get('/count/:group', countStudentsPerClass)
-    .get('/list/', (req, res) => {
-        new findAllStudents(req, res)
-    })
-    .get('/highscore', (req, res) => {
-        new highscore(req, res)
-    })
+    .get('/list/', (req, res) => new findAllStudents(req, res))
+    .get('/highscore', (req, res) => new highscore(req, res))
     .get('/average', averageScore)
     .get('/count', countStudent)
     .get('/highscore/update', (req, res) => {
@@ -28,4 +24,3 @@ router
             }
         })
     })
-module.exports = router
