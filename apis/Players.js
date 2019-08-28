@@ -3,6 +3,7 @@
  */
 const router = require('express').Router()
 const highScoreService = require('../services/services/Highscore')
+const averageScoreService = require('../services/services/AverageScore')
 const {
     averageScore,
     countStudentsPerClass,
@@ -18,6 +19,7 @@ module.exports = router
     .get('/count', countStudent)
     .get('/highscore/update', (req, res) => {
         new highScoreService()
+        new averageScoreService()
         res.json({
             results: {
                 message: `High Score Manually Updated`
