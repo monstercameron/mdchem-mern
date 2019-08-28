@@ -393,10 +393,12 @@ class Highscore {
                     }
                 })
                 //console.log(highscores)
+                let scores = []
+                for(const highscore of highscores){
+                    scores.push({score:highscore.score,email:highscore.email})
+                }
                 this.res.json({
-                    results: {
-                        highscores: highscores
-                    }
+                        scores
                 })
             })
             .select('score')
