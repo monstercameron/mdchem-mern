@@ -11,6 +11,9 @@ student update class api
 server log api
 update service chron job
 update landing page
+check student registration to  save the right data in recovery object
+one admin  to rule them all
+
 
 //client  features
 caching results clientside

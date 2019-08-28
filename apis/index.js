@@ -19,6 +19,6 @@ router.use('/admin', /*isAuthAdmin,*/ Admin) // needs to add token checking midd
 router.use('/feed', isAuthAdmin, Feed)
 router.use('/message', isAuthAdmin, Msg)
 router.use('/player', isAuthStudent, Player)
-router.use('/players', isAuthAdmin, Players)
+router.use('/players', isAuthStudent, Players)
 //router.use('/test', isAuthAdmin, Test)
 module.exports = router
