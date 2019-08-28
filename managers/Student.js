@@ -244,24 +244,18 @@ class AuthenticateStudent {
 /**
  * Count  Students
  */
-class CountStudent {
-    constructor(req, res) {
-        this.req = req
-        this.res = res
-        this.run()
-    }
-    run = () => {
-        this.count()
-    }
-    count = () => {
+const CountStudent = async (req, res) => {
+    try {
         const student = db.model('student', Student);
-        student.countDocuments({}, (err, count) => {
-            if (err) throw err
-            this.res.json({
-                results: {
-                    count: count
-                }
-            })
+        const count = await student.countDocuments()
+        res.json({
+            results: {
+                count: count
+            }
+        })
+    } catch (error) {
+        res.json({
+            error: error
         })
     }
 }

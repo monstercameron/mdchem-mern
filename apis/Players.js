@@ -19,13 +19,11 @@ router
         new highscore(req, res)
     })
     .get('/average', averageScore)
-    .get('/count', (req, res) => {
-        new countStudent(req, res)
-    })
+    .get('/count', countStudent)
     .get('/highscore/update', (req, res) => {
         new highScoreService()
         res.json({
-            results:{
+            results: {
                 message: `High Score Manually Updated`
             }
         })
