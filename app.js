@@ -11,7 +11,7 @@ app.use(cookieParser())
 const cors = require('cors')
 //app.use(cors())
 app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://172.104.11.115") // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Origin", "https://www.mdchem.app") // update to match the domain you will make the request from
     // res.header("Access-Control-Allow-Origin", "http://localhost:3000") // update to match the domain you will make the request from
     res.header('Access-Control-Allow-Credentials', true)
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')

@@ -1,7 +1,6 @@
 MVP status
 
 //backend features
-count the amount of classes
 calculate completion rating
 admin approval for other admins
 node mailer integration/backend email alerts
@@ -13,6 +12,7 @@ update service chron job
 update landing page
 check student registration to  save the right data in recovery object
 one admin  to rule them all
+emails case insensitive
 
 
 //client  features
