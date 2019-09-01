@@ -106,7 +106,7 @@ class Login extends React.Component {
           localStorage.removeItem('email');
         }
 
-        this.setState({ redirect: '/admin/index' })
+        if (req.status === 200) this.setState({ redirect: '/admin/index' })
       } catch (error) {
         console.log(error)
         alert(error)
