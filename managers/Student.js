@@ -24,15 +24,15 @@ class AddStudent {
     }
     bodyShim = (body) => {
         return {
-            email: body.email,
+            email: body.email.toLowerCase(),
             role: 'student',
-            password: body.password,
+            password: body.password.toLowerCase(),
             recovery: {
-                question: body.question,
-                answer: body.answer
+                question: body.question.toLowerCase(),
+                answer: body.answer.toLowerCase()
             },
             meta: {
-                group: body.group
+                group: body.group.toLowerCase()
             }
         }
     }
@@ -533,6 +533,25 @@ const averageScore = async (req, res) => {
         })
     }
 }
+const changeGroup = async (req, res) => {
+    try {
+        const student = db.model('student', Student)
+        const query = await student.findById(req.body.id)
+        query.meta.group = req.body.group
+        query.save()
+        // console.log(query)
+        res.json({
+            results: {
+                message: `Student ${query.email}'s group was updated  successfully`
+            }
+        })
+    } catch (error) {
+        // console.log(error)
+        res.status(400).json({
+            error: error
+        })
+    }
+}
 module.exports = {
     addStudent: AddStudent,
     deleteStudent,
@@ -548,5 +567,6 @@ module.exports = {
     updateStudent: UpdateStudent,
     resetStudentPassword: ResetStudentPassword,
     countStudentsPerClass,
-    averageScore
+    averageScore,
+    changeGroup
 }

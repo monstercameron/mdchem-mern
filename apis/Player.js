@@ -6,7 +6,8 @@ const {
     addStudent,
     deleteStudent,
     findStudentById,
-    updateStudent
+    updateStudent,
+    changeGroup
 } = require('../managers/Student')
 router
     .get('/:id', (req, res) => {
@@ -16,4 +17,5 @@ router
         new updateStudent(req, res)
     })
     .delete('/', deleteStudent)
+    .post('/group', changeGroup)
 module.exports = router

@@ -68,6 +68,27 @@ class StudentInfo extends React.Component {
       }
     }
   }
+  changeGroup = async () => {
+    try {
+      const query = await axios({
+        url: `${URL.testing}/api/player/group`,
+        method: 'post',
+        withCredentials: true,
+        data: { id: this.state.student._id, group: this.state.newGroup }
+      })
+      console.log(query.data)
+      if (query.status === 200) {
+        this.setState({ changeGroup: false })
+        this.setState({ state: { student: { meta: Object.assign(this.state.student.meta, { group: this.state.newGroup }) } } })
+      }
+      alert(query.data.result.message)
+    } catch (error) {
+      if (error && error.response) {
+        console.log(error.response)
+        alert(error.response.data.error)
+      }
+    }
+  }
   dataSetVisualizer = () => {
     if (this.state.student.data) {
       return Object.keys(this.state.student.data).map((data, index) => {
@@ -87,7 +108,7 @@ class StudentInfo extends React.Component {
             />
           </Col>
           <Col sm={4}>
-            <Button className='btn-block' color='primary' onClick={e => this.changeGroupRequest()}>Update</Button>
+            <Button className='btn-block' color='primary' onClick={e => this.changeGroup()}>Update</Button>
           </Col>
         </Row>
       )
@@ -205,11 +226,11 @@ class StudentInfo extends React.Component {
                         <Button className='btn-block' color='danger' onClick={this.deleteStudent}>Delete</Button>
                       </Col>
                     </Row>
-                    <Row>
+                    {/* <Row>
                       <Col className='mt-3'>
                         <Button className='btn-block' color='warning'>Reset</Button>
                       </Col>
-                    </Row>
+                    </Row> */}
                     <Row>
                       <Col className='mt-3'>
                         <Button className='btn-block' color='primary' onClick={_ => this.setState({ changeGroup: !this.state.changeGroup })}>

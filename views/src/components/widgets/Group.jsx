@@ -64,7 +64,7 @@ class Group extends Component {
                 <Row
                     style={this.state.deleted ? { visibility: 'hidden' } : { visibility: 'visible' }}
                 >
-                    <Col sm={9}>
+                    <Col sm={8}>
                         <Row>
                             <Col>
                                 Group: {this.props.group.id}
@@ -77,14 +77,14 @@ class Group extends Component {
                             </Col>
                         </Row>
                     </Col>
-                    <Col sm={1}>
+                    <Col sm={2}>
                         <Link to={`/admin/students/${this.props.group.id}`}>
                             <Button color='success' className='btn-block'>
                                 <i className="fa fa-eye" aria-hidden="true"></i>
                             </Button>
                         </Link>
                     </Col>
-                    <Col sm={1} className='text-center'>
+                    <Col sm={2} className='text-center'>
                         <Button color="danger" className='btn-block' onClick={this.toggle}>
                             <i className="fa fa-trash" aria-hidden="true"></i>
                         </Button>

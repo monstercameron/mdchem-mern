@@ -31,7 +31,7 @@ class AddAdmin {
     }
     validateAdmin = () => {
         // Validation TBC
-        new AdminEmailExists(this.body.email, (results) => {
+        new AdminEmailExists(this.body.email.toLowerCase(), (results) => {
             if (results) {
                 return this.res.status(400).json({
                     results: {
@@ -44,12 +44,12 @@ class AddAdmin {
         })
     }
     primaryhash = () => {
-        new Hash(this.body.password, (hash) => {
+        new Hash(this.body.password.toLowerCase(), (hash) => {
             console.log(hash)
             const admin = db.model('admin', Admin);
             this._admin = new admin({
                 name: this.body.name,
-                email: this.body.email,
+                email: this.body.email.toLowerCase(),
                 role: this.body.role,
                 hash: hash,
                 recovery: {
@@ -65,7 +65,7 @@ class AddAdmin {
             question,
             answer
         } = this.body.recovery
-        new Hash(question + answer, (hash) => {
+        new Hash(question + answer.toLowerCase(), (hash) => {
             this._admin.recovery.hash = hash
             console.log(hash)
             //console.log('recovery hash')
@@ -105,9 +105,9 @@ class AuthenticateAdmin {
         this.emailExists()
     }
     emailExists = () => {
-        new AdminEmailExists(this.body.email, (result) => {
+        new AdminEmailExists(this.body.email.toLowerCase(), (result) => {
             console.log('the results', result)
-            if (!result) return this.res.status(400).json({
+            if (!result) return this.res.status(401).json({
                 results: {
                     message: `user ${this.body.email} doesn't exist`
                 }
@@ -125,7 +125,7 @@ class AuthenticateAdmin {
         const {
             hash
         } = this._admin
-        new Compare(password, hash, (result) => {
+        new Compare(password.toLowerCase(), hash, (result) => {
             //console.log(`result:`, result)
             if (result) {
                 this.generateToken()
@@ -205,7 +205,7 @@ class ResetAdminPassword {
     }
     emailExists = () => {
         new AdminEmailExists(this.body.email, (result) => {
-            if (!result) this.res.status(400).json({
+            if (!result) this.res.status(401).json({
                 results: {
                     message: `user ${this.body.email} doesn't exist`
                 }
