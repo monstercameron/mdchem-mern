@@ -41,19 +41,23 @@ class StudentInfo extends React.Component {
     this.getAdminGroups()
   }
   getAdminGroups = async () => {
-    const groups = await axios({
-      url: `${URL.testing}/api/admin/groups`,
-      method: 'post',
-      withCredentials: true,
-      data: { email: localStorage.getItem('email') }
-    })
-    // console.log(groups)
-    this.setState({ groups: groups.data.results.groups })
+    try {
+      const groups = await axios({
+        url: `${URL.testing}/api/admin/groups`,
+        method: 'post',
+        withCredentials: true,
+        data: { email: localStorage.getItem('email') }
+      })
+      // console.log(groups)
+      this.setState({ groups: groups.data.results.groups })
+    } catch (error) {
+      console.log(error)
+    }
   }
   displayGroups = () => {
     if (this.state.groups)
       return this.state.groups.map((group, index) => {
-        return <Group key={index} group={group} email={localStorage.getItem('email')} />
+        return <Group key={index} group={group} email={localStorage.getItem('temp')} />
       })
   }
   addGroup = async () => {

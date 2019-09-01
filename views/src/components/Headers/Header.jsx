@@ -75,7 +75,7 @@ class Header extends React.Component {
           withCredentials: true,
         })
         localStorage.setItem('group', query.data.results.count)
-        console.log('this ran', query.data)
+        // console.log('this ran', query.data)
         // alert(query.data)
       } catch (error) {
         console.log(error)

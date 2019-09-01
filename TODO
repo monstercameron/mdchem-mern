@@ -5,13 +5,10 @@ calculate completion rating
 admin approval for other admins
 node mailer integration/backend email alerts
 check scores to see if higher else overwrite old score
-student data deletion api
 student update class api
 server log api
-update service chron job
-update landing page
 check student registration to  save the right data in recovery object
-one admin  to rule them all
+one admin to rule them all
 emails case insensitive
 
 
@@ -20,7 +17,6 @@ caching results clientside
 client email verification
 client info update
 client  forgot password
-bad badword rejection
 reports
 internal messages
 list of admins

@@ -6,19 +6,23 @@ import { Table } from 'reactable'
 class Highscore extends Component {
     constructor(props) {
         super(props);
-        this.state = { highscore: [] }
+        this.state = { highScore: [] }
     }
     componentWillMount = () => {
         this.getHighscoreData()
     }
-    getHighscoreData = () => {
-        Axios({
-            url: `${URL.testing}/api/players/highscore`,
-            method: 'get',
-            withCredentials: true,
-        })
-            .then(res => this.setState({ highscore: res.data.results.highscores }))
-            .catch(err => console.log(err.response))
+    getHighscoreData = async () => {
+        try {
+            const req = await Axios({
+                url: `${URL.testing}/api/players/highscore`,
+                method: 'get',
+                withCredentials: true,
+            })
+            // console.log(req.data)
+            this.setState({ highScore: req.data.scores })
+        } catch (error) {
+            console.log(error)
+        }
     }
     manualRefresh = async () => {
         try {
@@ -33,6 +37,7 @@ class Highscore extends Component {
         }
     }
     render() {
+        // console.log('highscore', this.state)
         return (
             <Container>
                 <Row className=''>
@@ -52,7 +57,7 @@ class Highscore extends Component {
                         </Row>
                         <Row>
                             <Col>
-                                <Table className="table" data={this.state.highscore} />
+                                <Table className="table" data={this.state.highScore} />
                             </Col>
                         </Row>
                     </Col>

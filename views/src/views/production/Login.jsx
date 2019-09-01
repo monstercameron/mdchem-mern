@@ -83,43 +83,45 @@ class Login extends React.Component {
       password: this.state.password
     }
   }
-  login = () => {
+  login = async () => {
     const form = this.buildLoginRequestForm()
     if (this.validate()) {
-      axios({
-        url: `${URL.testing}/api/auth/login/admin`,
-        method: 'post',
-        withCredentials: true,
-        data: form
-      })
-        .then(response => {
-          console.log(response)
-          localStorage.setItem('temp', form.email)
-          if (this.state.remember) {
-            localStorage.setItem('email', form.email)
-            localStorage.setItem('avg', 0)
-            localStorage.setItem('group', 0)
-            localStorage.setItem('exp', new Date().getTime() + 3600000 /* 1 hour */)
-          } else {
-            localStorage.removeItem('email');
-          }
-          this.setState({ redirect: '/admin/index' })
+      try {
+        const req = await axios({
+          url: `${URL.testing}/api/auth/login/admin`,
+          method: 'post',
+          withCredentials: true,
+          data: form
         })
-        .catch(err => console.log(err.response))
+
+        console.log(req)
+        localStorage.setItem('temp', form.email)
+        localStorage.setItem('avg', 0)
+        localStorage.setItem('group', 0)
+        localStorage.setItem('exp', new Date().getTime() + 3600000 /* 1 hour */)
+
+        if (this.state.remember) {
+          localStorage.setItem('email', form.email)
+        } else {
+          localStorage.removeItem('email');
+        }
+
+        this.setState({ redirect: '/admin/index' })
+      } catch (error) {
+        console.log(error)
+        alert(error)
+      }
     }
-  }
-  redirect = () => {
-    let { redirect } = this.state
-    if (redirect.includes(':300')) {
-      redirect = redirect.split(':300')
-      return <Redirect to={redirect[1]} />
-    }
-    return <Redirect to={redirect} />
   }
   render() {
     //console.log('state', this.state)
     if (this.state.redirect !== null) {
-      return this.redirect()
+      let { redirect } = this.state
+      if (redirect.includes(':300')) {
+        redirect = redirect.split(':300')
+        return <Redirect to={redirect[1]} />
+      }
+      return <Redirect to={redirect} />
     }
     return (
       <>
@@ -201,7 +203,7 @@ class Login extends React.Component {
                 href="/auth/register"
                 onClick={e => {
                   //console.log(e.target.parentElement.href)
-                  this.setState({ redirect: '/auth/register' })
+                  this.setState({ redirect: './register' })
                   e.preventDefault()
                 }}
               >

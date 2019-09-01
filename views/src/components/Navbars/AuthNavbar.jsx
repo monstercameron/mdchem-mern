@@ -16,6 +16,7 @@
 
 */
 import React from "react";
+import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
 // reactstrap components
 import {
@@ -40,7 +41,9 @@ class AdminNavbar extends React.Component {
         >
           <Container className="px-4">
             <NavbarBrand to="/" tag={Link}>
-              <img alt="MDChem" src={require("assets/img/brand/logo.png")} />
+              {this.props.location.pathname.includes('register') || this.props.location.pathname.includes('login') ?
+                '' : <img alt="MDChem" src={require("assets/img/brand/logo.png")} />
+              }
             </NavbarBrand>
             <button className="navbar-toggler" id="navbar-collapse-main">
               <span className="navbar-toggler-icon" />
@@ -49,11 +52,10 @@ class AdminNavbar extends React.Component {
               <div className="navbar-collapse-header d-md-none">
                 <Row>
                   <Col className="collapse-brand" xs="6">
-                    <Link to="/">
-                      <img
-                        alt="MDCHEM"
-                        src={require("assets/img/brand/logo.png")}
-                      />
+                    <Link to="/"><img
+                      alt="MDCHEM"
+                      src={require("assets/img/brand/logo.png")}
+                    />
                     </Link>
                   </Col>
                   <Col className="collapse-close" xs="6">
@@ -103,4 +105,4 @@ class AdminNavbar extends React.Component {
   }
 }
 
-export default AdminNavbar;
+export default withRouter(AdminNavbar)

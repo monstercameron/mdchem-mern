@@ -261,7 +261,7 @@ class ResetAdminPassword {
 }
 /**
  * @name Admin Groups
- * @description queries database and return a list of groups for specified admin
+ * @description queries database and returns a list of groups for specified admin
  */
 const adminGroups = async (req, res) => {
     try {

@@ -30,19 +30,21 @@ class Data extends Component {
         }
     }
     explainCorrect = () => {
-        return this.props.correct.map((elem, index) => {
-            const group = elem.split('=')
-            // console.log(group)
-            // return `[${group[0]} ${group[1]}]`
-            return <Explain levelId={this.props.levelId} Id={index} state={true} key={index} reason={group[0]} data={group[1]}/>
-        })
+        if (this.props.correct)
+            return this.props.correct.map((elem, index) => {
+                const group = elem.split('=')
+                // console.log(group)
+                // return `[${group[0]} ${group[1]}]`
+                return <Explain levelId={this.props.levelId} Id={index} state={true} key={index} reason={group[0]} data={group[1]} />
+            })
     }
     explainIncorrect = () => {
+        if (this.props.incorrect)
         return this.props.incorrect.map((elem, index) => {
             const group = elem.split('=')
             // console.log(group)
             // return `[${group[0]} ${group[1]}]`
-            return <Explain levelId={this.props.levelId} Id={index} state={false} key={index} reason={group[0]} data={group[1]}/>
+            return <Explain levelId={this.props.levelId} Id={index} state={false} key={index} reason={group[0]} data={group[1]} />
         })
     }
     render() {

@@ -34,7 +34,7 @@ import URL from '../../variables/url'
 import axios from 'axios'
 import Data from '../../components/widgets/Data'
 class StudentInfo extends React.Component {
-  state = { student: { _id: '', meta: {}, data: {} }, changeGroup: false, newGroup: '' }
+  state = { student: { _id: '', meta: {}, data: {} }, changeGroup: false, newGroup: '', deleted: false }
   componentWillMount = () => {
     this.getStudentById()
   }
@@ -48,6 +48,24 @@ class StudentInfo extends React.Component {
       if (query.data.results.student) this.setState({ student: query.data.results.student })
     } catch (error) {
       console.log(error)
+    }
+  }
+  deleteStudent = async () => {
+    try {
+      const query = await axios({
+        url: `${URL.testing}/api/player`,
+        method: 'delete',
+        withCredentials: true,
+        data: { id: this.state.student._id }
+      })
+      console.log(query.data)
+      if (query.status === 200) this.setState({ deleted: true })
+      alert(query.data.result.message)
+    } catch (error) {
+      if (error && error.response) {
+        console.log(error)
+        alert(error.response.data.error)
+      }
     }
   }
   dataSetVisualizer = () => {
@@ -80,79 +98,157 @@ class StudentInfo extends React.Component {
   changeGroupRequest = () => {
     this.setState({ changeGroup: !this.state.changeGroup })
   }
+  deletedStudentPage = () => {
+    return (
+      <Container className="mt--7" fluid>
+        {/* Table */}
+        <Row>
+          <Col>
+            <Row>
+              <Col sm={3}
+                className='mb-3 text-white border p-2 ml-3 rounded'
+                style={{ backgroundColor: 'white', a: { active: 'red' } }}
+              >
+                <Link to='/admin/students'>
+                  <i className="ni ni-bold-left"></i> Back To All Students
+          </Link>
+              </Col>
+            </Row>
+            <Card className="shadow">
+              <CardHeader className="">
+                <Row>
+                  <Col sm={9} className=''>
+                    <Row>
+                      <Col sm={3} className=''><h3>ID:</h3></Col>
+                      <Col sm={9} className=''>[deleted]</Col>
+                      <Col sm={3} className=''><h3>Email:</h3></Col>
+                      <Col sm={9} className=''>[deleted</Col>
+                      <Col sm={3} className=''><h3>Score:</h3></Col>
+                      <Col sm={9} className=''>[deleted</Col>
+                      <Col sm={3} className=''><h3>Group:</h3></Col>
+                      <Col sm={9} className=''>[deleted</Col>
+                    </Row>
+                  </Col>
+                  <Col sm={3}>
+                    <Row>
+                      <Col>
+                        <Button className='btn-block' color='secondary' onClick={this.deleteStudent}>Delete</Button>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className='mt-3'>
+                        <Button className='btn-block' color='secondary'>Reset</Button>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className='mt-3'>
+                        <Button className='btn-block' color='secondary'>
+                          Change Group
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </CardHeader>
+              <Container fluid>
+                <Row>
+                  <Col>
+                    <h3>Student dataset</h3>
+                  </Col>
+                </Row>
+                <Row>
+                </Row>
+              </Container>
+              <CardFooter className="py-4">
+                {/* things go here */}
+              </CardFooter>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    )
+  }
+  renderPage = () => {
+    return (
+      <Container className="mt--7" fluid>
+        {/* Table */}
+        <Row>
+          <Col>
+            <Row>
+              <Col sm={3}
+                className='mb-3 text-white border p-2 ml-3 rounded'
+                style={{ backgroundColor: 'white', a: { active: 'red' } }}
+              >
+                <Link to='/admin/students'>
+                  <i className="ni ni-bold-left"></i> Back To All Students
+              </Link>
+              </Col>
+            </Row>
+            <Card className="shadow">
+              <CardHeader className="">
+                <Row>
+                  <Col sm={9} className=''>
+                    <Row>
+                      <Col sm={3} className=''><h3>ID:</h3></Col>
+                      <Col sm={9} className=''>{this.state.student._id}</Col>
+                      <Col sm={3} className=''><h3>Email:</h3></Col>
+                      <Col sm={9} className=''>{this.state.student.email}</Col>
+                      <Col sm={3} className=''><h3>Score:</h3></Col>
+                      <Col sm={9} className=''>{this.state.student.score}</Col>
+                      <Col sm={3} className=''><h3>Group:</h3></Col>
+                      <Col sm={9} className=''>{this.changeGroupInput()}</Col>
+                    </Row>
+                  </Col>
+                  <Col sm={3}>
+                    <Row>
+                      <Col>
+                        <Button className='btn-block' color='danger' onClick={this.deleteStudent}>Delete</Button>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className='mt-3'>
+                        <Button className='btn-block' color='warning'>Reset</Button>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className='mt-3'>
+                        <Button className='btn-block' color='primary' onClick={_ => this.setState({ changeGroup: !this.state.changeGroup })}>
+                          Change Group {this.state.changeGroup ? '-' : '+'}
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </CardHeader>
+              <Container fluid>
+                <Row>
+                  <Col>
+                    <h3>Student dataset</h3>
+                  </Col>
+                </Row>
+                <Row>
+                  {this.dataSetVisualizer()}
+                </Row>
+              </Container>
+              <CardFooter className="py-4">
+                {/* things go here */}
+              </CardFooter>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+
+    )
+  }
   render() {
-    console.log('student:', this.state)
+    // console.log('student:', this.state)
     return (
       <>
         <Header />
         {/* Page content */}
-        <Container className="mt--7" fluid>
-          {/* Table */}
-          <Row>
-            <Col>
-              <Row>
-                <Col sm={3}
-                  className='mb-3 text-white border p-2 ml-3 rounded'
-                  style={{ backgroundColor: 'white', a: { active: 'red' } }}
-                >
-                  <Link to='/admin/students'>
-                    <i className="ni ni-bold-left"></i> Back To All Students
-                  </Link>
-                </Col>
-              </Row>
-              <Card className="shadow">
-                <CardHeader className="">
-                  <Row>
-                    <Col sm={9} className=''>
-                      <Row>
-                        <Col sm={3} className=''><h3>ID:</h3></Col>
-                        <Col sm={9} className=''>{this.state.student._id}</Col>
-                        <Col sm={3} className=''><h3>Email:</h3></Col>
-                        <Col sm={9} className=''>{this.state.student.email}</Col>
-                        <Col sm={3} className=''><h3>Score:</h3></Col>
-                        <Col sm={9} className=''>{this.state.student.score}</Col>
-                        <Col sm={3} className=''><h3>Group:</h3></Col>
-                        <Col sm={9} className=''>{this.changeGroupInput()}</Col>
-                      </Row>
-                    </Col>
-                    <Col sm={3}>
-                      <Row>
-                        <Col>
-                          <Button className='btn-block' color='danger'>Unsubscribe</Button>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col className='mt-3'>
-                          <Button className='btn-block' color='warning'>Reset</Button>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col className='mt-3'>
-                          <Button className='btn-block' color='primary' onClick={_ => this.setState({ changeGroup: !this.state.changeGroup })}>
-                            Change Group {this.state.changeGroup?'-':'+'}
-                          </Button>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                </CardHeader>
-                <Container fluid>
-                  <Row>
-                    <Col>
-                      <h3>Student dataset</h3>
-                    </Col>
-                  </Row>
-                  <Row>
-                    {this.dataSetVisualizer()}
-                  </Row>
-                </Container>
-                <CardFooter className="py-4">
-                  {/* things go here */}
-                </CardFooter>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
+        {
+          this.state.deleted ? this.deletedStudentPage() : this.renderPage()
+        }
       </>
     );
   }

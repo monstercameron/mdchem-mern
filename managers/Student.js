@@ -93,24 +93,27 @@ class AddStudent {
     }
 }
 /**
- * Delete a Student from the database
+ * @name - Delete Student
+ * @description - Delete a Student from the database
  */
-class DeleteStudent {
-    constructor(req, res) {
-        this.res = res
-        this.body = req.body
-        this.run()
-    }
-    run = () => {
-        this.delete()
-    }
-    delete = () => {
-        new findByEmail(this.body.email, (result) => {
-            this.res.json({
-                results: {
-                    message: `Student Deleted`
-                }
+const deleteStudent = async (req, res) => {
+    try {
+        const student = await findStudentByEmailOrIdPromise(
+            req.body.email ? {
+                email: req.body.email
+            } : {
+                id: req.body.id
             })
+        // console.log(student)
+        const results = await student.remove()
+        res.json({
+            results: {
+                message: `Student ${student.email} deleted!`
+            }
+        })
+    } catch (error) {
+        res.status(400).json({
+            error: error.message
         })
     }
 }
@@ -357,6 +360,21 @@ class FindStudentByEmail {
         }).select('-hash -recovery')
     }
 }
+const findStudentByEmailOrIdPromise = async ({
+    email,
+    id
+}) => {
+    const student = db.model('student', Student)
+    const aStudent = await student.findOne(email ? {
+            email: email
+        } : {
+            _id: id
+        })
+        .select('-hash -recovery')
+    return new Promise((resolve, reject) => {
+        aStudent ? resolve(aStudent) : reject(new Error('Student Not Found'))
+    })
+}
 /**
  * Returns a list of all students and their data
  */
@@ -375,38 +393,31 @@ class AllData {
 /**
  * returns sorted list of highscore
  */
-class Highscore {
-    constructor(req, res) {
-        this.req = req
-        this.res = res
-        this.run()
-    }
-    run = () => {
-        this.getHighscore()
-    }
-    getHighscore = () => {
-        const student = db.model('students', Student)
-        student.find({}, (err, highscores) => {
-                if (err) return this.res.json({
-                    results: {
-                        message: err
-                    }
-                })
-                //console.log(highscores)
-                let scores = []
-                for(const highscore of highscores){
-                    scores.push({score:highscore.score,user:highscore.email})
-                }
-                this.res.json({
-                        scores
-                })
-            })
+const highscore = async (req, res) => {
+    try {
+        const student = db.model('student', Student)
+        const query = await student.find({})
             .select('score')
             .select('email')
             .sort({
                 score: -1
             })
             .limit(10)
+        let scores = []
+        for (const highscore of query) {
+            scores.push({
+                score: highscore.score,
+                user: highscore.email
+            })
+        }
+        res.json({
+            scores
+        })
+    } catch (error) {
+        console.log(error)
+        res.json({
+            error: error
+        })
     }
 }
 /**
@@ -521,19 +532,19 @@ const averageScore = async (req, res) => {
             error: e
         })
     }
-
 }
 module.exports = {
     addStudent: AddStudent,
-    deleteStudent: DeleteStudent,
+    deleteStudent,
     authenticateStudent: AuthenticateStudent,
     countStudent: CountStudent,
     findAllStudents: FindAllStudents,
+    findStudentByEmailOrIdPromise,
     emailExistsStudent: StudentEmailExists,
     findStudentById: FindStudentById,
     findStudentByEmail: FindStudentByEmail,
     allStudentData: AllData,
-    highscore: Highscore,
+    highscore,
     updateStudent: UpdateStudent,
     resetStudentPassword: ResetStudentPassword,
     countStudentsPerClass,

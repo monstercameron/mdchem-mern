@@ -14,7 +14,7 @@ const {
 module.exports = router
     .get('/count/:group', countStudentsPerClass)
     .get('/list/', (req, res) => new findAllStudents(req, res))
-    .get('/highscore', (req, res) => new highscore(req, res))
+    .get('/highscore', highscore)
     .get('/average', averageScore)
     .get('/count', countStudent)
     .get('/highscore/update', (req, res) => {

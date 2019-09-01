@@ -15,7 +15,5 @@ router
     .patch('/', (req, res) => {
         new updateStudent(req, res)
     })
-    .delete('/', (req, res) => {
-        new deleteStudent(req, res)
-    })
+    .delete('/', deleteStudent)
 module.exports = router

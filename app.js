@@ -9,15 +9,23 @@ app.use(cookieParser())
 
 // include cors
 const cors = require('cors')
-//app.use(cors())
-app.use(function (req, res, next) {
-    // res.header("Access-Control-Allow-Origin", "https://www.mdchem.app") // update to match the domain you will make the request from
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000") // update to match the domain you will make the request from
-    res.header('Access-Control-Allow-Credentials', true)
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-    next();
-});
+const corsOptions = {
+    // origin: `http://localhost:3000`,
+    origin: `https://www.mdchem.app`,
+    optionsSuccessStatus: 200,
+    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false
+}
+app.use(cors(corsOptions))
+// app.use(function (req, res, next) {
+//     // res.header("Access-Control-Allow-Origin", "https://www.mdchem.app") // update to match the domain you will make the request from
+//     res.header("Access-Control-Allow-Origin", "http://localhost:3000") // update to match the domain you will make the request from
+//     res.header('Access-Control-Allow-Credentials', true)
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+//     next();
+// });
 
 // include body parser
 const bodyParser = require('body-parser')

@@ -21,6 +21,7 @@ import questions from "../../variables/SecurityQuestions"
 import URL from '../../variables/url'
 import zxcvbn from "zxcvbn"
 import axios from "axios"
+import validator from 'validator';
 // reactstrap components
 import {
   Button,
@@ -42,7 +43,9 @@ class Register extends React.Component {
     super(props);
     this.state = {
       score: null,
-      privacy: false
+      privacy: false,
+      redirect: null,
+      validationErr: { name: null, email: null, password: null, secQuestion: null, secAnswer: null }
     };
   }
   handlePasswordInput = (e) => {
@@ -79,61 +82,111 @@ class Register extends React.Component {
     const form = this.buildRegistrationRequestForm()
     const { name, email, password, role } = form
     const { question, answer } = form.recovery
+    const pattern = {
+      lower: `(?=.*[a-z])`,
+      upper: `(?=.*[A-Z])`,
+      numeric: `(?=.*[0-9])`,
+      specChar: '(?=.[!@#\$%\^&])',
+      eightChar: `(?=.{8,})`
+    }
+    //reset validation errors
+    this.setState({ validationErr: null })
+    let verdict = true
+    //name
     if (name) {
-      console.log(`name is good`)
+      validator.matches(name, /^[a-zA-Z ]+$/) ?
+      this.setState({ validationErr: Object.assign(this.state.validationErr, { name: null }) }) :
+        this.setState({ validationErr: Object.assign(this.state.validationErr, { name: `Name shouldn't have non-alpha characters` }) })
     } else {
-      return false
+      verdict = false
+      this.setState({ validationErr: Object.assign(this.state.validationErr, { name: `Enter your name!` }) })
+
     }
+    //email
     if (email) {
-      console.log(`email is good`)
+      validator.isEmail(email) ?
+      this.setState({ validationErr: Object.assign(this.state.validationErr, { email: null }) }) :
+        this.setState({ validationErr: Object.assign(this.state.validationErr, { email: `Email isn't formatted properly!` }) })
     } else {
-      return false
+      verdict = false
+      this.setState({ validationErr: Object.assign(this.state.validationErr, { email: `Enter your email!` }) })
     }
+    //password
     if (password) {
-      console.log(`password is good`)
+      validator.matches(password, pattern.lower) ?
+        this.setState({ validationErr: Object.assign(this.state.validationErr, { password: null }) }) :
+        this.setState({ validationErr: Object.assign(this.state.validationErr, { password: `Must contain atleast 1 lower case character!` }) })
+      validator.matches(password, pattern.upper) ?
+        this.setState({ validationErr: Object.assign(this.state.validationErr, { password: null }) }) :
+        this.setState({ validationErr: Object.assign(this.state.validationErr, { password: `Must contain atleast 1 upper case character!` }) })
+      validator.matches(password, pattern.numeric) ?
+        this.setState({ validationErr: Object.assign(this.state.validationErr, { password: null }) }) :
+        this.setState({ validationErr: Object.assign(this.state.validationErr, { password: `Must contain atleast 1 number!` }) })
+      validator.matches(password, pattern.specChar) ?
+        this.setState({ validationErr: Object.assign(this.state.validationErr, { password: null }) }) :
+        this.setState({ validationErr: Object.assign(this.state.validationErr, { password: `Must contain atleast 1 special character!` }) })
+      validator.matches(password, pattern.eightChar) ?
+        this.setState({ validationErr: Object.assign(this.state.validationErr, { password: null }) }) :
+        this.setState({ validationErr: Object.assign(this.state.validationErr, { password: `Must contain atleast 8 characters!` }) })
     } else {
-      return false
+      verdict = false
+      this.setState({ validationErr: Object.assign(this.state.validationErr, { password: `Enter a password!` }) })
     }
+    //role
     if (role) {
-      console.log(`role is good`)
     } else {
-      return false
+      verdict = false
+      // this.setState({ validationErr: { email: `Email isn't formatted properly!` } })
     }
+    //sec question
     if (question) {
-      console.log(`question is good`)
+      this.setState({ validationErr: Object.assign(this.state.validationErr, { secQuestion: null }) })
     } else {
-      return false
+      verdict = false
+      this.setState({ validationErr: Object.assign(this.state.validationErr, { secQuestion: `Please select a security question!` }) })
     }
+    //sec answer
     if (answer) {
-      console.log(`answer is good`)
-    } else {
-      return false
+      this.setState({ validationErr: Object.assign(this.state.validationErr, { secAnswer: null }) })
     }
-    return true
+    else{
+       verdict = false
+      this.setState({ validationErr: Object.assign(this.state.validationErr, { secAnswer: `Please enter a security answer!` }) })
+    }
+    //the verdict
+    return verdict
   }
-  register = () => {
+  register = async () => {
     if (this.state.privacy && this.validate()) {
-      const form = this.buildRegistrationRequestForm()
-      axios({
-        method: 'post',
-        url: `${URL.testing}/api/auth/register/admin`,
-        headers: {},
-        data: form
-      })
-        .then(res => {
-          console.log(res)
-          this.setState({ toLogin: true })
+      try {
+        const form = this.buildRegistrationRequestForm()
+        const req = await axios({
+          method: 'post',
+          url: `${URL.testing}/api/auth/register/admin`,
+          headers: {},
+          data: form
         })
-        .catch(err => console.log(err))
+        console.log(req)
+        this.setState({ toLogin: true })
+      } catch (error) {
+        console.log(error.response.data.results.message)
+        alert(error.response.data.results.message)
+      }
     } else {
       // handle check box response
-      console.log('agree to privacy policy')
+      !this.state.privacy ? console.warn('Agree to privacy policy!') : console.log('You have agreed to the privacy policy!')
+      // alert('Agree to privacy policy!')
     }
   }
   render() {
-    //console.log(`state`, this.state)
-    if (this.state.toLogin === true) {
-      return <Redirect to='/auth/login' />
+    // console.log(`state`, this.state)
+    if (this.state.redirect !== null) {
+      let { redirect } = this.state
+      if (redirect.includes(':300')) {
+        redirect = redirect.split(':300')
+        return <Redirect to={redirect[1]} />
+      }
+      return <Redirect to={redirect} />
     }
     return (
       <>
@@ -150,7 +203,7 @@ class Register extends React.Component {
               </div>
               <Form role="form">
                 <FormGroup>
-                  <InputGroup className="input-group-alternative mb-3">
+                  <InputGroup className="input-group-alternative mb-1">
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
                         <i className="ni ni-hat-3" />
@@ -158,9 +211,17 @@ class Register extends React.Component {
                     </InputGroupAddon>
                     <Input placeholder="Name" type="text" onChange={e => this.setState({ name: e.target.value })} />
                   </InputGroup>
+                  {
+                    this.state.validationErr.name ?
+                      <div className="text-red font-italic">
+                        <small>
+                          {this.state.validationErr.name}
+                        </small>
+                      </div> : ''
+                  }
                 </FormGroup>
                 <FormGroup>
-                  <InputGroup className="input-group-alternative mb-3">
+                  <InputGroup className="input-group-alternative mb-1">
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
                         <i className="ni ni-email-83" />
@@ -168,6 +229,14 @@ class Register extends React.Component {
                     </InputGroupAddon>
                     <Input placeholder="Email" type="email" onChange={e => this.setState({ email: e.target.value })} />
                   </InputGroup>
+                  {
+                    this.state.validationErr.email ?
+                      <div className="text-red font-italic">
+                        <small>
+                          {this.state.validationErr.email}
+                        </small>
+                      </div> : ''
+                  }
                 </FormGroup>
                 <FormGroup>
                   <InputGroup className="input-group-alternative">
@@ -176,11 +245,11 @@ class Register extends React.Component {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Password" type="password" onChange={this.handlePasswordInput} />
+                    <Input placeholder="Password [1 upper, 1 lower, 1 special, 1 number, 8 chars]" type="password" onChange={this.handlePasswordInput} />
                   </InputGroup>
-                  <div className="text-muted font-italic">
+                  <div className="text-red font-italic">
                     <small>
-                      Password Strength is:  {this.handlePasswordScore()}
+                      {this.state.validationErr.password ? this.state.validationErr.password + ' | ' : ''} Password Strength is:  {this.handlePasswordScore()}
                     </small>
                   </div>
                 </FormGroup>
@@ -197,6 +266,14 @@ class Register extends React.Component {
                       return <option key={index}>{question}</option>
                     })}
                   </Input>
+                  {
+                    this.state.validationErr.secQuestion ?
+                      <div className="text-red font-italic">
+                        <small>
+                          {this.state.validationErr.secQuestion}
+                        </small>
+                      </div> : ''
+                  }
                 </FormGroup>
                 <FormGroup>
                   <InputGroup className="input-group-alternative">
@@ -211,6 +288,14 @@ class Register extends React.Component {
                       onChange={e => this.setState({ sec_answer: e.target.value })}
                     />
                   </InputGroup>
+                  {
+                    this.state.validationErr.secAnswer ?
+                      <div className="text-red font-italic">
+                        <small>
+                          {this.state.validationErr.secAnswer}
+                        </small>
+                      </div> : ''
+                  }
                 </FormGroup>
                 <Row className="my-4">
                   <Col xs="12">
@@ -243,6 +328,29 @@ class Register extends React.Component {
               </Form>
             </CardBody>
           </Card>
+          <Row className="mt-3">
+            <Col xs="6">
+              <a
+                className="text-light"
+                href="#pablo"
+                onClick={e => e.preventDefault()}
+              >
+                <small>Forgot password?</small>
+              </a>
+            </Col>
+            <Col className="text-right" xs="6">
+              <a
+                className="text-light"
+                href="/auth/login"
+                onClick={e => {
+                  this.setState({ redirect: '/auth/login' })
+                  e.preventDefault()
+                }}
+              >
+                <small>Login</small>
+              </a>
+            </Col>
+          </Row>
         </Col>
       </>
     );
