@@ -705,8 +705,8 @@ const deleteStudentLevelData = async (req, res) => {
 module.exports = {
     addStudent: AddStudent,
     deleteStudent,
-    AuthenticateStudent,
-    authenticateStudent,
+    authenticateStudent:AuthenticateStudent,
+    // authenticateStudent,
     countStudent: CountStudent,
     findAllStudents: FindAllStudents,
     findStudentByEmailOrIdPromise,

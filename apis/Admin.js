@@ -15,6 +15,7 @@ const {
 module.exports = router
     .get('/', getListOfAdmins)
     .get('/logs', getServerLogs)
+    .get('/logs/:fileName', getServerLogs)
     .delete('/', deleteAdmin)
     .post('/approve', approveAdmin)
     .post('/groups', adminGroups)

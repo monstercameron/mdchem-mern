@@ -58,7 +58,8 @@ class AdminData extends Component {
             this.toggle()
             this.props.getListOfAdmins()
         } catch (error) {
-            console.error(error)
+            console.error(error.response.data.error)
+            alert(error.response.data.error)
         }
     }
     toggleRedirect = e => {

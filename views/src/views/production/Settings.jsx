@@ -26,7 +26,11 @@ import {
   Row,
   Col,
   Input,
-  Button
+  Button,
+  DropdownItem,
+  ButtonDropdown,
+  DropdownToggle,
+  DropdownMenu
 } from "reactstrap";
 // core components
 import Header from "components/Headers/Header.jsx"
@@ -36,31 +40,66 @@ import SyntaxHighlighter from 'react-syntax-highlighter'
 class StudentInfo extends React.Component {
   state = {
     settings: { update: false, email: '', prePassword: '', password: '', vPassword: '' },
-    logs: { view: true, lines: 'No Data' },
-    lines: 50
+    logs: { view: false, lines: 'No Data' },
+    lines: 50,
+    logFiles: null,
+    selectedLog: null,
+    dropdownOpen: false
   }
-  componentWillMount = () => {
+  toggle = () => {
+    this.setState({
+      dropdownOpen: !this.state.dropdownOpen
+    });
   }
   toggleLogs = () => {
     if (this.state.logs.view) {
       this.setState({ logs: { view: false, lines: this.state.logs.lines } })
     } else {
       this.setState({ logs: { view: true, lines: this.state.logs.lines } })
-      this.getlog()
+      this.getlogs()
+    }
+  }
+  getlogs = async () => {
+    try {
+      const req = await axios({
+        url: `${URL.testing}/api/admin/logs`,
+        method: 'get',
+        withCredentials: true
+      })
+      console.log(req.data)
+      this.setState({ logFiles: req.data.results.files })
+    } catch (error) {
+      console.log(error)
+      // alert(error)
     }
   }
   getlog = async () => {
     try {
       const req = await axios({
-        url: `${URL.testing}/api/admin/logs?lines=${this.state.lines}`,
+        url: `${URL.testing}/api/admin/logs/${this.state.selectedLog}?lines=${this.state.lines}`,
         method: 'get',
         withCredentials: true
       })
-      console.log(req)
+      console.log(req.data)
       this.setState({ logs: { view: this.state.logs.view, lines: req.data.results.lines } })
     } catch (error) {
       console.log(error)
-      // alert(error)
+      alert(error)
+    }
+  }
+  logFileDropDown = () => {
+    if (this.state.logFiles) {
+      return this.state.logFiles.map((log, index) => {
+        return <DropdownItem
+          defaultValue={log}
+          key={index}
+          onClick={e => this.setState({ selectedLog: e.target.value })}
+        >
+          {log}
+        </DropdownItem>
+      })
+    } else {
+      return ''
     }
   }
   render() {
@@ -108,6 +147,20 @@ class StudentInfo extends React.Component {
                     </Col>
                     <Col sm={12} style={this.state.logs.view ? { height: 'auto' } : { height: '0px', overflow: 'hidden' }}>
                       <Row>
+                        <Col>
+                          <Row>
+                            <Col>
+                              <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                                <DropdownToggle caret>
+                                  {this.state.selectedLog ? this.state.selectedLog : 'Logs'}
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                  {this.logFileDropDown()}
+                                </DropdownMenu>
+                              </ButtonDropdown>
+                            </Col>
+                          </Row>
+                        </Col>
                         <Col>
                           <Input type='number' defaultValue={50} step={10} onChange={e => this.setState({ lines: e.target.value })} />
                         </Col>

@@ -485,18 +485,21 @@ const getServerLogs = async (req, res) => {
         const readdir = util.promisify(fs.readdir)
         const files = await readdir(`./logs`)
 
+        console.log(req.params)
         console.log(files)
-
-        let chosen
-        for (file of files) {
-            // console.log(file)
-            if (file.includes(today())) chosen = file
+        if(!req.params.fileName){
+            res.json({
+                results: {
+                    files: files
+                }
+            })
+            return
         }
 
-        console.log('the chose one',chosen, today())
+        console.log('the chosen one',req.params.fileName, today())
 
         const readLastLines = require('read-last-lines');
-        const lines = await readLastLines.read(`./logs/${chosen}`, req.query.lines)
+        const lines = await readLastLines.read(`./logs/${req.params.fileName}`, req.query.lines)
         res.json({
             results: {
                 lines: lines
