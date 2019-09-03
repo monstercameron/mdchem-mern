@@ -1,5 +1,5 @@
 /**
- * Student Manager
+ * @name Student Manager
  */
 const {
     db
@@ -14,7 +14,7 @@ const {
     createToken
 } = require('../managers/Authentication')
 /**
- * Add new Student to the database
+ * @name Add new Student to the database
  */
 class AddStudent {
     constructor(req, res) {
@@ -57,9 +57,6 @@ class AddStudent {
                 email: this.body.email,
                 role: this.body.role,
                 hash: hash,
-                recovery: {
-                    question: this.body.recovery.question
-                },
                 meta: {
                     group: this.body.meta.group
                 }
@@ -75,7 +72,10 @@ class AddStudent {
         } = this.body.recovery
         //console.log(this.body)
         new Hash(question + answer, (hash) => {
-            this._student.recovery.hash = hash
+            this._student.recovery = {
+                question: this.body.recovery.question,
+                hash: hash
+            }
             // console.log(this._student)
             this.saveStudent()
         })
@@ -105,7 +105,7 @@ const deleteStudent = async (req, res) => {
                 id: req.body.id
             })
         // console.log(student)
-        const results = await student.remove()
+        await student.remove()
         res.json({
             results: {
                 message: `Student ${student.email} deleted!`
@@ -245,7 +245,33 @@ class AuthenticateStudent {
     }
 }
 /**
- * Count  Students
+ * @name Authenticate Student
+ * @description logs a student in
+ */
+const authenticateStudent = async (req, res) => {
+    try {
+        console.log('ran')
+        //validation/sanity check
+        const {
+            email,
+            password
+        } = req.body
+        const checkEmail = await studentEmailExistPromise({
+            email: email
+        })
+        const student = await findStudentByEmailOrIdPromise({
+            email: email
+        })
+    } catch (error) {
+        console.log(error)
+        res.json({
+            error: error
+        })
+    }
+}
+/**
+ * @name Count Students
+ * @description returns a count of all registered students
  */
 const CountStudent = async (req, res) => {
     try {
@@ -298,6 +324,19 @@ class FindAllStudents {
     }
 }
 /**
+ * 
+ */
+const findAllStudentsPromise = async ({
+    where,
+    filter
+}) => {
+    const student = db.model('student', Student)
+    const query = await student.find(where).select(filter)
+    return new Promise((resolve, reject) => {
+        query ? resolve(true) : reject(new Error('Students Not Found with filters'))
+    })
+}
+/**
  * Check if the student already exists via email
  */
 class StudentEmailExists {
@@ -317,6 +356,21 @@ class StudentEmailExists {
             this.callback(docs)
         })
     }
+}
+/**
+ * @name Student Email Exist
+ * @description checks whether student email exists
+ */
+const studentEmailExistPromise = async ({
+    email
+}) => {
+    const student = db.model('student', Student)
+    const query = await student.findOne({
+        email: this.email
+    })
+    return new Promise((resolve, reject) => {
+        query ? resolve(true) : reject(new Error('Student Not Found'))
+    })
 }
 /**
  * Query student via unique key / id
@@ -360,6 +414,12 @@ class FindStudentByEmail {
         }).select('-hash -recovery')
     }
 }
+/**
+ * @name  Find Student By Email Or Id
+ * @param {email} param - student email
+ * @param {Id} param - student id
+ * @return student instance
+ */
 const findStudentByEmailOrIdPromise = async ({
     email,
     id
@@ -391,7 +451,8 @@ class AllData {
     }
 }
 /**
- * returns sorted list of highscore
+ * @name Highscore
+ * @description -returns sorted list of highscore
  */
 const highscore = async (req, res) => {
     try {
@@ -421,7 +482,7 @@ const highscore = async (req, res) => {
     }
 }
 /**
- * Reset Student Password
+ * @description Reset Student Password
  */
 class ResetStudentPassword {
     constructor(req, res) {
@@ -517,6 +578,10 @@ const countStudentsPerClass = async (req, res) => {
         })
     }
 }
+/**
+ * @name Student Average
+ * @description returns the average
+ */
 const averageScore = async (req, res) => {
     try {
         const stat = db.model('stats', Stat)
@@ -533,12 +598,14 @@ const averageScore = async (req, res) => {
         })
     }
 }
-const changeGroup = async (req, res) => {
+/**
+ * @name Change Student Group
+ * @description update a students group
+ */
+const changeStudentGroup = async (req, res) => {
     try {
         const student = db.model('student', Student)
-        const query = await student.findById(req.body.id)
-        query.meta.group = req.body.group
-        query.save()
+        const query = await student.findById(req.body.id || req.locals.id)
         // console.log(query)
         res.json({
             results: {
@@ -546,7 +613,90 @@ const changeGroup = async (req, res) => {
             }
         })
     } catch (error) {
-        // console.log(error)
+        console.log(error)
+        res.status(400).json({
+            error: error
+        })
+    }
+}
+/**
+ * @name Student Stars Status
+ * @description returns a list of levels and scores  for a  specified student
+ */
+const studentStarStatus = async (req, res) => {
+    try {
+        // console.log('details', req.params, req.body)
+        const student = db.model('student', Student)
+        const query = await student.findById(req.body.id)
+        // console.log(query)
+        if (req.params.format && req.params.format === '.csv') {
+            let result = ''
+            for (key in query.data) {
+                result += `${key}=${query.data[key].score},`
+            }
+            res.send(result.substring(0, result.length - 1))
+            return
+        }
+        const groups = []
+        for (key in query.data) {
+            groups.push({
+                level: key,
+                score: query.data[key].score
+            })
+        }
+        res.json({
+            results: {
+                groups: groups
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({
+            error: error
+        })
+    }
+}
+/**
+ * @name Reset Student Data
+ * @description erases all data for a specified student
+ */
+const resetStudentData = async (req, res) => {
+    try {
+        const student = db.model('student', Student)
+        const query = await student.findById(req.body.id)
+        query.data = {}
+        await query.save()
+        res.json({
+            results: {
+                message: `Student ${query.email} data was reset!`
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({
+            error: error
+        })
+    }
+}
+/**
+ * @name  Delete Student Data
+ * @description deletes level data for specified student
+ * @todo solve not saving error
+ */
+const deleteStudentLevelData = async (req, res) => {
+    try {
+        const student = db.model('student', Student)
+        const query = await student.findById(req.body.id)
+        delete query.data[req.body.levelId]
+        await query.save()
+        // console.log(query)
+        res.json({
+            results: {
+                message: `Student ${query.email}'s level ${req.body.levelId} data was not deleted!`
+            }
+        })
+    } catch (error) {
+        console.log(error)
         res.status(400).json({
             error: error
         })
@@ -555,7 +705,8 @@ const changeGroup = async (req, res) => {
 module.exports = {
     addStudent: AddStudent,
     deleteStudent,
-    authenticateStudent: AuthenticateStudent,
+    AuthenticateStudent,
+    authenticateStudent,
     countStudent: CountStudent,
     findAllStudents: FindAllStudents,
     findStudentByEmailOrIdPromise,
@@ -568,5 +719,10 @@ module.exports = {
     resetStudentPassword: ResetStudentPassword,
     countStudentsPerClass,
     averageScore,
-    changeGroup
+    changeStudentGroup,
+    studentStarStatus,
+    resetStudentData,
+    deleteStudentLevelData,
+    studentEmailExistPromise,
+    findAllStudentsPromise
 }

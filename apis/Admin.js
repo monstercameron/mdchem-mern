@@ -6,12 +6,17 @@ const {
     adminGroups,
     addAdminGroups,
     deleteAdminGroups,
-    countAdminGroups
+    countAdminGroups,
+    approveAdmin,
+    getListOfAdmins,
+    deleteAdmin,
+    getServerLogs
 } = require('../managers/Admin')
-const {
-    isAuthAdmin
-} = require('../middleware/Authentication')
 module.exports = router
+    .get('/', getListOfAdmins)
+    .get('/logs', getServerLogs)
+    .delete('/', deleteAdmin)
+    .post('/approve', approveAdmin)
     .post('/groups', adminGroups)
     .post('/groups/add', addAdminGroups)
     .post('/groups/delete', deleteAdminGroups)

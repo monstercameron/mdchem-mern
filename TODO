@@ -2,14 +2,11 @@ MVP status
 
 //backend features
 calculate completion rating
-admin approval for other admins
+admin approval for other admins / partial
 node mailer integration/backend email alerts
 check scores to see if higher else overwrite old score
-student update class api
 server log api
-check student registration to  save the right data in recovery object
-one admin to rule them all
-emails case insensitive
+check student registration to save the right data in recovery object
 
 
 //client  features
@@ -19,9 +16,10 @@ client info update
 client  forgot password
 reports
 internal messages
-list of admins
 download server logs
 error message modal
+privacy policy
+password reset student
 
 //code
 make classes aync functions

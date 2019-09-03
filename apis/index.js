@@ -16,6 +16,6 @@ router.use('/auth', Auth)
 router.use('/admin', isAuthAdmin, Admin)
 router.use('/feed', isAuthAdmin, Feed)
 router.use('/message', isAuthAdmin, Msg)
-router.use('/player', isAuthStudent, Player)
+router.use('/player', Player)
 router.use('/players', isAuthStudent, Players)
 module.exports = router

@@ -5,10 +5,31 @@ import {
     Button
 } from "reactstrap"
 import Explain from '../widgets/Explain'
+import axios from 'axios'
+import URL from '../../variables/url'
 class Data extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = { deleted: false }
+    }
+    deleteStudentData = async () => {
+        try {
+            const query = await axios({
+                url: `${URL.testing}/api/player/reset/level`,
+                method: 'post',
+                withCredentials: true,
+                data: { id: this.props.studentId, levelId: this.props.levelId }
+            })
+            console.log(query)
+            if (query.status === 200) this.setState({ deleted: true })
+            alert(query.data.results.message)
+        } catch (error) {
+            console.log(error)
+            if (error && error.response) {
+                console.log(error)
+                alert(error.response.data.error)
+            }
+        }
     }
     levelDescription = () => {
         switch (this.props.levelId) {
@@ -40,15 +61,15 @@ class Data extends Component {
     }
     explainIncorrect = () => {
         if (this.props.incorrect)
-        return this.props.incorrect.map((elem, index) => {
-            const group = elem.split('=')
-            // console.log(group)
-            // return `[${group[0]} ${group[1]}]`
-            return <Explain levelId={this.props.levelId} Id={index} state={false} key={index} reason={group[0]} data={group[1]} />
-        })
+            return this.props.incorrect.map((elem, index) => {
+                const group = elem.split('=')
+                // console.log(group)
+                // return `[${group[0]} ${group[1]}]`
+                return <Explain levelId={this.props.levelId} Id={index} state={false} key={index} reason={group[0]} data={group[1]} />
+            })
     }
     render() {
-        // console.log('The props', this.props)
+        // console.log('The state', this.state, this.props)
         return (
             <Col sm={12} className='m-2 shadow-lg p-3'>
                 <Row>
@@ -69,7 +90,7 @@ class Data extends Component {
                     <Col>
                         <Row>
                             <Col>
-                                <Button color='danger'>
+                                <Button color='danger' onClick={this.deleteStudentData}>
                                     Erase
                                 </Button>
                             </Col>

@@ -50,6 +50,24 @@ class StudentInfo extends React.Component {
       console.log(error)
     }
   }
+  resetStudentData = async () => {
+    try {
+      const query = await axios({
+        url: `${URL.testing}/api/player/reset`,
+        method: 'post',
+        withCredentials: true,
+        data: { id: this.state.student._id }
+      })
+      console.log(query.data)
+      if (query.status === 200) this.getStudentById()
+      alert(query.data.results.message)
+    } catch (error) {
+      if (error && error.response) {
+        console.log(error)
+        alert(error.response.data.error)
+      }
+    }
+  }
   deleteStudent = async () => {
     try {
       const query = await axios({
@@ -60,7 +78,7 @@ class StudentInfo extends React.Component {
       })
       console.log(query.data)
       if (query.status === 200) this.setState({ deleted: true })
-      alert(query.data.result.message)
+      alert(query.data.results.message)
     } catch (error) {
       if (error && error.response) {
         console.log(error)
@@ -81,7 +99,7 @@ class StudentInfo extends React.Component {
         this.setState({ changeGroup: false })
         this.setState({ state: { student: { meta: Object.assign(this.state.student.meta, { group: this.state.newGroup }) } } })
       }
-      alert(query.data.result.message)
+      alert(query.data.results.message)
     } catch (error) {
       if (error && error.response) {
         console.log(error.response)
@@ -92,7 +110,7 @@ class StudentInfo extends React.Component {
   dataSetVisualizer = () => {
     if (this.state.student.data) {
       return Object.keys(this.state.student.data).map((data, index) => {
-        return <Data key={index} levelId={data} {...this.state.student.data[data]} />
+        return <Data key={index} studentId={this.state.student._id} levelId={data} {...this.state.student.data[data]} />
       })
     }
   }
@@ -226,14 +244,14 @@ class StudentInfo extends React.Component {
                         <Button className='btn-block' color='danger' onClick={this.deleteStudent}>Delete</Button>
                       </Col>
                     </Row>
-                    {/* <Row>
-                      <Col className='mt-3'>
-                        <Button className='btn-block' color='warning'>Reset</Button>
-                      </Col>
-                    </Row> */}
                     <Row>
                       <Col className='mt-3'>
-                        <Button className='btn-block' color='primary' onClick={_ => this.setState({ changeGroup: !this.state.changeGroup })}>
+                        <Button className='btn-block' color='warning' onClick={this.resetStudentData}>Reset</Button>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className='mt-3'>
+                        <Button className='btn-block' color='primary' onClick={e => this.setState({ changeGroup: !this.state.changeGroup })}>
                           Change Group {this.state.changeGroup ? '-' : '+'}
                         </Button>
                       </Col>

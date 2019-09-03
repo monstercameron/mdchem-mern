@@ -26,6 +26,7 @@ import Students from "views/production/Students.jsx"
 import SingleStudent from "views/production/SingleStudent.jsx"
 import MyGroups from "views/production/MyGroups.jsx"
 import Settings from "views/production/Settings.jsx"
+import Admins from "views/production/Admins.jsx"
 
 var routes = [{
     path: "/index",
@@ -72,7 +73,7 @@ var routes = [{
   },
   {
     path: "/students/:group",
-    name: "My Students",
+    name: "Students",
     icon: "fa fa-users text-red",
     component: Students,
     layout: "/admin",
@@ -80,21 +81,28 @@ var routes = [{
   },
   {
     path: "/students",
-    name: "My Students",
+    name: "Students",
     icon: "fa fa-users text-red",
     component: Students,
     layout: "/admin"
   },
   {
     path: "/groups",
-    name: "My Groups",
+    name: "Groups",
     icon: "fa fa-list-ol text-red",
     component: MyGroups,
     layout: "/admin"
   },
   {
+    path: "/admins",
+    name: "Admins",
+    icon: "fa fa-grav text-red",
+    component: Admins,
+    layout: "/admin"
+  },
+  {
     path: "/settings",
-    name: "My Settings",
+    name: "Settings",
     icon: "fa fa-cogs text-red",
     component: Settings,
     layout: "/admin"

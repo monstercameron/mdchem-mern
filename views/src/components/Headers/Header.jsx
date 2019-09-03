@@ -59,7 +59,7 @@ class Header extends React.Component {
           method: 'get',
           withCredentials: true
         })
-        localStorage.setItem('avg', query.data.results.average)
+        localStorage.setItem('avg', query.data.results.average.toFixed(2))
       } catch (error) {
         console.log(error)
       }

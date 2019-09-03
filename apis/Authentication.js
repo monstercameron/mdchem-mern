@@ -81,7 +81,7 @@ router
                 new authenticateStudent(req, res)
                 break
             case 'admin':
-                new authenticateAdmin(req, res)
+                authenticateAdmin(req, res)
                 break
             default:
                 res.status(401).json({
@@ -95,7 +95,7 @@ router
                 new addStudent(req, res)
                 break
             case 'admin':
-                new addAdmin(req, res)
+                addAdmin(req, res)
                 break
             default:
                 res.status(401).json({
@@ -107,7 +107,7 @@ router
     .post('/reset/:role', (req, res) => {
         switch (req.params.role) {
             case 'admin':
-                new resetAdminPassword(req, res)
+                resetAdminPassword(req, res)
                 break
             case 'student':
                 new resetStudentPassword(req, res)

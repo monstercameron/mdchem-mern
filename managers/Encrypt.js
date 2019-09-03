@@ -1,5 +1,5 @@
 /**
- * Encryption Manager
+ * @name Encryption Manager
  */
 const bcrypt = require('bcrypt')
 class Hash {
@@ -33,7 +33,34 @@ class Compare {
         });
     }
 }
+/**
+ * @name Hash
+ * @param {string} password - user password to hash
+ * @returns - hashed password
+ */
+const hash = async ({
+    password
+}) => {
+    const salt = await bcrypt.genSalt(parseInt(process.env.TOKEN_SALT_ROUNDS))
+    return bcrypt.hash(password, salt)
+}
+/**
+ * @name Compare
+ * @param {string} password - user password plain text
+ * @param {string} hash - user password hash
+ */
+const compare = async ({
+    password,
+    hash
+}) => {
+    return new Promise(async (resolve, reject) => {
+        const result = await bcrypt.compare(password, hash)
+        result ? resolve(result) : reject(new Error(`Password doesn't match stored value`))
+    })
+}
 module.exports = {
     Hash: Hash,
-    Compare: Compare
+    hash,
+    Compare: Compare,
+    compare
 }

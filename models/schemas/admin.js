@@ -6,6 +6,14 @@ module.exports = require('mongoose').Schema({
     email: String,
     hash: String,
     role: String,
+    approved: {
+        type: Boolean,
+        defualt: false
+    },
+    su: {
+        type: Boolean,
+        defualt: false
+    },
     recovery: {
         question: String,
         hash: String

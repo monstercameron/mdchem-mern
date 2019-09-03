@@ -1,5 +1,5 @@
 /**
- * Admin  Manager
+ * @name Admin Manager
  */
 const {
     db,
@@ -8,7 +8,9 @@ const {
 const Admin = require('../models/schemas/admin')
 const {
     Hash,
-    Compare
+    Compare,
+    hash,
+    compare
 } = require('../managers/Encrypt')
 const {
     adminEmailExist
@@ -16,6 +18,8 @@ const {
 const {
     createToken
 } = require('../managers/Authentication')
+const util = require('util');
+const fs = require('fs');
 /**
  * Add Admin
  */
@@ -89,83 +93,99 @@ class AddAdmin {
         })
     }
 }
-/**
- * Login by generating a token
- */
-class AuthenticateAdmin {
-    constructor(req, res) {
-        this.res = res
-        this.body = req.body
-        this.run()
-    }
-    run = () => {
-        this.validation()
-    }
-    validation = () => {
-        this.emailExists()
-    }
-    emailExists = () => {
-        new AdminEmailExists(this.body.email.toLowerCase(), (result) => {
-            console.log('the results', result)
-            if (!result) return this.res.status(401).json({
-                results: {
-                    message: `user ${this.body.email} doesn't exist`
-                }
-            })
-            //console.log(result)
-            this._admin = result
-            this.checkPassword()
-        })
-    }
-    checkPassword = () => {
-        console.log(this._admin)
+const addAdmin = async (req, res) => {
+    try {
         const {
+            name,
+            email,
+            role,
             password
-        } = this.body
+        } = req.body
         const {
-            hash
-        } = this._admin
-        new Compare(password.toLowerCase(), hash, (result) => {
-            //console.log(`result:`, result)
-            if (result) {
-                this.generateToken()
-            } else {
-                this.res.status(401).json({
-                    results: {
-                        message: `Credentials did not match.`
-                    }
-                })
+            question,
+            answer
+        } = req.body.recovery
+        const checkEmail = await adminEmailExists({
+            email: email.toLowerCase()
+        })
+        if (checkEmail) throw new Error(`Admin with email '${email}' already exists!`)
+        const mainHash = await hash({
+            password: password.toLowerCase()
+        })
+        const recoveryHash = await hash({
+            password: question.toLowerCase() + answer.toLowerCase()
+        })
+        const admin = db.model('admin', Admin);
+        const anAdmin = new admin({
+            name: name,
+            email: email.toLowerCase(),
+            role: role,
+            hash: mainHash,
+            recovery: {
+                question: question,
+                hash: recoveryHash
             }
         })
+        anAdmin.save()
+        res.json({
+            results: {
+                message: `Admin ${email} registered!`
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        res.json({
+            error: error.message
+        })
     }
-    generateToken = () => {
+}
+/**
+ * @name - Authenticate Admin
+ * @description - Admin authentication and token mechanism
+ */
+const authenticateAdmin = async (req, res) => {
+    try {
+        //validation/sanity check
+        const {
+            email,
+            password
+        } = req.body
+        await adminEmailExists({
+            email: email
+        })
+        const query = await getAdmin({
+            email: email
+        })
+        await compare({
+            hash: query.hash,
+            password: password.toLowerCase()
+        })
         const params = {
             payload: {
                 role: `admin`,
-                email: this.body.email,
-                id: this._admin._id
+                email: email,
+                id: query._id,
+                su: query.su ? query.su : false
             },
             options: {
-                expiresIn: 60 * 60 * 24 // 24 hours
+                expiresIn: 1000 * 60 * 60 * 12 /* 12 hours */
             }
         }
-        createToken(params)
-            .then(token => this.res.status(200)
-                .cookie('token', token, {
-                    maxAge: 1000 * 60 * 60 * 12 /* 12 hours */ ,
-                    httpOnly: true
-                })
-                .json({
-                    results: {
-                        message: `Successfully Authenticated.`
-                    }
-                }))
-            .catch(err => this.res.status(500).json({
+        const token = await createToken(params)
+        res.cookie('token', token, {
+                maxAge: 1000 * 60 * 60 * 12 /* 12 hours */ ,
+                httpOnly: true
+            })
+            .json({
                 results: {
-                    error: err,
-                    message: `There was an error.`
+                    message: `Successfully Authenticated.`
                 }
-            }))
+            })
+    } catch (error) {
+        // console.log('error',error)
+        res.json({
+            error: error.message
+        })
     }
 }
 /**
@@ -191,71 +211,72 @@ class AdminEmailExists {
     }
 }
 /**
- * Reset Admin Password
+ * @name Admin Email Exists
+ * @description Check If Admin Email Exists
  */
-class ResetAdminPassword {
-    constructor(req, res) {
-        this.body = req.body
-        this.res = res
-        this.run()
-        //res.json(this.body)
-    }
-    run = () => {
-        this.emailExists()
-    }
-    emailExists = () => {
-        new AdminEmailExists(this.body.email, (result) => {
-            if (!result) this.res.status(401).json({
-                results: {
-                    message: `user ${this.body.email} doesn't exist`
-                }
-            })
-            //console.log(result)
-            this._admin = result
-            this.checkSecretQuestion()
-        })
-    }
-    checkSecretQuestion = () => {
+const adminEmailExists = async ({
+    email
+}) => {
+    const admin = db.model('admin', Admin)
+    const query = await admin.findOne({
+        email: email
+    })
+    return new Promise((resolve, reject) => {
+        query ? resolve(true) : reject(new Error(`Admin '${email}' doesn't exist`))
+    })
+}
+/**
+ * @name Get Admin
+ * @description find and returns and admin
+ * @param {string} email - 
+ * @returns admin object
+ */
+const getAdmin = async ({
+    email
+}) => {
+    const admin = db.model('admin', Admin)
+    const query = await admin.findOne({
+        email: email
+    })
+    return new Promise((resolve, reject) => {
+        query ? resolve(query) : reject(new Error(`Admin '${email}' doesn't exist`))
+    })
+}
+/**
+ * @name Reset Admin Password
+ * @description resets the admin password based on the security question
+ */
+const resetAdminPassword = async (req, res) => {
+    try {
         const {
+            email,
+            password,
             question,
             answer
-        } = this.body
-        const {
-            hash
-        } = this._admin.recovery
-        new Compare(question + answer, hash, (result) => {
-            //console.log(`result:`, result)
-            if (result) {
-                this.generateNewHash()
-            } else {
-                this.res.status(401).json({
-                    results: {
-                        message: `Credentials did not match.`
-                    }
-                })
+        } = req.body
+        await adminEmailExists({
+            email: email
+        })
+        const query = await getAdmin({
+            email: email
+        })
+        await compare({
+            password: question + answer,
+            hash: query.recovery.hash
+        })
+        query.hash = await hash({
+            password: password
+        })
+        await query.save()
+        res.json({
+            results: {
+                message: `Admin ${query.email} password updated!`
             }
         })
-    }
-    generateNewHash = () => {
-        new Hash(this.body.password, (hash) => {
-            this._admin.hash = hash
-            //console.log(this._admin)
-            this.updatePassword()
-        })
-    }
-    updatePassword = () => {
-        this._admin.save((err, model) => {
-            if (err) throw this.res.status(500).json({
-                results: {
-                    error: err
-                }
-            })
-            // console.log(model)
-            this.res.status(200).json({
-                results: {
-                    message: `Admin ${model.email} password updated!`
-                }
-            })
+    } catch (error) {
+        // console.log(error)
+        res.json({
+            error: error.message
         })
     }
 }
@@ -352,14 +373,16 @@ const countAdminGroups = async (req, res) => {
     try {
         const admins = db.model('Admins', Admin)
         const query = await admins.find({})
-        let count = 0
+        const groups = []
         for (const admin of query) {
-            count += admin.meta.mygroups.length
+            for (const group of admin.meta.mygroups) {
+                if (!groups.includes(group)) groups.push(group)
+            }
         }
         // console.log('count:', count)
         res.json({
             results: {
-                count: count
+                count: groups.length
             }
         })
     } catch (error) {
@@ -369,13 +392,137 @@ const countAdminGroups = async (req, res) => {
         })
     }
 }
+/**
+ * @name Approve Admin
+ * @description allows addmins access to backend
+ */
+const approveAdmin = async (req, res) => {
+    if (res.locals.su) {
+        try {
+            console.log(res.locals)
+            const admins = db.model('Admins', Admin)
+            const query = await admins.findById(req.body.id)
+            query.approved = req.body.approved
+            query.save()
+            res.json({
+                results: {
+                    message: `Admin '${query.email}' approved!`
+                }
+            })
+        } catch (error) {
+            res.json({
+                error: error
+            })
+        }
+    } else {
+        res.status(401).json({
+            error: `${res.locals.email} doesn't have this permission, please contact webmaster!`
+        })
+    }
+}
+/**
+ * @name Listof Admins
+ * @description returns a list of admins and associated meta data 
+ */
+const getListOfAdmins = async (req, res) => {
+    try {
+        console.log(res.locals)
+        const admins = db.model('Admins', Admin)
+        const query = await admins.find({})
+            .select('-hash -recovery')
+        res.json({
+            results: {
+                admins: query
+            }
+        })
+    } catch (error) {
+        res.json({
+            error: error
+        })
+    }
+}
+/**
+ * @name Delete Admin
+ * @description Removes a specified admin frothe database
+ */
+const deleteAdmin = async (req, res) => {
+    if (res.locals.su) {
+        try {
+            console.log(res.locals)
+            const admins = db.model('Admins', Admin)
+            const query = await admins.findById(req.body.id)
+            await query.remove()
+            res.json({
+                results: {
+                    message: `Admin '${query.emai}' was deleted`
+                }
+            })
+        } catch (error) {
+            res.json({
+                error: error
+            })
+        }
+    } else {
+        res.json({
+            error: `${res.locals.email} doesn't have this permission, please contact webmaster!`
+        })
+    }
+}
+/**
+ * @name  Get Server Logs
+ * @description Returns the last n lines of the currentlog
+ */
+const getServerLogs = async (req, res) => {
+    try {
+        const today = () => {
+            const dateObj = new Date();
+            const month = dateObj.getUTCMonth() + 1
+            const day = dateObj.getUTCDate()
+            const year = dateObj.getUTCFullYear()
+            return `${year}${("0" + month).slice(-2)}${("0" + (day-2)).slice(-2)}`
+        }
+
+        const readdir = util.promisify(fs.readdir)
+        const files = await readdir(`./logs`)
+
+        console.log(files)
+
+        let chosen
+        for (file of files) {
+            // console.log(file)
+            if (file.includes(today())) chosen = file
+        }
+
+        console.log('the chose one',chosen, today())
+
+        const readLastLines = require('read-last-lines');
+        const lines = await readLastLines.read(`./logs/${chosen}`, req.query.lines)
+        res.json({
+            results: {
+                lines: lines
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        res.json({
+            error: error
+        })
+    }
+}
 module.exports = {
-    addAdmin: AddAdmin,
-    authenticateAdmin: AuthenticateAdmin,
+    AddAdmin,
+    addAdmin,
     adminEmailExist: AdminEmailExists,
-    resetAdminPassword: ResetAdminPassword,
     adminGroups,
     addAdminGroups,
     deleteAdminGroups,
-    countAdminGroups
+    countAdminGroups,
+    adminEmailExists,
+    getAdmin,
+    authenticateAdmin,
+    resetAdminPassword,
+    approveAdmin,
+    getListOfAdmins,
+    deleteAdmin,
+    getServerLogs
 }

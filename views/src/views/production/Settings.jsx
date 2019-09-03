@@ -30,18 +30,41 @@ import {
 } from "reactstrap";
 // core components
 import Header from "components/Headers/Header.jsx"
-// import URL from '../../variables/url'
-// import axios from 'axios'
+import URL from '../../variables/url'
+import axios from 'axios'
+import SyntaxHighlighter from 'react-syntax-highlighter'
 class StudentInfo extends React.Component {
   state = {
     settings: { update: false, email: '', prePassword: '', password: '', vPassword: '' },
-    logs: { view: false }
+    logs: { view: true, lines: 'No Data' },
+    lines: 50
   }
   componentWillMount = () => {
   }
-
+  toggleLogs = () => {
+    if (this.state.logs.view) {
+      this.setState({ logs: { view: false, lines: this.state.logs.lines } })
+    } else {
+      this.setState({ logs: { view: true, lines: this.state.logs.lines } })
+      this.getlog()
+    }
+  }
+  getlog = async () => {
+    try {
+      const req = await axios({
+        url: `${URL.testing}/api/admin/logs?lines=${this.state.lines}`,
+        method: 'get',
+        withCredentials: true
+      })
+      console.log(req)
+      this.setState({ logs: { view: this.state.logs.view, lines: req.data.results.lines } })
+    } catch (error) {
+      console.log(error)
+      // alert(error)
+    }
+  }
   render() {
-    console.log('student:', this.state)
+    console.log('state', this.state)
     return (
       <>
         <Header />
@@ -79,13 +102,30 @@ class StudentInfo extends React.Component {
                   <Row>
                     <Col
                       className='shadow-lg--hover border rounded mt-2 p-1 pt-2 text-center'
-                      onClick={e => this.setState({ logs: { view: !this.state.logs.view } })}
+                      onClick={this.toggleLogs}
                     >
                       <h3>Server Logs {this.state.logs.view ? '-' : '+'}</h3>
                     </Col>
                     <Col sm={12} style={this.state.logs.view ? { height: 'auto' } : { height: '0px', overflow: 'hidden' }}>
-                      test
-                  </Col>
+                      <Row>
+                        <Col>
+                          <Input type='number' defaultValue={50} step={10} onChange={e => this.setState({ lines: e.target.value })} />
+                        </Col>
+                        <Col>
+                          <Button onClick={this.getlog}>Update</Button>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <SyntaxHighlighter
+                            language="nginx"
+                            showLineNumbers={true}
+                          >
+                            {this.state.logs.lines}
+                          </SyntaxHighlighter>
+                        </Col>
+                      </Row>
+                    </Col>
                   </Row>
                 </Container>
                 <CardFooter className="py-4">
