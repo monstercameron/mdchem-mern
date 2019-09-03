@@ -627,7 +627,7 @@ const studentStarStatus = async (req, res) => {
     try {
         // console.log('details', req.params, req.body)
         const student = db.model('student', Student)
-        const query = await student.findById(req.body.id)
+        const query = await student.findById(res.locals.id)
         // console.log(query)
         if (req.params.format && req.params.format === '.csv') {
             let result = ''

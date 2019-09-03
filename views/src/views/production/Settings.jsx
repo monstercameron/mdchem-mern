@@ -93,7 +93,7 @@ class StudentInfo extends React.Component {
         return <DropdownItem
           defaultValue={log}
           key={index}
-          onClick={e => this.setState({ selectedLog: e.target.value })}
+          onClick={e => this.setState({ selectedLog: e.target.innerText })}
         >
           {log}
         </DropdownItem>
@@ -147,9 +147,9 @@ class StudentInfo extends React.Component {
                     </Col>
                     <Col sm={12} style={this.state.logs.view ? { height: 'auto' } : { height: '0px', overflow: 'hidden' }}>
                       <Row>
-                        <Col>
+                        <Col sm={4}>
                           <Row>
-                            <Col>
+                            <Col sm={'auto'} className='mx-auto'>
                               <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                                 <DropdownToggle caret>
                                   {this.state.selectedLog ? this.state.selectedLog : 'Logs'}
@@ -161,11 +161,11 @@ class StudentInfo extends React.Component {
                             </Col>
                           </Row>
                         </Col>
-                        <Col>
+                        <Col sm={4}>
                           <Input type='number' defaultValue={50} step={10} onChange={e => this.setState({ lines: e.target.value })} />
                         </Col>
-                        <Col>
-                          <Button onClick={this.getlog}>Update</Button>
+                        <Col sm={4}>
+                          <Button onClick={this.getlog} className='btn-block'>View</Button>
                         </Col>
                       </Row>
                       <Row>
@@ -185,7 +185,7 @@ class StudentInfo extends React.Component {
                   <Container>
                     <Row>
                       <Col>
-                        Footer
+                        {/* Footer */}
                       </Col>
                     </Row>
                   </Container>
