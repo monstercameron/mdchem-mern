@@ -625,10 +625,11 @@ const changeStudentGroup = async (req, res) => {
  */
 const studentStarStatus = async (req, res) => {
     try {
-        // console.log('details', req.params, req.body)
+        console.log('ran')
+        console.log('details', req.params, req.body, res.locals)
         const student = db.model('student', Student)
-        const query = await student.findById(res.locals.id)
-        // console.log(query)
+        const query = await student.findById(req.body.id || res.locals.id)
+        console.log(query)
         if (req.params.format && req.params.format === '.csv') {
             let result = ''
             for (key in query.data) {
@@ -652,7 +653,7 @@ const studentStarStatus = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(400).json({
-            error: error
+            error: error.message
         })
     }
 }
@@ -705,7 +706,7 @@ const deleteStudentLevelData = async (req, res) => {
 module.exports = {
     addStudent: AddStudent,
     deleteStudent,
-    authenticateStudent:AuthenticateStudent,
+    authenticateStudent: AuthenticateStudent,
     // authenticateStudent,
     countStudent: CountStudent,
     findAllStudents: FindAllStudents,
