@@ -33,6 +33,7 @@ import Header from "components/Headers/Header.jsx"
 import URL from '../../variables/url'
 import axios from 'axios'
 import Data from '../../components/widgets/Data'
+import Notifications from "../../components/widgets/Notifications";
 class StudentInfo extends React.Component {
   state = { student: { _id: '', meta: {}, data: {} }, changeGroup: false, newGroup: '', deleted: false }
   componentWillMount = () => {
@@ -60,11 +61,11 @@ class StudentInfo extends React.Component {
       })
       console.log(query.data)
       if (query.status === 200) this.getStudentById()
-      alert(query.data.results.message)
+      Notifications.notify({ title: query.data.results.message })
     } catch (error) {
       if (error && error.response) {
         console.log(error)
-        alert(error.response.data.error)
+        Notifications.notify({ title: error.response.data.error })
       }
     }
   }
@@ -78,11 +79,11 @@ class StudentInfo extends React.Component {
       })
       console.log(query.data)
       if (query.status === 200) this.setState({ deleted: true })
-      alert(query.data.results.message)
+      Notifications.notify({ title: query.data.results.message })
     } catch (error) {
       if (error && error.response) {
         console.log(error)
-        alert(error.response.data.error)
+        Notifications.notify({ title: `Error?`, body: error.response.data.error })
       }
     }
   }
@@ -99,11 +100,11 @@ class StudentInfo extends React.Component {
         this.setState({ changeGroup: false })
         this.setState({ state: { student: { meta: Object.assign(this.state.student.meta, { group: this.state.newGroup }) } } })
       }
-      alert(query.data.results.message)
+      Notifications.notify({ title: query.data.results.message })
     } catch (error) {
       if (error && error.response) {
         console.log(error.response)
-        alert(error.response.data.error)
+        Notifications.notify({ title: `Error!`, body: error.response.data.error })
       }
     }
   }

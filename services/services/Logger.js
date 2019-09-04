@@ -8,6 +8,8 @@ const accessLogStream = rfs('access.log', {
     path: `logs`
 })
 module.exports = {
-    logFile:  morgan('combined', { stream: accessLogStream }),
+    logFile: morgan('combined', {
+        stream: accessLogStream
+    }),
     dev: morgan('dev')
 }

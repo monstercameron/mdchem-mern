@@ -7,6 +7,7 @@ import {
 } from "reactstrap"
 import axios from 'axios'
 import URL from '../../variables/url'
+import Notifications from '../../components/widgets/Notifications'
 class AdminData extends Component {
     constructor(props) {
         super(props);
@@ -37,13 +38,15 @@ class AdminData extends Component {
                     withCredentials: true,
                     data: { id: this.props._id, approved: this.state.approved }
                 })
-                console.log(req.data)
+                // console.log(req.data)
+                Notifications.notify({ title: req.data.results.message })
+                this.props.getListOfAdmins()
             } catch (error) {
-                console.error(error.response.data.error)
-                alert(error.response.data.error)
+                // console.error(error.response.data.error)
+                Notifications.notify({ title: `Error!`, body:error.response.data.error })
             }
         } else {
-            alert('No changes to be made!')
+            Notifications.notify({ title: `No changes were made`})
         }
     }
     deleteAdmin = async () => {
@@ -59,7 +62,7 @@ class AdminData extends Component {
             this.props.getListOfAdmins()
         } catch (error) {
             console.error(error.response.data.error)
-            alert(error.response.data.error)
+            Notifications.notify({ title: `Error!`, body:error.response.data.error })
         }
     }
     toggleRedirect = e => {
@@ -109,7 +112,7 @@ class AdminData extends Component {
     render() {
         // console.log(this.state)
         return (
-            <Container className='border-top pt-3 pb-1 mx-auto'>
+            <Container className='border-top pt-3 pb-2 mx-auto'>
                 <Row>
                     <Col sm={3}>
                         <Row>
@@ -126,7 +129,7 @@ class AdminData extends Component {
                     </Col>
                     <Col sm={5} className='text-right'>
                         <Row>
-                            <Col>
+                            <Col sm={4} className='mx-auto'>
                                 <FormGroup check inline>
                                     <Label check>
                                         <Input
@@ -137,18 +140,22 @@ class AdminData extends Component {
                                     </Label>
                                 </FormGroup>
                             </Col>
-                            <Col>
+                            <Col sm={4}>
                                 <Button
+                                    className='btn-block'
                                     color='primary'
                                     onClick={this.approveAdmin}
-                                >apply</Button>
+                                >
+                                    <i className="fa fa-check" aria-hidden="true"></i>
+                                </Button>
                             </Col>
-                            <Col>
+                            <Col sm={4}>
                                 <Button
+                                    className='btn-block'
                                     color='danger'
                                     onClick={this.toggle}
                                 >
-                                    Delete
+                                    <i className="fa fa-trash" aria-hidden="true"></i>
                                 </Button>
                             </Col>
                         </Row>

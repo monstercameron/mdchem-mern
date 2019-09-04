@@ -35,6 +35,7 @@ import Header from "components/Headers/Header.jsx"
 import URL from '../../variables/url'
 import Group from '../../components/widgets/Group'
 import axios from 'axios'
+import Notifications from "../../components/widgets/Notifications";
 class StudentInfo extends React.Component {
   state = { open: false, notes: '', id: '' }
   componentWillMount = () => {
@@ -68,6 +69,7 @@ class StudentInfo extends React.Component {
       data: { ...this.groupForm() }
     })
     console.log(addGroup)
+    Notifications.notify({title:addGroup.data.results.message})
     if (addGroup.status === 200) {
       this.setState({ open: !this.state.open })
       this.getAdminGroups()
@@ -99,7 +101,7 @@ class StudentInfo extends React.Component {
                         <h3 className='d-inline-block'>My Groups</h3>
                       </Col>
                       <Col sm={2} className='text-center'>
-                        <Button className='btn-block' color={!this.state.open ? 'success' : 'danger'} alt='Add Group' onClick={() => this.setState({ open: !this.state.open })}>
+                        <Button className='btn-block' color={!this.state.open ? 'primary' : 'danger'} alt='Add Group' onClick={() => this.setState({ open: !this.state.open })}>
                           {!this.state.open ? <i className="fa fa-plus-square" aria-hidden="true" /> : <i className="fa fa-minus-square" aria-hidden="true" />}
                         </Button>
                       </Col>

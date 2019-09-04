@@ -16,7 +16,7 @@
 
 */
 import React from "react";
-import { Redirect } from "react-router-dom"
+import { Redirect, withRouter } from "react-router-dom"
 import questions from "../../variables/SecurityQuestions"
 import URL from '../../variables/url'
 import zxcvbn from "zxcvbn"
@@ -37,7 +37,7 @@ import {
   Row,
   Col
 } from "reactstrap"
-
+import Notifications from '../../components/widgets/Notifications'
 class Register extends React.Component {
   constructor(props) {
     super(props);
@@ -95,7 +95,7 @@ class Register extends React.Component {
     //name
     if (name) {
       validator.matches(name, /^[a-zA-Z ]+$/) ?
-      this.setState({ validationErr: Object.assign(this.state.validationErr, { name: null }) }) :
+        this.setState({ validationErr: Object.assign(this.state.validationErr, { name: null }) }) :
         this.setState({ validationErr: Object.assign(this.state.validationErr, { name: `Name shouldn't have non-alpha characters` }) })
     } else {
       verdict = false
@@ -105,7 +105,7 @@ class Register extends React.Component {
     //email
     if (email) {
       validator.isEmail(email) ?
-      this.setState({ validationErr: Object.assign(this.state.validationErr, { email: null }) }) :
+        this.setState({ validationErr: Object.assign(this.state.validationErr, { email: null }) }) :
         this.setState({ validationErr: Object.assign(this.state.validationErr, { email: `Email isn't formatted properly!` }) })
     } else {
       verdict = false
@@ -149,8 +149,8 @@ class Register extends React.Component {
     if (answer) {
       this.setState({ validationErr: Object.assign(this.state.validationErr, { secAnswer: null }) })
     }
-    else{
-       verdict = false
+    else {
+      verdict = false
       this.setState({ validationErr: Object.assign(this.state.validationErr, { secAnswer: `Please enter a security answer!` }) })
     }
     //the verdict
@@ -166,11 +166,14 @@ class Register extends React.Component {
           headers: {},
           data: form
         })
-        console.log(req)
-        this.setState({ toLogin: true })
+        // console.log(req)
+        Notifications.notify({ title: `Ready to log in!`, body: req.data.results.message })
+        this.props.history.push(`/auth/login`)
       } catch (error) {
-        console.log(error.response.data.results.message)
-        alert(error.response.data.results.message)
+        if (error || error.response) {
+          console.log(error)
+          Notifications.notify({ title: `Error!`, body: error.response.data.error })
+        }
       }
     } else {
       // handle check box response
@@ -356,4 +359,4 @@ class Register extends React.Component {
     );
   }
 }
-export default Register
+export default withRouter(Register)

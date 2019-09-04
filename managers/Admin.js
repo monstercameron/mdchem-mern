@@ -108,7 +108,7 @@ const addAdmin = async (req, res) => {
         const checkEmail = await adminEmailExists({
             email: email.toLowerCase()
         })
-        if (checkEmail) throw new Error(`Admin with email '${email}' already exists!`)
+        if (checkEmail) throw new Error(`Admin '${email}' already exists!`)
         const mainHash = await hash({
             password: password.toLowerCase()
         })
@@ -134,7 +134,7 @@ const addAdmin = async (req, res) => {
         })
     } catch (error) {
         console.log(error)
-        res.json({
+        res.status(401).json({
             error: error.message
         })
     }
@@ -183,7 +183,7 @@ const authenticateAdmin = async (req, res) => {
             })
     } catch (error) {
         // console.log('error',error)
-        res.json({
+        res.status(401).json({
             error: error.message
         })
     }
@@ -221,9 +221,7 @@ const adminEmailExists = async ({
     const query = await admin.findOne({
         email: email
     })
-    return new Promise((resolve, reject) => {
-        query ? resolve(true) : reject(new Error(`Admin '${email}' doesn't exist`))
-    })
+    return query ? true : false
 }
 /**
  * @name Get Admin
@@ -406,7 +404,7 @@ const approveAdmin = async (req, res) => {
             query.save()
             res.json({
                 results: {
-                    message: `Admin '${query.email}' approved!`
+                    message: `Admin '${query.email}' ${query.approved?'':' un'}approved!`
                 }
             })
         } catch (error) {
@@ -474,20 +472,11 @@ const deleteAdmin = async (req, res) => {
  */
 const getServerLogs = async (req, res) => {
     try {
-        const today = () => {
-            const dateObj = new Date();
-            const month = dateObj.getUTCMonth() + 1
-            const day = dateObj.getUTCDate()
-            const year = dateObj.getUTCFullYear()
-            return `${year}${("0" + month).slice(-2)}${("0" + (day-2)).slice(-2)}`
-        }
-
         const readdir = util.promisify(fs.readdir)
         const files = await readdir(`./logs`)
-
         console.log(req.params)
         console.log(files)
-        if(!req.params.fileName){
+        if (!req.params.fileName) {
             res.json({
                 results: {
                     files: files
@@ -495,9 +484,6 @@ const getServerLogs = async (req, res) => {
             })
             return
         }
-
-        console.log('the chosen one',req.params.fileName, today())
-
         const readLastLines = require('read-last-lines');
         const lines = await readLastLines.read(`./logs/${req.params.fileName}`, req.query.lines)
         res.json({

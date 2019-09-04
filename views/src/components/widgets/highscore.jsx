@@ -3,6 +3,7 @@ import { Col, Row, Container, Button } from 'reactstrap'
 import Axios from 'axios';
 import URL from '../../variables/url'
 import { Table } from 'reactable'
+import Notifications from './Notifications';
 class Highscore extends Component {
     constructor(props) {
         super(props);
@@ -31,9 +32,9 @@ class Highscore extends Component {
                 method: 'get',
                 withCredentials: true,
             })
-            alert(query.data.results.message)
+            Notifications.notify({ title: query.data.results.message })
         } catch (error) {
-            alert(error.response)
+            Notifications.notify({ title: `Error!`, body: error.response })
         }
     }
     render() {

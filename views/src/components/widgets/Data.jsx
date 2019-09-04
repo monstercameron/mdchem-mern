@@ -7,6 +7,7 @@ import {
 import Explain from '../widgets/Explain'
 import axios from 'axios'
 import URL from '../../variables/url'
+import Notifications from './Notifications';
 class Data extends Component {
     constructor(props) {
         super(props);
@@ -22,12 +23,13 @@ class Data extends Component {
             })
             console.log(query)
             if (query.status === 200) this.setState({ deleted: true })
-            alert(query.data.results.message)
+            //alert(query.data.results.message)
+            Notifications.notify({ title: query.data.results.message })
         } catch (error) {
             console.log(error)
             if (error && error.response) {
                 console.log(error)
-                alert(error.response.data.error)
+                Notifications.notify({title:error.response.data.error})
             }
         }
     }

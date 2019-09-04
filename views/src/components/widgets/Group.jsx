@@ -5,6 +5,7 @@ import {
     Col,
     Row,
     Button,
+    Container,
     Modal,
     ModalHeader,
     ModalBody,
@@ -53,7 +54,8 @@ class Group extends Component {
         // console.log('Count:', this.state)
         // console.log(this.state)
         return (
-            <Col className='border rounded p-3 m-2 shadow-lg mx-auto'>
+            <Container className='border-top pt-1 pb-3 mx-auto'>
+            <Col>
                 <Row
                     style={!this.state.deleted ? { visibility: 'hidden' } : { visibility: 'visible' }}
                 >
@@ -79,7 +81,7 @@ class Group extends Component {
                     </Col>
                     <Col sm={2}>
                         <Link to={`/admin/students/${this.props.group.id}`}>
-                            <Button color='success' className='btn-block'>
+                            <Button color='primary' className='btn-block'>
                                 <i className="fa fa-eye" aria-hidden="true"></i>
                             </Button>
                         </Link>
@@ -104,6 +106,7 @@ class Group extends Component {
                     </Modal>
                 </div>
             </Col>
+        </Container>
         )
     }
 }

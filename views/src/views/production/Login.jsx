@@ -35,7 +35,7 @@ import {
   Row,
   Col
 } from "reactstrap";
-
+import Notifications from '../../components/widgets/Notifications'
 class Login extends React.Component {
   constructor(props) {
     super(props)
@@ -49,6 +49,7 @@ class Login extends React.Component {
   }
   componentWillMount = () => {
     this.checkLocalStorage()
+    Notifications.requestPermission()
   }
   checkLocalStorage = () => {
     const localEmail = localStorage.getItem('email');
@@ -105,11 +106,11 @@ class Login extends React.Component {
         } else {
           localStorage.removeItem('email');
         }
-
         if (req.status === 200) this.setState({ redirect: '/admin/index' })
+
       } catch (error) {
-        console.log(error)
-        alert(error.response.data.results.message)
+        console.log(error.response)
+        Notifications.notify({ title: `Error!`, body:error.response.data.error })
       }
     }
   }
