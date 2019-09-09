@@ -33,9 +33,92 @@
   <link rel="apple-touch-icon" sizes="76x76" href="%PUBLIC_URL%/apple-icon.png" />
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     html {
       scroll-behavior: smooth;
+    }
+
+    .cursor {
+      cursor: pointer;
+    }
+
+    .otto {
+      background: #0e8dbc;
+      color: white;
+      text-shadow: 0 1px 0 #ccc,
+        0 2px 0 #c9c9c9,
+        0 3px 0 #bbb,
+        0 4px 0 #b9b9b9,
+        0 5px 0 #aaa,
+        0 6px 1px rgba(0, 0, 0, .1),
+        0 0 5px rgba(0, 0, 0, .1),
+        0 1px 3px rgba(0, 0, 0, .3),
+        0 3px 5px rgba(0, 0, 0, .2),
+        0 5px 10px rgba(0, 0, 0, .25),
+        0 10px 10px rgba(0, 0, 0, .2),
+        0 20px 20px rgba(0, 0, 0, .15);
+    }
+
+    .glow {
+      text-shadow:
+        1px 0px 1px #ccc, 0px 1px 1px rgb(150, 150, 150),
+        2px 1px 1px #ccc, 1px 2px 1px rgb(150, 150, 150),
+        3px 2px 1px #ccc, 2px 3px 1px rgb(150, 150, 150)
+    }
+
+    .text-shadow {
+      text-shadow: 1px 0px 1px, rgb(150, 150, 150),
+    }
+
+    /*Css Patterns*/
+    .dotted {
+      background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
+      background-image: -moz-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
+      background-image: -ms-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
+      background-image: repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
+      -webkit-background-size: 3px 3px;
+      -moz-background-size: 3px 3px;
+      background-size: 3px 3px;
+    }
+
+    .stripped {
+      background-image: -webkit-repeating-linear-gradient(135deg, rgba(0, 0, 0, .3), rgba(0, 0, 0, .3) 1px, transparent 2px, transparent 2px, rgba(0, 0, 0, .3) 3px);
+      background-image: -moz-repeating-linear-gradient(135deg, rgba(0, 0, 0, .3), rgba(0, 0, 0, .3) 1px, transparent 2px, transparent 2px, rgba(0, 0, 0, .3) 3px);
+      background-image: -o-repeating-linear-gradient(135deg, rgba(0, 0, 0, .3), rgba(0, 0, 0, .3) 1px, transparent 2px, transparent 2px, rgba(0, 0, 0, .3) 3px);
+      background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, .3), rgba(0, 0, 0, .3) 1px, transparent 2px, transparent 2px, rgba(0, 0, 0, .3) 3px);
+      -webkit-background-size: 4px 4px;
+      -moz-background-size: 4px 4px;
+      background-size: 4px 4px;
+    }
+
+    .blueprint {
+      background-color: #269;
+      background-image: linear-gradient(white 2px, transparent 2px),
+        linear-gradient(90deg, white 2px, transparent 2px),
+        linear-gradient(rgba(255, 255, 255, .3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .3) 1px, transparent 1px);
+      background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+      background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+    }
+
+    .carbon {
+      background:
+        radial-gradient(black 15%, transparent 16%) 0 0,
+        radial-gradient(black 15%, transparent 16%) 8px 8px,
+        radial-gradient(rgba(255, 255, 255, .1) 15%, transparent 20%) 0 1px,
+        radial-gradient(rgba(255, 255, 255, .1) 15%, transparent 20%) 8px 9px;
+      background-color: #282828;
+      background-size: 16px 16px;
+    }
+
+    .pattern-lined-paper {
+      background-color: #fff;
+      background-image:
+        linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+        linear-gradient(#eee .1em, transparent .1em);
+      background-size: 100% 1.2em;
     }
   </style>
   <title>MDChem</title>

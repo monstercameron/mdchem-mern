@@ -78,7 +78,7 @@ router
     .post('/login/:role', (req, res) => {
         switch (req.params.role) {
             case 'student':
-                new authenticateStudent(req, res)
+                authenticateStudent(req, res)
                 break
             case 'admin':
                 authenticateAdmin(req, res)

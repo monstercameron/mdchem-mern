@@ -53,8 +53,8 @@ const compare = async ({
     password,
     hash
 }) => {
-    return new Promise(async (resolve, reject) => {
-        const result = await bcrypt.compare(password, hash)
+    const result = await bcrypt.compare(password, hash)
+    return new Promise((resolve, reject) => {
         result ? resolve(result) : reject(new Error(`Password doesn't match stored value`))
     })
 }

@@ -43,10 +43,10 @@ class AdminData extends Component {
                 this.props.getListOfAdmins()
             } catch (error) {
                 // console.error(error.response.data.error)
-                Notifications.notify({ title: `Error!`, body:error.response.data.error })
+                Notifications.notify({ title: `Error!`, body: error.response.data.error })
             }
         } else {
-            Notifications.notify({ title: `No changes were made`})
+            Notifications.notify({ title: `No changes were made` })
         }
     }
     deleteAdmin = async () => {
@@ -57,12 +57,13 @@ class AdminData extends Component {
                 withCredentials: true,
                 data: { id: this.props._id }
             })
-            console.log(req.data)
-            this.toggle()
+            Notifications.notify({ title: req.data.results.message })
             this.props.getListOfAdmins()
         } catch (error) {
-            console.error(error.response.data.error)
-            Notifications.notify({ title: `Error!`, body:error.response.data.error })
+            // console.error(error.response.data.error)
+            Notifications.notify({ title: `Error!`, body: error.response.data.error })
+        } finally {
+            this.toggle()
         }
     }
     toggleRedirect = e => {

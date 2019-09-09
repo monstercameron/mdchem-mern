@@ -452,7 +452,7 @@ const deleteAdmin = async (req, res) => {
             await query.remove()
             res.json({
                 results: {
-                    message: `Admin '${query.emai}' was deleted`
+                    message: `Admin '${query.email}' was deleted`
                 }
             })
         } catch (error) {
@@ -461,7 +461,7 @@ const deleteAdmin = async (req, res) => {
             })
         }
     } else {
-        res.json({
+        res.status(401).json({
             error: `${res.locals.email} doesn't have this permission, please contact webmaster!`
         })
     }

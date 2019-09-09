@@ -8,7 +8,9 @@ const Student = require('../models/schemas/student')
 const Stat = require('../models/schemas/stats')
 const {
     Hash,
-    Compare
+    hash,
+    Compare,
+    compare
 } = require('../managers/Encrypt')
 const {
     createToken
@@ -18,6 +20,7 @@ const {
  */
 class AddStudent {
     constructor(req, res) {
+        console.log(req.body)
         this.body = this.bodyShim(req.body)
         this.res = res
         this.run()
@@ -32,7 +35,7 @@ class AddStudent {
                 answer: body.answer.toLowerCase()
             },
             meta: {
-                group: body.group.toLowerCase()
+                group: body.group
             }
         }
     }
@@ -169,6 +172,7 @@ class UpdateStudent {
  */
 class AuthenticateStudent {
     constructor(req, res) {
+        console.log(req.body)
         this.res = res
         this.body = req.body
         this.run()
@@ -250,21 +254,53 @@ class AuthenticateStudent {
  */
 const authenticateStudent = async (req, res) => {
     try {
-        console.log('ran')
         //validation/sanity check
-        const {
+        let {
             email,
             password
         } = req.body
-        const checkEmail = await studentEmailExistPromise({
+        email = email.toLowerCase()
+        password = password.toLowerCase()
+        const StudentExists = await studentEmailExist({
             email: email
         })
+        if (StudentExists) throw new Error(`Student ${email} already exixts`)
         const student = await findStudentByEmailOrIdPromise({
-            email: email
+            email: email,
+            filter: ''
         })
+        const comparePassword = await compare({
+            password: password,
+            hash: student.hash
+        })
+        if (comparePassword) {
+            const payload = {
+                role: `student`,
+                id: student._id
+            }
+            const options = {
+                expiresIn: 1000 * 60 * 60 * 24 * 7 /* 1  week */
+                // expiresIn: 1000 * 30 /* 30 seconds */
+            }
+            const token = createToken({
+                payload,
+                options
+            })
+            res.cookie('token', token, {
+                    maxAge: 1000 * 60 * 60 * 24 * 7 /* 1  week */ ,
+                    // maxAge: 1000 * 30 /* 30 seconds */ ,
+                    httpOnly: true
+                })
+                .cookie('id', student._id)
+                .json({
+                    results: {
+                        message: `Successfully Authenticated.`
+                    }
+                })
+        }
     } catch (error) {
         console.log(error)
-        res.json({
+        res.status(401).json({
             error: error
         })
     }
@@ -361,16 +397,14 @@ class StudentEmailExists {
  * @name Student Email Exist
  * @description checks whether student email exists
  */
-const studentEmailExistPromise = async ({
+const studentEmailExist = async ({
     email
 }) => {
     const student = db.model('student', Student)
     const query = await student.findOne({
         email: this.email
     })
-    return new Promise((resolve, reject) => {
-        query ? resolve(true) : reject(new Error('Student Not Found'))
-    })
+    return query ? true : false
 }
 /**
  * Query student via unique key / id
@@ -422,7 +456,8 @@ class FindStudentByEmail {
  */
 const findStudentByEmailOrIdPromise = async ({
     email,
-    id
+    id,
+    filter = '-hash -recovery'
 }) => {
     const student = db.model('student', Student)
     const aStudent = await student.findOne(email ? {
@@ -430,7 +465,7 @@ const findStudentByEmailOrIdPromise = async ({
         } : {
             _id: id
         })
-        .select('-hash -recovery')
+        .select(filter)
     return new Promise((resolve, reject) => {
         aStudent ? resolve(aStudent) : reject(new Error('Student Not Found'))
     })
@@ -706,8 +741,8 @@ const deleteStudentLevelData = async (req, res) => {
 module.exports = {
     addStudent: AddStudent,
     deleteStudent,
-    authenticateStudent: AuthenticateStudent,
-    // authenticateStudent,
+    //authenticateStudent: AuthenticateStudent,
+    authenticateStudent,
     countStudent: CountStudent,
     findAllStudents: FindAllStudents,
     findStudentByEmailOrIdPromise,
@@ -724,6 +759,6 @@ module.exports = {
     studentStarStatus,
     resetStudentData,
     deleteStudentLevelData,
-    studentEmailExistPromise,
+    studentEmailExist,
     findAllStudentsPromise
 }

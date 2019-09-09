@@ -55,13 +55,13 @@ class Auth extends React.Component {
           <AuthNavbar />
           <div className="header bg-gradient-info py-7 py-lg-8">
             <Container>
-              <div className="header-body text-center mb-7">
+              <div className="header-body text-center mb-5">
                 <Row>
                   <Col lg="5" className='mx-auto'>
                     <img src={require('../assets/img/brand/logo.png')} alt='MDChem' className='d-block img-fluid' />
                   </Col>
                 </Row>
-                <Row className="justify-content-center">
+                {/* <Row className="justify-content-center">
                   <Col lg="5" md="6" className='rounded border mt-5' style={{backgroundColor:'rgba(0,0,0,.5)'}}>
                     <h1 className="text-white">Welcome!</h1>
                     <p className="text-lead text-light">
@@ -71,7 +71,7 @@ class Auth extends React.Component {
                          concentration to master MDChem.
                     </p>
                   </Col>
-                </Row>
+                </Row> */}
               </div>
             </Container>
             <div className="separator separator-bottom separator-skew zindex-100">

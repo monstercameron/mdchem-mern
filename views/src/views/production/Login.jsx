@@ -24,7 +24,7 @@ import URL from '../../variables/url'
 import {
   Button,
   Card,
-  // CardHeader,
+  CardHeader,
   CardBody,
   FormGroup,
   Form,
@@ -128,15 +128,15 @@ class Login extends React.Component {
       <>
         <Col lg="5" md="7">
           <Card className="bg-secondary shadow border-0">
-            {/* <CardHeader className="bg-transparent pb-5">
+            <CardHeader className="bg-transparent pb-3 text-center">
               <div>
-                something can go here
+                Log In
               </div>
-            </CardHeader> */}
+            </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
-              <div className="text-center text-muted mb-4">
-                <small>Sign in with credentials</small>
-              </div>
+              {/* <div className="text-center text-muted mb-4">
+                <small>Log In</small>
+              </div> */}
               <Form role="form">
                 <FormGroup className="mb-3">
                   <InputGroup className="input-group-alternative">

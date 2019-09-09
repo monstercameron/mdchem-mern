@@ -10,8 +10,8 @@ app.use(cookieParser())
 // include cors
 const cors = require('cors')
 const corsOptions = {
-    // origin: `http://localhost:3000`,
-    origin: `https://www.mdchem.app`,
+    origin: `http://localhost:3000`,
+    // origin: `https://www.mdchem.app`,
     optionsSuccessStatus: 200,
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
