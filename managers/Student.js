@@ -125,6 +125,7 @@ const deleteStudent = async (req, res) => {
  */
 class UpdateStudent {
     constructor(req, res) {
+        // console.log(res.locals)
         this.res = res
         this.req = req
         this.body = this.dataBuilder(req.body)
@@ -166,6 +167,58 @@ class UpdateStudent {
             })
         })
     }
+}
+/**
+ * @description Update Student
+ */
+const updateStudent = async (req, res) => {
+    try {
+        const {
+            levelID
+        } = req.body
+
+        const body = {
+            [levelID]: {
+                score: req.body.score,
+                correct: req.body.correctData,
+                incorrect: req.body.incorrectData
+            }
+        }
+
+        const student = await findStudentByEmailOrIdPromise({
+            id: res.locals.id
+        })
+
+        let newData
+        if (!student.data) newData = updatedData
+        else newData = Object.assign(data, updatedData)
+
+
+        update = () => {
+            new FindStudentById(this.req, this.res, (result) => {
+                const updatedData = this.body
+                let {
+                    data
+                } = result
+                let newData
+                if (!data) newData = updatedData
+                else newData = Object.assign(data, updatedData)
+                result.updateOne({
+                    data: newData
+                }, (err, result) => {
+                    this.res.json({
+                        results: {
+                            message: 'model updated',
+                            updated: result
+                        }
+                    })
+                })
+            })
+        }
+    } catch (error) {
+
+    }
+
 }
 /**
  * Login by generating a token
@@ -261,10 +314,10 @@ const authenticateStudent = async (req, res) => {
         } = req.body
         email = email.toLowerCase()
         password = password.toLowerCase()
-        const StudentExists = await studentEmailExist({
+        const studentExists = await studentEmailExist({
             email: email
         })
-        if (StudentExists) throw new Error(`Student ${email} already exixts`)
+        if (studentExists) throw new Error(`Student ${email} doesn't exist`)
         const student = await findStudentByEmailOrIdPromise({
             email: email,
             filter: ''
@@ -282,7 +335,7 @@ const authenticateStudent = async (req, res) => {
                 expiresIn: 1000 * 60 * 60 * 24 * 7 /* 1  week */
                 // expiresIn: 1000 * 30 /* 30 seconds */
             }
-            const token = createToken({
+            const token = await createToken({
                 payload,
                 options
             })
@@ -660,8 +713,8 @@ const changeStudentGroup = async (req, res) => {
  */
 const studentStarStatus = async (req, res) => {
     try {
-        console.log('ran')
-        console.log('details', req.params, req.body, res.locals)
+        // console.log('ran')
+        // console.log('details', req.params, req.body, res.locals)
         const student = db.model('student', Student)
         const query = await student.findById(req.body.id ? req.body.id : res.locals.id)
         console.log(query)
