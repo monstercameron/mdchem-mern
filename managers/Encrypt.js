@@ -48,6 +48,7 @@ const hash = async ({
  * @name Compare
  * @param {string} password - user password plain text
  * @param {string} hash - user password hash
+ * @returns {boolean} - return true or a new Error
  */
 const compare = async ({
     password,

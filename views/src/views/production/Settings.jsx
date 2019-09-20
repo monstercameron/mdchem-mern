@@ -37,9 +37,14 @@ import Header from "components/Headers/Header.jsx"
 import URL from '../../variables/url'
 import axios from 'axios'
 import SyntaxHighlighter from 'react-syntax-highlighter'
+import Notifications from '../../components/widgets/Notifications'
 class StudentInfo extends React.Component {
   state = {
-    settings: { update: false, email: '', prePassword: '', password: '', vPassword: '' },
+    settingsUpdate: false,
+    email: '',
+    prePassword: '',
+    password: '',
+    vPassword: '',
     logs: { view: false, lines: 'No Data' },
     lines: 50,
     logFiles: null,
@@ -102,6 +107,34 @@ class StudentInfo extends React.Component {
       return ''
     }
   }
+  resetPassword = async () => {
+    try {
+      if (!this.state.email)
+        throw new Error('No Email Entered.')
+      if (!this.state.prePassword)
+        throw new Error('No Old Password Entered.')
+      if (!this.state.password)
+        throw new Error('No Password Entered.')
+      if (!this.state.vPassword)
+        throw new Error('No Verification Password Entered.')
+      if (this.state.password !== this.state.vPassword)
+        throw new Error('Passwords Do Not Match!')
+      const req = await axios({
+        url: `${URL.testing}/api/auth/reset/admin?type=`,
+        method: 'post',
+        withCredentials: true,
+        data: {
+          email: this.state.email,
+          oldPassword: this.state.prePassword,
+          newPassword: this.state.password
+        }
+      })
+      console.log(req.data)
+    } catch (error) {
+      console.log(error)
+      Notifications.notify({ title: error.message })
+    }
+  }
   render() {
     console.log('state', this.state)
     return (
@@ -126,16 +159,16 @@ class StudentInfo extends React.Component {
                   <Row>
                     <Col
                       className='shadow-lg--hover border rounded mt-2 p-1 pt-2 text-center'
-                      onClick={e => this.setState({ settings: { update: !this.state.settings.update } })}
+                      onClick={e => this.setState({ settingsUpdate: !this.state.settingsUpdate })}
                     >
-                      <h3>Update User Information {this.state.settings.update ? '-' : '+'}</h3>
+                      <h3>Update User Information {this.state.settingsUpdate ? '-' : '+'}</h3>
                     </Col>
-                    <Col sm={12} style={this.state.settings.update ? { height: 'auto' } : { height: '0px', overflow: 'hidden' }}>
-                      <Input className='mt-1' placeholder={localStorage.getItem('email')} onChange={e => this.setState({ settings: { email: e.target.value } })} />
-                      <Input className='mt-1' type='password' placeholder={'Old password'} onChange={e => this.setState({ settings: { prePassword: e.target.value } })} />
-                      <Input className='mt-1' type='password' placeholder={'New password'} onChange={e => this.setState({ settings: { password: e.target.value } })} />
-                      <Input className='mt-1' type='password' placeholder={'verify password'} onChange={e => this.setState({ settings: { vPassword: e.target.value } })} />
-                      <Button className='mt-1 btn-block' color='primary'>Update</Button>
+                    <Col sm={12} style={this.state.settingsUpdate ? { height: 'auto' } : { height: '0px', overflow: 'hidden' }}>
+                      <Input className='mt-1' placeholder={localStorage.getItem('email')} onChange={e => this.setState({ email: e.target.value })} />
+                      <Input className='mt-1' type='password' placeholder={'Old password'} onChange={e => this.setState({ prePassword: e.target.value })} />
+                      <Input className='mt-1' type='password' placeholder={'New password'} onChange={e => this.setState({ password: e.target.value })} />
+                      <Input className='mt-1' type='password' placeholder={'verify password'} onChange={e => this.setState({ vPassword: e.target.value })} />
+                      <Button className='mt-1 btn-block' color='primary' onClick={this.resetPassword}>Update</Button>
                     </Col>
                   </Row>
                   <Row>

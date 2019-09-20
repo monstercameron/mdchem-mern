@@ -10,12 +10,13 @@ const {
 const {
     addAdmin,
     authenticateAdmin,
-    resetAdminPassword
+    resetAdminPassword,
+    resetAdminPasswordWithSecQuestion
 } = require('../managers/Admin')
 const {
     verifyToken
 } = require('../managers/Authentication')
-router
+module.exports = router
     .get('/check', (req, res) => {
         verifyToken(req.query.token)
             .then(decoded => {
@@ -107,7 +108,11 @@ router
     .post('/reset/:role', (req, res) => {
         switch (req.params.role) {
             case 'admin':
-                resetAdminPassword(req, res)
+                if (req.query.type === 'forgot') {
+                    resetAdminPasswordWithSecQuestion(req, res)
+                } else {
+                    resetAdminPassword(req, res)
+                }
                 break
             case 'student':
                 new resetStudentPassword(req, res)
@@ -120,4 +125,3 @@ router
                 })
         }
     })
-module.exports = router

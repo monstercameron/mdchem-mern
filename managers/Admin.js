@@ -110,10 +110,10 @@ const addAdmin = async (req, res) => {
         })
         if (checkEmail) throw new Error(`Admin '${email}' already exists!`)
         const mainHash = await hash({
-            password: password.toLowerCase()
+            password: password
         })
         const recoveryHash = await hash({
-            password: question.toLowerCase() + answer.toLowerCase()
+            password: question + answer
         })
         const admin = db.model('admin', Admin);
         const anAdmin = new admin({
@@ -158,7 +158,7 @@ const authenticateAdmin = async (req, res) => {
         })
         await compare({
             hash: query.hash,
-            password: password.toLowerCase()
+            password: password
         })
         const params = {
             payload: {
@@ -241,10 +241,10 @@ const getAdmin = async ({
     })
 }
 /**
- * @name Reset Admin Password
+ * @name Reset Admin Password 
  * @description resets the admin password based on the security question
  */
-const resetAdminPassword = async (req, res) => {
+const resetAdminPasswordWithSecQuestion = async (req, res) => {
     try {
         const {
             email,
@@ -258,6 +258,7 @@ const resetAdminPassword = async (req, res) => {
         const query = await getAdmin({
             email: email
         })
+        console.log(query)
         await compare({
             password: question + answer,
             hash: query.recovery.hash
@@ -279,6 +280,45 @@ const resetAdminPassword = async (req, res) => {
     }
 }
 /**
+ * @name Reset Admin Password 
+ * @description resets the admin password if password is know
+ */
+const resetAdminPassword = async (req, res) => {
+    try {
+        const {
+            email,
+            oldPassword,
+            newPassword
+        } = req.body
+        await adminEmailExists({
+            email: email
+        })
+        const query = await getAdmin({
+            email: email
+        })
+        // console.log(query)
+        await compare({
+            hash: query.hash,
+            password: oldPassword
+        })
+        // console.log(req.body)
+        query.hash = await hash({
+            password: newPassword
+        })
+        await query.save()
+        res.json({
+            results: {
+                message: `Admin ${query.email} password updated!`
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        res.json({
+            error: error.message
+        })
+    }
+}
+/**
  * @name Admin Groups
  * @description queries database and returns a list of groups for specified admin
  */
@@ -288,7 +328,7 @@ const adminGroups = async (req, res) => {
         const query = await admin.findOne({
             email: req.body.email
         }).select('-hash -recovery')
-        console.log(query)
+        // console.log(query)
         res.json({
             results: {
                 groups: query ? query.meta.mygroups : null
@@ -424,7 +464,7 @@ const approveAdmin = async (req, res) => {
  */
 const getListOfAdmins = async (req, res) => {
     try {
-        console.log(res.locals)
+        // console.log(res.locals)
         const admins = db.model('Admins', Admin)
         const query = await admins.find({})
             .select('-hash -recovery')
@@ -510,6 +550,7 @@ module.exports = {
     getAdmin,
     authenticateAdmin,
     resetAdminPassword,
+    resetAdminPasswordWithSecQuestion,
     approveAdmin,
     getListOfAdmins,
     deleteAdmin,
