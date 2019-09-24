@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import { MDBDataTable } from 'mdbreact'
+import { Button } from 'reactstrap'
 import URL from '../../variables/url'
 import axios from "axios"
 class Table extends Component {
@@ -30,6 +31,11 @@ class Table extends Component {
         const newData = {
             columns: [
                 {
+                    label: 'Profile',
+                    field: 'link',
+                    width: 150
+                },
+                {
                     label: 'Email',
                     field: 'email',
                     sort: 'asc',
@@ -48,45 +54,24 @@ class Table extends Component {
         data.forEach(elem => {
             //console.log(elem)
             const endPoint = `/admin/student/${elem._id}`
-            newData.rows.push({ email: <Link to={endPoint}>{elem.email}</Link>, id: elem._id })
+            newData.rows.push({ 
+                link:<Link to={endPoint}><Button size='sm' color='primary'>Open Profile</Button></Link>, 
+                email: elem.email, 
+                id: elem._id })
         })
 
         this.setState({ data: newData })
-    }
-    fetchTestData = () => {
-        const data = {
-            columns: [
-                {
-                    label: 'Name',
-                    field: 'name',
-                    sort: 'asc',
-                    width: 150
-                },
-                {
-                    label: 'Position',
-                    field: 'position',
-                    sort: 'asc',
-                    width: 270
-                },
-            ],
-            rows: [
-                {
-                    name: 'Tiger Nixon',
-                    position: 'System Architect'
-                },
-                {
-                    name: 'Garrett Winters',
-                    position: 'Accountant'
-                }
-            ]
-        }
-        this.setState({ data: data })
     }
     render() {
         //console.log(`state`, this.state)
         return (
             <div className="p-4" style={{ transition: '1s' }}>
                 <MDBDataTable
+                    responsive
+                    striped
+                    fixed
+                    scrollY
+                    maxHeight="50vh"
                     data={this.state.data}
                 />
             </div>
