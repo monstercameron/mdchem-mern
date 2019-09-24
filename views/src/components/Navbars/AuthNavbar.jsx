@@ -41,7 +41,7 @@ class AdminNavbar extends React.Component {
         >
           <Container className="px-4">
             <NavbarBrand to="/" tag={Link}>
-              {this.props.location.pathname.includes('register') || this.props.location.pathname.includes('login') ?
+              {this.props.location.pathname.includes('auth') ?
                 '' : <img alt="MDChem" src={require("assets/img/brand/logo.png")} />
               }
             </NavbarBrand>

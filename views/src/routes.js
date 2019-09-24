@@ -21,48 +21,20 @@
 // import Icons from "views/examples/Icons.jsx"
 import Index from "views/production/Index.jsx"
 import Register from "views/production/Register.jsx"
+import Reset from "views/production/Reset.jsx"
 import Login from "views/production/Login.jsx"
 import Students from "views/production/Students.jsx"
 import SingleStudent from "views/production/SingleStudent.jsx"
 import MyGroups from "views/production/MyGroups.jsx"
 import Settings from "views/production/Settings.jsx"
 import Admins from "views/production/Admins.jsx"
-
-var routes = [{
+export default [{
     path: "/index",
     name: "Dashboard",
     icon: "ni ni-tv-2 text-red",
     component: Index,
     layout: "/admin"
   },
-  // {
-  //   path: "/icons",
-  //   name: "Icons",
-  //   icon: "ni ni-planet text-blue",
-  //   component: Icons,
-  //   layout: "/admin"
-  // },
-  // {
-  //   path: "/maps",
-  //   name: "Maps",
-  //   icon: "ni ni-pin-3 text-orange",
-  //   component: Maps,
-  //   layout: "/admin"
-  // },
-  // {
-  //   path: "/user-profile",
-  //   name: "User Profile",
-  //   icon: "ni ni-single-02 text-yellow",
-  //   component: Profile,
-  //   layout: "/admin"
-  // },
-  // {
-  //   path: "/tables",
-  //   name: "Tables",
-  //   icon: "ni ni-bullet-list-67 text-red",
-  //   component: Tables,
-  //   layout: "/admin"
-  // },
   {
     path: "/student/:id",
     name: "Student",
@@ -120,6 +92,12 @@ var routes = [{
     icon: "ni ni-circle-08 text-pink",
     component: Register,
     layout: "/auth"
+  },
+  {
+    path: "/reset",
+    name: "Reset",
+    icon: "ni ni-circle-08 text-pink",
+    component: Reset,
+    layout: "/auth"
   }
-];
-export default routes;
+]

@@ -124,7 +124,7 @@ class Login extends React.Component {
             <Col xs="6">
               <a
                 className="text-light"
-                href="#pablo"
+                href="/reset"
                 onClick={e => e.preventDefault()}
               >
                 <small>Forgot password?</small>

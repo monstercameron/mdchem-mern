@@ -129,14 +129,14 @@ class StudentInfo extends React.Component {
           newPassword: this.state.password
         }
       })
-      console.log(req.data)
+      // console.log(req.data)
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       Notifications.notify({ title: error.message })
     }
   }
   render() {
-    console.log('state', this.state)
+    // console.log('state', this.state)
     return (
       <>
         <Header />

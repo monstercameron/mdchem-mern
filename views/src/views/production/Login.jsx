@@ -20,6 +20,7 @@ import { Redirect } from "react-router-dom";
 import axios from 'axios'
 import emailValidator from "email-validator"
 import URL from '../../variables/url'
+import { withRouter } from 'react-router-dom'
 // reactstrap components
 import {
   Button,
@@ -65,15 +66,15 @@ class Login extends React.Component {
     let { email: localEmail } = this.state.local
     if (!email) email = localEmail
     if (emailValidator.validate(email)) {
-      console.log('email is good')
+      // console.log('email is good')
     } else {
-      console.log('email is not good')
+      // console.log('email is not good')
       return false
     }
     if (password) {
-      console.log('Password is good')
+      // console.log('Password is good')
     } else {
-      console.log('Password is not good')
+      // console.log('Password is not good')
       return false
     }
     return true
@@ -95,7 +96,7 @@ class Login extends React.Component {
           data: form
         })
 
-        console.log(req)
+        // console.log(req)
         localStorage.setItem('temp', form.email)
         localStorage.setItem('avg', 0)
         localStorage.setItem('group', 0)
@@ -109,8 +110,8 @@ class Login extends React.Component {
         if (req.status === 200) this.setState({ redirect: '/admin/index' })
 
       } catch (error) {
-        console.log(error.response)
-        Notifications.notify({ title: `Error!`, body:error.response.data.error })
+        // console.log(error.response)
+        Notifications.notify({ title: `Error!`, body: error.response.data.error })
       }
     }
   }
@@ -192,8 +193,11 @@ class Login extends React.Component {
             <Col xs="6">
               <a
                 className="text-light"
-                href="#pablo"
-                onClick={e => e.preventDefault()}
+                href="/auth/reset"
+                onClick={e => {
+                  this.props.history.push('/auth/reset')
+                  e.preventDefault()
+                }}
               >
                 <small>Forgot password?</small>
               </a>
@@ -218,4 +222,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default withRouter(Login)

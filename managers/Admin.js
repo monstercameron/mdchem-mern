@@ -258,7 +258,7 @@ const resetAdminPasswordWithSecQuestion = async (req, res) => {
         const query = await getAdmin({
             email: email
         })
-        console.log(query)
+        // console.log(query)
         await compare({
             password: question + answer,
             hash: query.recovery.hash
