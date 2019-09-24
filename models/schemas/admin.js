@@ -8,11 +8,11 @@ module.exports = require('mongoose').Schema({
     role: String,
     approved: {
         type: Boolean,
-        defualt: false
+        default: false
     },
     su: {
         type: Boolean,
-        defualt: false
+        default: false
     },
     recovery: {
         question: String,

@@ -435,9 +435,9 @@ const countAdminGroups = async (req, res) => {
  * @description allows addmins access to backend
  */
 const approveAdmin = async (req, res) => {
+    console.log(res.locals)
     if (res.locals.su) {
         try {
-            console.log(res.locals)
             const admins = db.model('Admins', Admin)
             const query = await admins.findById(req.body.id)
             query.approved = req.body.approved

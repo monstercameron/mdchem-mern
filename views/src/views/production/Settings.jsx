@@ -130,6 +130,7 @@ class StudentInfo extends React.Component {
         }
       })
       // console.log(req.data)
+      Notifications.notify({ title: req.data.results.message })
     } catch (error) {
       // console.log(error)
       Notifications.notify({ title: error.message })
