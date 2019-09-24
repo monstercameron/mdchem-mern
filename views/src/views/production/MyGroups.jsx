@@ -47,9 +47,9 @@ class StudentInfo extends React.Component {
         url: `${URL.testing}/api/admin/groups`,
         method: 'post',
         withCredentials: true,
-        data: { email: localStorage.getItem('email') }
+        data: { email: localStorage.getItem('temp') }
       })
-      // console.log(groups)
+      console.log(groups)
       this.setState({ groups: groups.data.results.groups })
     } catch (error) {
       console.log(error)
@@ -69,7 +69,7 @@ class StudentInfo extends React.Component {
       data: { ...this.groupForm() }
     })
     console.log(addGroup)
-    Notifications.notify({title:addGroup.data.results.message})
+    Notifications.notify({ title: addGroup.data.results.message })
     if (addGroup.status === 200) {
       this.setState({ open: !this.state.open })
       this.getAdminGroups()
@@ -80,7 +80,7 @@ class StudentInfo extends React.Component {
     return {
       email: localStorage.getItem('email'),
       id: this.state.id,
-      notes: this.state.notes
+      notes: this.state.notes ? this.state.notes : ''
     }
   }
   render() {
