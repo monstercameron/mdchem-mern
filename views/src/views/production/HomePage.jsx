@@ -101,7 +101,7 @@ class HomePage extends Component {
                 </Row>
                 <Row>
                     <Col sm={12} md={6} lg={6} className='text-dark p-5 mt-3 mb-3 mx-auto rounded shadow-lg' style={{ background: 'rgba(255,255,255,1)' }}>
-                        <form action="https://formspree.io/mr.e.cameron@gmail.com" method="POST">
+                        <form action="https://formspree.io/david.freer@gmail.com" method="POST">
                             <Row>
                                 <Col className='text-center'>
                                     <h1>Contact Us</h1>
