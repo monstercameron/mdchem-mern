@@ -315,7 +315,7 @@ class Register extends React.Component {
                       >
                         <span className="text-muted">
                           I agree with the{" "}
-                          <a href="#pablo" onClick={e => e.preventDefault()}>
+                          <a href="/privacy" target='_new'>
                             Privacy Policy
                           </a>
                         </span>
