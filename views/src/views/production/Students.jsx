@@ -16,7 +16,7 @@
 
 */
 import React from "react"
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import DataTable from "../../components/widgets/tables"
 // reactstrap components
 import {
@@ -24,13 +24,14 @@ import {
   CardHeader,
   CardFooter,
   Container,
-  Row
+  Row,
+  Col
 } from "reactstrap"
 // core components
 import Header from "components/Headers/Header.jsx"
 class Tables extends React.Component {
   hasGroupId = () => {
-    return this.props.match.params.group ? `In  Group: ${this.props.match.params.group}` : ''
+    return this.props.match.params.group ? `In Group: ${this.props.match.params.group}` : ''
   }
   render() {
     return (
@@ -39,6 +40,19 @@ class Tables extends React.Component {
         {/* Page content */}
         <Container className="mt--7" fluid>
           {/* Table */}
+          {this.props.match.params.group ?
+            <Row>
+            <Col sm={3}
+              className='mb-3 text-white border p-2 ml-3 rounded'
+              style={{ backgroundColor: 'white', a: { active: 'red' } }}
+            >
+              <Link to='/admin/students'>
+                <i className="ni ni-bold-left"></i> Back To All Students
+        </Link>
+            </Col>
+          </Row> :
+            ''
+          }
           <Row>
             <div className="col">
               <Card className="shadow">

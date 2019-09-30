@@ -4,7 +4,7 @@ import clip from '../../assets/video/mdchem-intro.mp4'
 import image1 from '../../assets/img/samples/level2.png'
 import image2 from '../../assets/img/samples/login.png'
 import image3 from '../../assets/img/samples/halloffame.PNG'
-import image4 from '../../assets/img/samples/level5.PNG'
+// import image4 from '../../assets/img/samples/level5.PNG'
 import image5 from '../../assets/img/samples/tech.png'
 class HomePage extends Component {
     images = [

@@ -132,7 +132,8 @@ class StudentInfo extends React.Component {
         </Row>
       )
     } else {
-      return this.state.student.meta.group
+      return <Link to={`/admin/students/${this.state.student.meta.group}`}><Button size='sm' color='primary'>Group: {this.state.student.meta.group}</Button></Link>
+      //this.state.student.meta.group
     }
   }
   changeGroupRequest = () => {
