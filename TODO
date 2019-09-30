@@ -3,23 +3,19 @@ MVP status
 //backend features
 calculate completion rating
 admin approval for other admins / partial
-node mailer integration/backend email alerts
 check scores to see if higher else overwrite old score
-server log api
-check student registration to save the right data in recovery object
 
 
 //client  features
 caching results clientside
 client email verification
-client info update
-client  forgot password
 reports
 internal messages
 download server logs
-error message modal
-privacy policy
 password reset student
+fix update student group
+fix groups not showing up in my groups
+fix adding groups
 
 //code
 make classes aync functions
@@ -27,8 +23,5 @@ clean up code/filenames
 try catch errors
 
 //app
-update login screen
-update signup screen
 add forgot password screen
-cache network requests until the network is connected
-toast notifications to signup/login screen
+cache network requests until the network is connected / partial
