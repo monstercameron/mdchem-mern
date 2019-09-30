@@ -39,13 +39,22 @@ class Table extends Component {
                     label: 'Email',
                     field: 'email',
                     sort: 'asc',
-                    width: 150
+                    width: 200
                 },
                 {
                     label: 'Id',
                     field: 'id',
-                    sort: 'asc',
-                    width: 270
+                    width: 200
+                },
+                {
+                    label: 'Group',
+                    field: 'group',
+                    width: 100
+                },
+                {
+                    label: 'Score',
+                    field: 'score',
+                    width: 100
                 }
             ],
             rows: [
@@ -53,17 +62,19 @@ class Table extends Component {
         }
         data.forEach(elem => {
             //console.log(elem)
-            const endPoint = `/admin/student/${elem._id}`
-            newData.rows.push({ 
-                link:<Link to={endPoint}><Button size='sm' color='primary'>Open Profile</Button></Link>, 
-                email: elem.email, 
-                id: elem._id })
+            newData.rows.push({
+                link: <Link to={`/admin/student/${elem._id}`}><Button size='sm' color='primary'>Open Profile</Button></Link>,
+                email: elem.email,
+                id: elem._id,
+                group: <Link to={`/admin/students/${elem.meta.group}`}><Button size='sm' color='primary'>Group: {elem.meta.group}</Button></Link>,
+                score: elem.score
+            })
         })
 
         this.setState({ data: newData })
     }
     render() {
-        //console.log(`state`, this.state)
+        // console.log(`state`, this.state)
         return (
             <div className="p-4" style={{ transition: '1s' }}>
                 <MDBDataTable
